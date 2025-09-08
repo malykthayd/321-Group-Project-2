@@ -5,7 +5,6 @@ class BasketballTracker {
         this.players = this.loadPlayers();
         this.workouts = this.loadWorkouts();
         this.stats = this.loadStats();
-        this.charts = {};
         
         this.init();
     }
@@ -54,7 +53,7 @@ class BasketballTracker {
     // Event Listeners
     setupEventListeners() {
         // Navigation
-        document.querySelectorAll('.nav-btn').forEach(btn => {
+        document.querySelectorAll('[data-section]').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 this.switchSection(e.target.dataset.section);
             });
@@ -123,7 +122,7 @@ class BasketballTracker {
     // Navigation
     switchSection(sectionName) {
         // Update nav buttons
-        document.querySelectorAll('.nav-btn').forEach(btn => {
+        document.querySelectorAll('[data-section]').forEach(btn => {
             btn.classList.remove('active');
         });
         document.querySelector(`[data-section="${sectionName}"]`).classList.add('active');
@@ -405,98 +404,88 @@ class BasketballTracker {
         document.getElementById('teamTotalWorkouts').textContent = totalWorkouts;
     }
 
-    // Charts
+    // Charts (replaced with simple text displays)
     updateCharts() {
-        this.updatePerformanceChart();
-        this.updateWorkoutChart();
+        this.updatePerformanceDisplay();
+        this.updateWorkoutDisplay();
     }
 
-    updatePerformanceChart() {
-        const ctx = document.getElementById('performanceChart');
-        if (!ctx) return;
+    updatePerformanceDisplay() {
+        const container = document.getElementById('performanceChart');
+        if (!container) return;
         
         const playerStats = this.stats.filter(s => s.playerId === this.currentPlayer);
-        const recentStats = playerStats.slice(0, 10).reverse();
+        const recentStats = playerStats.slice(0, 5);
         
-        const labels = recentStats.map(stat => this.formatDate(stat.date));
-        const threePointData = recentStats.map(stat => this.calculatePercentage(stat.threePointMakes, stat.threePointAttempts));
-        const freeThrowData = recentStats.map(stat => this.calculatePercentage(stat.freeThrowMakes, stat.freeThrowAttempts));
-        
-        if (this.charts.performance) {
-            this.charts.performance.destroy();
+        if (recentStats.length === 0) {
+            container.innerHTML = '<p class="text-muted">No performance data available</p>';
+            return;
         }
         
-        this.charts.performance = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: '3-Point %',
-                    data: threePointData,
-                    borderColor: '#3498db',
-                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
-                    tension: 0.4
-                }, {
-                    label: 'Free Throw %',
-                    data: freeThrowData,
-                    borderColor: '#e74c3c',
-                    backgroundColor: 'rgba(231, 76, 60, 0.1)',
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100
-                    }
-                }
-            }
+        const performanceData = recentStats.map(stat => {
+            const threePointPct = this.calculatePercentage(stat.threePointMakes, stat.threePointAttempts);
+            const freeThrowPct = this.calculatePercentage(stat.freeThrowMakes, stat.freeThrowAttempts);
+            return {
+                date: this.formatDate(stat.date),
+                threePoint: threePointPct,
+                freeThrow: freeThrowPct
+            };
         });
+        
+        container.innerHTML = `
+            <div class="table-responsive">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>3-Point %</th>
+                            <th>Free Throw %</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${performanceData.map(data => `
+                            <tr>
+                                <td>${data.date}</td>
+                                <td class="text-success">${data.threePoint}%</td>
+                                <td class="text-info">${data.freeThrow}%</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
     }
 
-    updateWorkoutChart() {
-        const ctx = document.getElementById('workoutChart');
-        if (!ctx) return;
+    updateWorkoutDisplay() {
+        const container = document.getElementById('workoutChart');
+        if (!container) return;
         
         const playerWorkouts = this.workouts.filter(w => w.playerId === this.currentPlayer);
-        const last30Days = this.getLast30Days();
+        const last7Days = this.getLast7Days();
         
-        const workoutCounts = last30Days.map(date => {
+        const workoutCounts = last7Days.map(date => {
             return playerWorkouts.filter(w => w.date === date).length;
         });
         
-        if (this.charts.workout) {
-            this.charts.workout.destroy();
-        }
+        const totalWorkouts = workoutCounts.reduce((sum, count) => sum + count, 0);
         
-        this.charts.workout = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: last30Days.map(date => new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
-                datasets: [{
-                    label: 'Workouts',
-                    data: workoutCounts,
-                    backgroundColor: 'rgba(52, 152, 219, 0.8)',
-                    borderColor: '#3498db',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1
-                        }
-                    }
-                }
-            }
-        });
+        container.innerHTML = `
+            <div class="text-center">
+                <h6 class="text-muted">Last 7 Days</h6>
+                <div class="display-6 text-primary mb-2">${totalWorkouts}</div>
+                <p class="text-muted">Total Workouts</p>
+                <div class="row g-2">
+                    ${last7Days.map((date, index) => `
+                        <div class="col">
+                            <div class="badge ${workoutCounts[index] > 0 ? 'bg-success' : 'bg-secondary'}">
+                                ${new Date(date).toLocaleDateString('en-US', { weekday: 'short' })}
+                            </div>
+                            <div class="small text-muted">${workoutCounts[index]}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
     }
 
     // Utility Functions
@@ -540,6 +529,16 @@ class BasketballTracker {
         if (diff > 5) return '📈 Improving';
         if (diff < -5) return '📉 Declining';
         return '➡️ Stable';
+    }
+
+    getLast7Days() {
+        const days = [];
+        for (let i = 6; i >= 0; i--) {
+            const date = new Date();
+            date.setDate(date.getDate() - i);
+            days.push(date.toISOString().split('T')[0]);
+        }
+        return days;
     }
 
     getLast30Days() {
