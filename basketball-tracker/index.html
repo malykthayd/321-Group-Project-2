@@ -28,7 +28,18 @@
                     <button class="nav-link btn btn-outline-primary me-2 active" data-section="dashboard">Dashboard</button>
                     <button class="nav-link btn btn-outline-primary me-2" data-section="workouts">Workouts</button>
                     <button class="nav-link btn btn-outline-primary me-2" data-section="stats">Statistics</button>
-                    <button class="nav-link btn btn-outline-primary" data-section="coach">Coach View</button>
+                    <button class="nav-link btn btn-outline-primary me-2" data-section="coach">Coach View</button>
+                    <!-- Login Page Feature - User Display and Logout -->
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <span id="userDisplay">User</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><span class="dropdown-item-text small text-muted" id="userEmailDisplay"></span></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><button class="dropdown-item" id="logoutBtn">Logout</button></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -343,6 +354,50 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+
+    <!-- Authentication Check -->
+    <script>
+        // Login Page Feature - Authentication Check
+        document.addEventListener('DOMContentLoaded', function() {
+            const isAuthenticated = localStorage.getItem('tideHoopsAuthenticated');
+            const userEmail = localStorage.getItem('tideHoopsUserEmail');
+            
+            if (isAuthenticated !== 'true' || !userEmail) {
+                // Redirect to login page if not authenticated
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Check if login is expired (24 hours)
+            const loginTime = localStorage.getItem('tideHoopsLoginTime');
+            if (loginTime) {
+                const loginDate = new Date(loginTime);
+                const now = new Date();
+                const hoursDiff = (now - loginDate) / (1000 * 60 * 60);
+                
+                if (hoursDiff > 24) {
+                    // Clear authentication and redirect to login
+                    localStorage.removeItem('tideHoopsAuthenticated');
+                    localStorage.removeItem('tideHoopsUserEmail');
+                    localStorage.removeItem('tideHoopsLoginTime');
+                    window.location.href = 'login.html';
+                    return;
+                }
+            }
+            
+            // Update user display if authenticated
+            const userDisplay = document.getElementById('userDisplay');
+            const userEmailDisplay = document.getElementById('userEmailDisplay');
+            if (userDisplay) {
+                // Extract username from email (part before @)
+                const username = userEmail.split('@')[0];
+                userDisplay.textContent = username;
+            }
+            if (userEmailDisplay) {
+                userEmailDisplay.textContent = userEmail;
+            }
+        });
+    </script>
 
     <!-- Custom JS -->
     <script src="Resources/Scripts/script.js"></script>

@@ -117,6 +117,11 @@ class BasketballTracker {
         document.getElementById('freeThrowMakes').addEventListener('input', (e) => {
             this.validateStatsInput(e.target, 'freeThrowAttempts');
         });
+
+        // Login Page Feature - Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            this.handleLogout();
+        });
     }
 
     // Navigation
@@ -597,6 +602,22 @@ class BasketballTracker {
         setTimeout(() => {
             message.remove();
         }, 3000);
+    }
+
+    // Login Page Feature - Handle logout
+    handleLogout() {
+        // Clear authentication data
+        localStorage.removeItem('tideHoopsAuthenticated');
+        localStorage.removeItem('tideHoopsUserEmail');
+        localStorage.removeItem('tideHoopsLoginTime');
+        
+        // Show logout message
+        this.showMessage('Logged out successfully!', 'success');
+        
+        // Redirect to login page after short delay
+        setTimeout(() => {
+            window.location.href = 'login.html';
+        }, 1000);
     }
 }
 

@@ -4,6 +4,63 @@ body {
     min-height: 100vh;
 }
 
+/* Login Page Feature Styles */
+.login-page {
+    background: linear-gradient(135deg, #8B0000 0%, #DC143C 50%, #B22222 100%);
+    min-height: 100vh;
+}
+
+.login-page .card {
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.login-page .form-control:focus,
+.login-page .form-select:focus {
+    border-color: #8B0000;
+    box-shadow: 0 0 0 0.25rem rgba(139, 0, 0, 0.25);
+}
+
+.login-page .btn-primary {
+    background: linear-gradient(45deg, #8B0000, #DC143C);
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.login-page .btn-primary:hover {
+    background: linear-gradient(45deg, #A52A2A, #B22222);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(139, 0, 0, 0.3);
+}
+
+.login-page .btn-outline-secondary {
+    border-color: #dee2e6;
+    color: #6c757d;
+}
+
+.login-page .btn-outline-secondary:hover {
+    background-color: #8B0000;
+    border-color: #8B0000;
+    color: white;
+}
+
+.login-page .text-primary {
+    color: #8B0000 !important;
+}
+
+.login-page .form-control.is-valid {
+    border-color: #198754;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='m2.3 6.73.94-.94 1.89-1.89-1.89-1.89-.94-.94L2.3 1.89l.94.94L5.13 4.72l-1.89 1.89-.94.94z'/%3e%3c/svg%3e");
+}
+
+.login-page .form-control.is-invalid {
+    border-color: #dc3545;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 4.6 1.4 1.4 1.4-1.4'/%3e%3c/svg%3e");
+}
+
 /* Navigation customizations */
 .navbar {
     background: rgba(255, 255, 255, 0.95) !important;
