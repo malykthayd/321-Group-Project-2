@@ -567,7 +567,7 @@
             const profilePosition = document.getElementById('profilePosition');
             
             // Fetch user data from API to get full name and profile info
-            fetch(`http://localhost:5038/api/Player/email/${encodeURIComponent(userEmail)}`)
+            fetch(`http://10.148.154.116:5038/api/Player/email/${encodeURIComponent(userEmail)}`)
                 .then(response => {
                     if (response.ok) {
                         return response.json();
@@ -664,7 +664,7 @@
                 if (!userEmail) return;
                 
                 // First get current user data
-                fetch(`http://localhost:5038/api/Player/email/${encodeURIComponent(userEmail)}`)
+                fetch(`http://10.148.154.116:5038/api/Player/email/${encodeURIComponent(userEmail)}`)
                     .then(response => response.json())
                     .then(user => {
                         // Update user with new photo
@@ -674,7 +674,7 @@
                         };
                         
                         // Send update to API
-                        return fetch(`http://localhost:5038/api/Player/${user.id}`, {
+                        return fetch(`http://10.148.154.116:5038/api/Player/${user.id}`, {
                             method: 'PUT',
                             headers: {
                                 'Content-Type': 'application/json'

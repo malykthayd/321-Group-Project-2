@@ -132,25 +132,17 @@ class LoginManager {
         // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 1000));
         
-        // For demo purposes, accept any @crimson.ua.edu email with password "password"
+        // Accept any @crimson.ua.edu email with password "password"
         // In production, this would make an API call to your authentication service
-        const validEmails = [
-            'player1@crimson.ua.edu',
-            'player2@crimson.ua.edu',
-            'coach@crimson.ua.edu',
-            'tastaples@crimson.ua.edu',
-            'mthayden@crimson.ua.edu',
-            'ewhardage@crimson.ua.edu',
-            'gjsegura@crimson.ua.edu'
-        ];
+        const emailRegex = /^[^\s@]+@crimson\.ua\.edu$/i;
         
-        return validEmails.includes(email.toLowerCase()) && password === 'password';
+        return emailRegex.test(email) && password === 'password';
     }
 
     // Check if user exists in database
     async checkUserExists(email) {
         try {
-            const response = await fetch(`http://localhost:5038/api/Player/email/${encodeURIComponent(email)}`);
+            const response = await fetch(`http://10.148.154.116:5038/api/Player/email/${encodeURIComponent(email)}`);
             return response.ok;
         } catch (error) {
             console.error('Error checking user existence:', error);
@@ -161,7 +153,7 @@ class LoginManager {
     // Get user by email
     async getUserByEmail(email) {
         try {
-            const response = await fetch(`http://localhost:5038/api/Player/email/${encodeURIComponent(email)}`);
+            const response = await fetch(`http://10.148.154.116:5038/api/Player/email/${encodeURIComponent(email)}`);
             if (response.ok) {
                 return await response.json();
             }
@@ -233,9 +225,9 @@ class LoginManager {
     async updateUserPosition(userId, position) {
         try {
             // First get the current user data
-            const user = await fetch(`http://localhost:5038/api/Player/${userId}`).then(r => r.json());
+            const user = await fetch(`http://10.148.154.116:5038/api/Player/${userId}`).then(r => r.json());
             
-            const response = await fetch(`http://localhost:5038/api/Player/${userId}`, {
+            const response = await fetch(`http://10.148.154.116:5038/api/Player/${userId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -344,7 +336,7 @@ class LoginManager {
     // Create user in database
     async createUserInDatabase(email, firstName, lastName, position) {
         try {
-            const response = await fetch('http://localhost:5038/api/Player', {
+            const response = await fetch('http://10.148.154.116:5038/api/Player', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

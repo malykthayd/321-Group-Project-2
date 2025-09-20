@@ -30,7 +30,7 @@ class BasketballTracker {
     // Data Management
     async loadPlayers() {
         try {
-            const response = await fetch('http://localhost:5038/api/Player');
+            const response = await fetch('http://10.148.154.116:5038/api/Player');
             if (response.ok) {
                 const players = await response.json();
                 // Convert API format to frontend format
@@ -506,7 +506,7 @@ class BasketballTracker {
 
         try {
             // Try to add player via API first
-            const response = await fetch('http://localhost:5038/api/Player', {
+            const response = await fetch('http://10.148.154.116:5038/api/Player', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -659,7 +659,7 @@ class BasketballTracker {
 
         try {
             // Try to update player via API first
-            const response = await fetch(`http://localhost:5038/api/Player/${playerId}`, {
+            const response = await fetch(`http://10.148.154.116:5038/api/Player/${playerId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -772,7 +772,7 @@ class BasketballTracker {
         
         try {
             // Try to delete player via API first
-            const response = await fetch(`http://localhost:5038/api/Player/${id}`, {
+            const response = await fetch(`http://10.148.154.116:5038/api/Player/${id}`, {
                 method: 'DELETE'
             });
 
@@ -1051,7 +1051,7 @@ class BasketballTracker {
                 return null;
             }
             
-            const response = await fetch(`http://localhost:5038/api/Player/email/${encodeURIComponent(userEmail)}`);
+            const response = await fetch(`http://10.148.154.116:5038/api/Player/email/${encodeURIComponent(userEmail)}`);
             if (response.ok) {
                 return await response.json();
             }
