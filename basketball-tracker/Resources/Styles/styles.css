@@ -1,9 +1,58 @@
 /* Custom styles to complement Bootstrap */
 body {
+<<<<<<< HEAD
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
 }
 
+=======
+    background: linear-gradient(135deg, #8B0000 0%, #DC143C 50%, #B22222 100%);
+    min-height: 100vh;
+}
+
+/* Override Bootstrap primary colors to match red theme */
+.text-primary {
+    color: #8B0000 !important;
+}
+
+.btn-primary {
+    background-color: #8B0000;
+    border-color: #8B0000;
+}
+
+.btn-primary:hover {
+    background-color: #A52A2A;
+    border-color: #A52A2A;
+}
+
+.btn-primary:focus {
+    background-color: #8B0000;
+    border-color: #8B0000;
+    box-shadow: 0 0 0 0.25rem rgba(139, 0, 0, 0.25);
+}
+
+.btn-outline-primary {
+    color: #8B0000;
+    border-color: #8B0000;
+}
+
+.btn-outline-primary:hover {
+    background-color: #8B0000;
+    border-color: #8B0000;
+    color: white;
+}
+
+.btn-outline-primary.active {
+    background-color: #8B0000;
+    border-color: #8B0000;
+    color: white;
+}
+
+.border-primary {
+    border-color: #8B0000 !important;
+}
+
+>>>>>>> 5fe6a3bb9b5437ca502565047ddf0195bf829d2d
 /* Login Page Feature Styles */
 .login-page {
     background: linear-gradient(135deg, #8B0000 0%, #DC143C 50%, #B22222 100%);
@@ -106,8 +155,13 @@ body {
 /* Form enhancements */
 .form-control:focus,
 .form-select:focus {
+<<<<<<< HEAD
     border-color: #0d6efd;
     box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+=======
+    border-color: #8B0000;
+    box-shadow: 0 0 0 0.25rem rgba(139, 0, 0, 0.25);
+>>>>>>> 5fe6a3bb9b5437ca502565047ddf0195bf829d2d
 }
 
 /* List item enhancements */
@@ -118,7 +172,11 @@ body {
     padding: 1.5rem;
     border-radius: 10px;
     margin-bottom: 1rem;
+<<<<<<< HEAD
     border-left: 4px solid #0d6efd;
+=======
+    border-left: 4px solid #8B0000;
+>>>>>>> 5fe6a3bb9b5437ca502565047ddf0195bf829d2d
     transition: transform 0.2s ease;
 }
 
@@ -153,3 +211,50 @@ body {
     color: #721c24;
     border: 1px solid #f5c6cb;
 }
+<<<<<<< HEAD
+=======
+
+/* Player Comparison Styles */
+.comparison-card {
+    border: 2px solid #dee2e6;
+    transition: border-color 0.3s ease;
+}
+
+.comparison-card:hover {
+    border-color: #8B0000;
+}
+
+.comparison-stat {
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    background-color: #f8f9fa;
+    border-left: 4px solid #dee2e6;
+}
+
+.comparison-stat.better {
+    background-color: #d4edda;
+    border-left-color: #28a745;
+}
+
+.comparison-stat.worse {
+    background-color: #f8d7da;
+    border-left-color: #dc3545;
+}
+
+.comparison-stat.neutral {
+    background-color: #e9ecef;
+    border-left-color: #6c757d;
+}
+
+.comparison-badge {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
+}
+
+.comparison-vs {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #8B0000;
+}
+>>>>>>> 5fe6a3bb9b5437ca502565047ddf0195bf829d2d
