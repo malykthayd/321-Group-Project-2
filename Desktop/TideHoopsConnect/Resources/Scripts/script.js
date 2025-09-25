@@ -45,6 +45,7 @@ class BasketballTracker {
         this.renderPlayers();
         this.updateTeamOverview();
         this.setDefaultDate();
+        this.setupStatsValidation();
     }
 
     // Data Management
@@ -58,7 +59,6 @@ class BasketballTracker {
                     id: player.id.toString(), // Convert to string for consistency
                     name: `${player.firstName} ${player.lastName}`,
                     position: player.position,
-                    photo: player.photoUrl || null,
                     email: player.email
                 }));
             }
@@ -229,6 +229,14 @@ class BasketballTracker {
                 this.editPlayer(playerId);
             }
         });
+
+        // Stats filter dropdown
+        const statsFilter = document.getElementById('statsFilter');
+        if (statsFilter) {
+            statsFilter.addEventListener('change', () => {
+                this.renderStats();
+            });
+        }
     }
 
     // Navigation
@@ -300,14 +308,11 @@ class BasketballTracker {
         // Hide edit form when showing add form
         if (form.style.display === 'block') {
             document.getElementById('editPlayerForm').style.display = 'none';
-            // Scroll to the add player form
-            const addForm = document.getElementById('playerFormElement');
-            if (addForm) {
-                addForm.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'start' 
-                });
-            }
+            // Scroll to the beginning of the page
+            window.scrollTo({ 
+                top: 0, 
+                behavior: 'smooth' 
+            });
         }
     }
 
@@ -362,19 +367,30 @@ class BasketballTracker {
             return;
         }
         const isAll = this.currentPlayer === 'all';
-        const playerStats = isAll ? this.stats : this.stats.filter(s => s.playerId === this.currentPlayer);
+        let playerStats = isAll ? this.stats : this.stats.filter(s => s.playerId === this.currentPlayer);
+        
+        // Apply session type filter if selected
+        const statsFilter = document.getElementById('statsFilter');
+        if (statsFilter && statsFilter.value !== 'all') {
+            playerStats = playerStats.filter(s => s.gameType === statsFilter.value);
+        }
         
         if (playerStats.length === 0) {
             container.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">No statistics recorded yet.</p>';
             return;
         }
 
-        container.innerHTML = playerStats.map(stat => {
-            const player = this.players.find(p => p.id === stat.playerId);
-            const playerName = player ? player.name : 'Unknown Player';
+        // Sort stats by timestamp in descending order (most recent first)
+        const sortedStats = playerStats.sort((a, b) => {
+            const dateA = new Date(a.timestamp);
+            const dateB = new Date(b.timestamp);
+            return dateB - dateA; // Descending order (newest first)
+        });
+
+        container.innerHTML = sortedStats.map(stat => {
             return `
                 <div class="stat-item">
-                    <h4>${this.formatGameType(stat.gameType)} - ${playerName} - ${this.formatDate(stat.date)}</h4>
+                    <h4>${this.formatGameType(stat.gameType)} - ${this.formatDate(stat.date)}</h4>
                     <div class="row g-2">
                         <div class="col-md-6">
                             <p><strong>3-Point:</strong> ${stat.threePointMakes}/${stat.threePointAttempts} (${this.calculatePercentage(stat.threePointMakes, stat.threePointAttempts)}%)</p>
@@ -486,28 +502,40 @@ class BasketballTracker {
             const attempts = parseInt(document.getElementById(attemptsId).value) || 0;
             const makes = parseInt(document.getElementById(makesId).value) || 0;
             const percentage = attempts > 0 ? Math.round((makes / attempts) * 100) : 0;
-            document.getElementById(displayId).textContent = 
-                displayId.replace('Percentage', '') + ': ' + percentage + '%';
+            
+            // Format the display text based on the field type
+            let displayText = '';
+            if (displayId === 'statsThreePointPercentage') {
+                displayText = '3-Point %: ' + percentage + '%';
+            } else if (displayId === 'statsFreeThrowPercentage') {
+                displayText = 'Free Throw %: ' + percentage + '%';
+            } else if (displayId === 'statsTwoPointPercentage') {
+                displayText = '2-Point %: ' + percentage + '%';
+            } else {
+                displayText = displayId.replace('Percentage', '') + ': ' + percentage + '%';
+            }
+            
+            document.getElementById(displayId).textContent = displayText;
         };
 
         // Add event listeners for real-time percentage updates
         document.getElementById('threePointAttempts').addEventListener('input', () => {
-            updatePercentage('threePointAttempts', 'threePointMakes', 'threePointPercentage');
+            updatePercentage('threePointAttempts', 'threePointMakes', 'statsThreePointPercentage');
         });
         document.getElementById('threePointMakes').addEventListener('input', () => {
-            updatePercentage('threePointAttempts', 'threePointMakes', 'threePointPercentage');
+            updatePercentage('threePointAttempts', 'threePointMakes', 'statsThreePointPercentage');
         });
         document.getElementById('freeThrowAttempts').addEventListener('input', () => {
-            updatePercentage('freeThrowAttempts', 'freeThrowMakes', 'freeThrowPercentage');
+            updatePercentage('freeThrowAttempts', 'freeThrowMakes', 'statsFreeThrowPercentage');
         });
         document.getElementById('freeThrowMakes').addEventListener('input', () => {
-            updatePercentage('freeThrowAttempts', 'freeThrowMakes', 'freeThrowPercentage');
+            updatePercentage('freeThrowAttempts', 'freeThrowMakes', 'statsFreeThrowPercentage');
         });
         document.getElementById('twoPointAttempts').addEventListener('input', () => {
-            updatePercentage('twoPointAttempts', 'twoPointMakes', 'twoPointPercentage');
+            updatePercentage('twoPointAttempts', 'twoPointMakes', 'statsTwoPointPercentage');
         });
         document.getElementById('twoPointMakes').addEventListener('input', () => {
-            updatePercentage('twoPointAttempts', 'twoPointMakes', 'twoPointPercentage');
+            updatePercentage('twoPointAttempts', 'twoPointMakes', 'statsTwoPointPercentage');
         });
 
         // Validation for makes not exceeding attempts
@@ -528,18 +556,69 @@ class BasketballTracker {
         document.getElementById('twoPointMakes').addEventListener('input', () => {
             validateMakes('twoPointMakes', 'twoPointAttempts');
         });
+
+        // Clear input boxes when clicked if they contain "0" and restore "0" when empty on blur
+        const clearOnClick = (inputId) => {
+            const input = document.getElementById(inputId);
+            if (input) {
+                input.addEventListener('click', () => {
+                    if (input.value === '0') {
+                        input.value = '';
+                    }
+                });
+                
+                input.addEventListener('blur', () => {
+                    if (input.value === '' || input.value === null) {
+                        input.value = '0';
+                    }
+                });
+            }
+        };
+
+        // Apply clear-on-click to all stats input fields
+        clearOnClick('threePointAttempts');
+        clearOnClick('threePointMakes');
+        clearOnClick('freeThrowAttempts');
+        clearOnClick('freeThrowMakes');
+        clearOnClick('twoPointAttempts');
+        clearOnClick('twoPointMakes');
+        clearOnClick('assists');
+        clearOnClick('rebounds');
     }
 
     // Player Management
     async addPlayer() {
         const form = document.getElementById('playerFormElement');
         
+        const email = document.getElementById('playerEmail').value;
+        const emailInput = document.getElementById('playerEmail');
+        
+        // Clear any previous error state
+        emailInput.classList.remove('is-invalid', 'text-danger');
+        
+        // Validate email domain
+        if (!email.endsWith('@crimson.ua.edu')) {
+            // Show error message in the input field
+            emailInput.classList.add('is-invalid', 'text-danger');
+            emailInput.value = 'Only @crimson.ua.edu emails allowed';
+            emailInput.placeholder = 'example@crimson.ua.edu';
+            
+            // Clear the error message after 3 seconds
+            setTimeout(() => {
+                emailInput.value = '';
+                emailInput.classList.remove('is-invalid', 'text-danger');
+            }, 3000);
+            
+            // Scroll to the email input to show the error
+            emailInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+        
         const playerData = {
-            email: document.getElementById('playerEmail').value,
+            email: email,
             firstName: document.getElementById('playerFirstName').value,
             lastName: document.getElementById('playerLastName').value,
-            position: document.getElementById('playerPosition').value,
-            photoUrl: null
+            position: document.getElementById('playerPosition').value
         };
 
         try {
@@ -558,8 +637,7 @@ class BasketballTracker {
                 const player = {
                     id: newPlayer.id.toString(),
                     name: `${newPlayer.firstName} ${newPlayer.lastName}`,
-                    position: newPlayer.position,
-                    photo: newPlayer.photoUrl || null
+                    position: newPlayer.position
                 };
 
                 // Reload players from database
@@ -600,10 +678,8 @@ class BasketballTracker {
         const nameParts = player.name.split(' ');
         document.getElementById('editPlayerFirstName').value = nameParts[0] || '';
         document.getElementById('editPlayerLastName').value = nameParts.slice(1).join(' ') || '';
+        document.getElementById('editPlayerEmail').value = player.email || '';
         document.getElementById('editPlayerPosition').value = player.position;
-        
-        
-        
         
         // Store the player ID for the update
         document.getElementById('editPlayerFormElement').setAttribute('data-player-id', playerId);
@@ -633,6 +709,29 @@ class BasketballTracker {
             return;
         }
 
+        const email = document.getElementById('editPlayerEmail').value;
+        const emailInput = document.getElementById('editPlayerEmail');
+        
+        // Clear any previous error state
+        emailInput.classList.remove('is-invalid', 'text-danger');
+        
+        // Validate email domain
+        if (!email.endsWith('@crimson.ua.edu')) {
+            // Show error message in the input field
+            emailInput.classList.add('is-invalid', 'text-danger');
+            emailInput.value = 'Only @crimson.ua.edu emails allowed';
+            emailInput.placeholder = 'example@crimson.ua.edu';
+            
+            // Clear the error message after 3 seconds
+            setTimeout(() => {
+                emailInput.value = '';
+                emailInput.classList.remove('is-invalid', 'text-danger');
+            }, 3000);
+            
+            // Scroll to the email input to show the error
+            emailInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
 
         // Get current user ID from authentication
         const currentUser = await this.getCurrentUser();
@@ -643,11 +742,10 @@ class BasketballTracker {
         
         const playerData = {
             id: parseInt(playerId), // Convert back to int for API
-            email: currentUser.email,
+            email: email,
             firstName: document.getElementById('editPlayerFirstName').value,
             lastName: document.getElementById('editPlayerLastName').value,
-            position: document.getElementById('editPlayerPosition').value,
-            photoUrl: null
+            position: document.getElementById('editPlayerPosition').value
         };
 
         try {
@@ -708,10 +806,7 @@ class BasketballTracker {
                 <div class="player-item">
                     <div class="d-flex align-items-start mb-3">
                         <div class="me-3">
-                            ${player.photo ? 
-                                `<img src="${player.photo}" alt="${player.name}" class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;">` :
-                                `<div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white" style="width: 60px; height: 60px; font-size: 1.5rem;">${player.name.charAt(0).toUpperCase()}</div>`
-                            }
+                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white" style="width: 60px; height: 60px; font-size: 1.5rem;">${player.name.charAt(0).toUpperCase()}</div>
                         </div>
                         <div class="flex-grow-1">
                             <h4>${player.name} (${player.position})</h4>
@@ -824,8 +919,8 @@ class BasketballTracker {
         if (!this.currentPlayer) {
             // No player selected, show empty dashboard
             document.getElementById('totalWorkouts').textContent = '0';
-            document.getElementById('weeklyWorkouts').textContent = '0';
             document.getElementById('threePointPercentage').textContent = '0%';
+            document.getElementById('twoPointPercentage').textContent = '0%';
             document.getElementById('freeThrowPercentage').textContent = '0%';
             document.getElementById('threePointStats').textContent = '0/0 (0%)';
             document.getElementById('freeThrowStats').textContent = '0/0 (0%)';
@@ -841,17 +936,13 @@ class BasketballTracker {
         // Total workouts
         document.getElementById('totalWorkouts').textContent = playerWorkouts.length;
         
-        // Weekly workouts
-        const oneWeekAgo = new Date();
-        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-        const weeklyWorkouts = playerWorkouts.filter(w => new Date(w.date) >= oneWeekAgo).length;
-        document.getElementById('weeklyWorkouts').textContent = weeklyWorkouts;
-        
         // Statistics
         const threePointStats = this.calculatePlayerStats(playerStats, 'threePoint');
+        const twoPointStats = this.calculatePlayerStats(playerStats, 'twoPoint');
         const freeThrowStats = this.calculatePlayerStats(playerStats, 'freeThrow');
         
         document.getElementById('threePointPercentage').textContent = `${threePointStats.percentage}%`;
+        document.getElementById('twoPointPercentage').textContent = `${twoPointStats.percentage}%`;
         document.getElementById('freeThrowPercentage').textContent = `${freeThrowStats.percentage}%`;
         
         // Update stats overview
@@ -923,7 +1014,6 @@ class BasketballTracker {
                 id: player.id,
                 name: player.name,
                 position: player.position,
-                photo: player.photo,
                 three,
                 two,
                 ft,
@@ -971,13 +1061,10 @@ class BasketballTracker {
                             <div class="d-flex align-items-center">
                                 <span class="me-2" style="font-size: 1.2rem;">${medal}</span>
                                 <div class="me-3">
-                                    ${player.photo && player.photo.length > 0 ? 
-                                        `<img src="${player.photo}" alt="${player.name}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">` :
-                                        `<div class="rounded-circle bg-secondary d-flex flex-column align-items-center justify-content-center text-white" style="width: 40px; height: 40px; font-size: 1.2rem;">
-                                            <div style="font-size: 1.2rem; line-height: 1;">${player.name.charAt(0).toUpperCase()}</div>
-                                            <div style="font-size: 0.6rem; line-height: 1; margin-top: 1px;">${player.position}</div>
-                                        </div>`
-                                    }
+                                    <div class="rounded-circle bg-secondary d-flex flex-column align-items-center justify-content-center text-white" style="width: 40px; height: 40px; font-size: 1.2rem;">
+                                        <div style="font-size: 1.2rem; line-height: 1;">${player.name.charAt(0).toUpperCase()}</div>
+                                        <div style="font-size: 0.6rem; line-height: 1; margin-top: 1px;">${player.position}</div>
+                                    </div>
                                 </div>
                                 <div>
                                     <div class="fw-bold">${player.name}</div>
@@ -1015,14 +1102,19 @@ class BasketballTracker {
                 <div class="display-6 text-primary mb-2">${totalWorkouts}</div>
                 <p class="text-muted">Total Workouts</p>
                 <div class="row g-2">
-                    ${last7Days.map((date, index) => `
+                    ${last7Days.map((date, index) => {
+                        // Parse date in local timezone to avoid day shift
+                        const [year, month, day] = date.split('-');
+                        const localDate = new Date(year, month - 1, day);
+                        return `
                         <div class="col">
                             <div class="badge ${workoutCounts[index] > 0 ? 'bg-success' : 'bg-secondary'}">
-                                ${new Date(date).toLocaleDateString('en-US', { weekday: 'short' })}
+                                ${localDate.toLocaleDateString('en-US', { weekday: 'short' })}
                             </div>
                             <div class="small text-muted">${workoutCounts[index]}</div>
                         </div>
-                    `).join('')}
+                        `;
+                    }).join('')}
                 </div>
             </div>
         `;
@@ -1061,7 +1153,12 @@ class BasketballTracker {
         // Set default lifting form values
         const dateInput = document.getElementById('liftingDate');
         if (dateInput) {
-            dateInput.value = new Date().toISOString().split('T')[0];
+            // Use local date formatting to avoid timezone issues
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            dateInput.value = `${year}-${month}-${day}`;
         }
         const playerSelect = document.getElementById('liftingPlayerSelect');
         if (playerSelect && this.currentPlayer) {
@@ -1097,6 +1194,7 @@ class BasketballTracker {
 
     setupLiftingEvents() {
         const filterBtn = document.getElementById('liftingFilterBtn');
+        const clearFilterBtn = document.getElementById('liftingClearFilterBtn');
         const start = document.getElementById('liftingStartDate');
         const end = document.getElementById('liftingEndDate');
         const addSetBtn = document.getElementById('addSetBtn');
@@ -1110,6 +1208,20 @@ class BasketballTracker {
                 this.lifting.filters.playerId = null; // Will be set to current user in loadLiftingWorkouts
                 this.lifting.filters.startDate = start.value || null;
                 this.lifting.filters.endDate = end.value || null;
+                await this.loadLiftingWorkouts();
+                this.renderLiftingQuickStats();
+                this.renderLiftingHistory();
+                this.renderLiftingProgress();
+            });
+        }
+
+        if (clearFilterBtn) {
+            clearFilterBtn.addEventListener('click', async () => {
+                // Clear the date filters and reset to show all workouts
+                start.value = '';
+                end.value = '';
+                this.lifting.filters.startDate = null;
+                this.lifting.filters.endDate = null;
                 await this.loadLiftingWorkouts();
                 this.renderLiftingQuickStats();
                 this.renderLiftingHistory();
@@ -1213,7 +1325,14 @@ class BasketballTracker {
         const notes = document.getElementById('liftingNotes');
         if (form) form.reset();
         if (sets) sets.innerHTML = '';
-        if (date) date.value = new Date().toISOString().split('T')[0];
+        if (date) {
+            // Use local date formatting to avoid timezone issues
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            date.value = `${year}-${month}-${day}`;
+        }
         if (notes) notes.value = '';
     }
 
@@ -1329,12 +1448,10 @@ class BasketballTracker {
                 const name = ex ? ex.name : `Exercise #${s.exerciseId}`;
                 return `<span class="badge bg-secondary me-1 mb-1">${name}: ${s.reps} x ${s.weight}</span>`;
             }).join('');
-            const player = this.players.find(p => p.id === (w.playerId?.toString?.() || w.playerId));
-            const pname = player ? player.name : `Player #${w.playerId}`;
             return `
                 <div class="workout-item">
                     <div class="d-flex justify-content-between">
-                        <h5 class="mb-2">${pname} • ${this.formatDate(w.date)}</h5>
+                        <h5 class="mb-2">${this.formatDate(w.date)}</h5>
                         <button class="btn btn-sm btn-outline-danger" onclick="tracker.deleteLiftingWorkout(${w.id})">Delete</button>
                     </div>
                     <div class="mb-2">${sets}</div>
@@ -1483,6 +1600,7 @@ class BasketballTracker {
     getLast7Days() {
         const days = [];
         const today = new Date();
+        
         // Get the current day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
         const currentDayOfWeek = today.getDay();
         
@@ -1494,7 +1612,12 @@ class BasketballTracker {
         for (let i = 0; i < 7; i++) {
             const date = new Date(startOfWeek);
             date.setDate(startOfWeek.getDate() + i);
-            days.push(date.toISOString().split('T')[0]);
+            
+            // Use local date formatting to avoid timezone issues
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            days.push(`${year}-${month}-${day}`);
         }
         return days;
     }
@@ -1529,7 +1652,9 @@ class BasketballTracker {
 
     formatGameType(type) {
         const types = {
-            'practice': 'Practice',
+            'shooting': 'Shooting Practice',
+            'skills': 'Skills Training',
+            'practice': 'Practice Game',
             'scrimmage': 'Scrimmage',
             'game': 'Official Game',
             'conditioning': 'Conditioning'

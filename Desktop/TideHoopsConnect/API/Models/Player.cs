@@ -24,9 +24,6 @@ namespace BasketballTrackerAPI.Models
         [MaxLength(20)]
         public string Position { get; set; } = string.Empty;
 
-        [MaxLength(500)]
-        public string? PhotoUrl { get; set; }
-
         // Audit fields
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

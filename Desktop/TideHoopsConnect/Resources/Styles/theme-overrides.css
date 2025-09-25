@@ -170,10 +170,53 @@ body {
     transform: translateX(5px);
 }
 
-/* User selector styling */
+/* Enhanced User selector styling */
 .user-selector .form-select {
-    background: rgba(255, 255, 255, 0.9);
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.95);
+    border: 3px solid #8B0000;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(139, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.user-selector .form-select:hover {
+    background: rgba(255, 255, 255, 1);
+    border-color: #A52A2A;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 0, 0, 0.3);
+}
+
+.user-selector .form-select:focus {
+    border-color: #8B0000;
+    box-shadow: 0 0 0 0.25rem rgba(139, 0, 0, 0.25), 0 6px 20px rgba(139, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 1);
+}
+
+.user-selector .form-label {
+    font-weight: 700;
+    font-size: 1rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.user-selector .form-label i {
+    color: #FFD700;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.user-selector .form-label small {
+    opacity: 0.9;
+    font-style: italic;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.9; }
+    50% { opacity: 0.7; }
+    100% { opacity: 0.9; }
 }
 
 /* Success/Error Messages */

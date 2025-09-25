@@ -27,7 +27,6 @@ namespace BasketballTrackerAPI.Data
                 entity.Property(p => p.FirstName).IsRequired().HasMaxLength(50);
                 entity.Property(p => p.LastName).IsRequired().HasMaxLength(50);
                 entity.Property(p => p.Position).IsRequired().HasMaxLength(20);
-                entity.Property(p => p.PhotoUrl).HasMaxLength(500);
                 entity.Property(p => p.CreatedAt).IsRequired();
                 entity.Property(p => p.UpdatedAt).IsRequired();
                 

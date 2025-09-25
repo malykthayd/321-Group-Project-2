@@ -66,18 +66,6 @@
                             </li>
                             <li><hr class="dropdown-divider"></li>
                             
-                            <!-- Photo Upload -->
-                            <li class="px-3 py-2">
-                                <label for="photoUpload" class="btn btn-sm btn-outline-primary w-100 mb-2">
-                                    <i class="bi bi-camera"></i> Update Photo
-                                </label>
-                                <input type="file" id="photoUpload" accept="image/*" style="display: none;">
-                                <button class="btn btn-sm btn-outline-danger w-100" id="removePhotoBtn">
-                                    <i class="bi bi-trash"></i> Remove Photo
-                                </button>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            
                             <!-- Logout -->
                             <li><button class="dropdown-item" id="logoutBtn">
                                 <i class="bi bi-box-arrow-right"></i> Logout
@@ -95,9 +83,17 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="h3 text-white">Player Dashboard</h2>
                 <div class="user-selector">
-                    <select id="playerSelect" class="form-select">
-                        <option value="current">Current Player</option>
-                    </select>
+                    <div class="text-end">
+                        <label for="playerSelect" class="form-label text-white mb-2 d-block">
+                            <i class="bi bi-people-fill me-2"></i>View Dashboard For:
+                            <small class="text-light d-block mt-1" style="font-size: 0.8rem;">
+                                <i class="bi bi-arrow-down me-1"></i>Click to select different player
+                            </small>
+                        </label>
+                        <select id="playerSelect" class="form-select form-select-lg bg-white border-primary shadow-sm" style="min-width: 200px;">
+                            <option value="current">Loading players...</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             
@@ -121,16 +117,16 @@
                 <div class="col-md-3 col-sm-6">
                     <div class="card text-center h-100">
                         <div class="card-body">
-                            <h5 class="card-title">Free Throw %</h5>
-                            <div class="display-4 text-info" id="freeThrowPercentage">0%</div>
+                            <h5 class="card-title">2-Point %</h5>
+                            <div class="display-4 text-info" id="twoPointPercentage">0%</div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6">
                     <div class="card text-center h-100">
                         <div class="card-body">
-                            <h5 class="card-title">This Week</h5>
-                            <div class="display-4 text-warning" id="weeklyWorkouts">0</div>
+                            <h5 class="card-title">Free Throw %</h5>
+                            <div class="display-4 text-warning" id="freeThrowPercentage">0%</div>
                         </div>
                     </div>
                 </div>
@@ -227,22 +223,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-2">
-                                    <small class="text-muted" id="threePointPercentage">3-Point %: 0%</small>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="row g-2">
-                                    <div class="col-6">
-                                        <label for="freeThrowAttempts" class="form-label">Free Throw Attempts</label>
-                                        <input type="number" class="form-control" id="freeThrowAttempts" min="0" value="0">
-                                    </div>
-                                    <div class="col-6">
-                                        <label for="freeThrowMakes" class="form-label">Free Throw Makes</label>
-                                        <input type="number" class="form-control" id="freeThrowMakes" min="0" value="0">
-                                    </div>
-                                </div>
-                                <div class="mt-2">
-                                    <small class="text-muted" id="freeThrowPercentage">Free Throw %: 0%</small>
+                                    <small class="text-muted" id="statsThreePointPercentage">3-Point %: 0%</small>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -257,7 +238,22 @@
                                     </div>
                                 </div>
                                 <div class="mt-2">
-                                    <small class="text-muted" id="twoPointPercentage">2-Point %: 0%</small>
+                                    <small class="text-muted" id="statsTwoPointPercentage">2-Point %: 0%</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <label for="freeThrowAttempts" class="form-label">Free Throw Attempts</label>
+                                        <input type="number" class="form-control" id="freeThrowAttempts" min="0" value="0">
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="freeThrowMakes" class="form-label">Free Throw Makes</label>
+                                        <input type="number" class="form-control" id="freeThrowMakes" min="0" value="0">
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <small class="text-muted" id="statsFreeThrowPercentage">Free Throw %: 0%</small>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -275,7 +271,7 @@
                         </div>
 
                         <div class="d-flex gap-2 mt-3">
-                            <button type="submit" class="btn btn-primary">Save Workout & Stats</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
                             <button type="button" class="btn btn-secondary" id="cancelCombined">Cancel</button>
                         </div>
                     </form>
@@ -306,8 +302,19 @@
             <div class="row g-4">
                 <div class="col-md-12">
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="card-title mb-0">Statistics History</h5>
+                            <div>
+                                <label for="statsFilter" class="form-label mb-1 me-2">Filter by Session Type:</label>
+                                <select id="statsFilter" class="form-select form-select-sm" style="width: auto;">
+                                    <option value="all">All Sessions</option>
+                                    <option value="shooting">Shooting Practice</option>
+                                    <option value="skills">Skills Training</option>
+                                    <option value="practice">Practice Game</option>
+                                    <option value="scrimmage">Scrimmage</option>
+                                    <option value="game">Official Game</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="card-body">
                             <div id="statsContainer"></div>
@@ -321,20 +328,6 @@
         <section id="lifting" class="section">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="h3 text-white">Workout Log</h2>
-                <div class="d-flex gap-2 align-items-end">
-                    <div>
-                        <label for="liftingStartDate" class="form-label text-white small">Start Date</label>
-                        <input type="date" id="liftingStartDate" class="form-control">
-                    </div>
-                    <div>
-                        <label for="liftingEndDate" class="form-label text-white small">End Date</label>
-                        <input type="date" id="liftingEndDate" class="form-control">
-                    </div>
-                    <div>
-                        <label class="form-label text-white small">&nbsp;</label>
-                        <button class="btn btn-primary" id="liftingFilterBtn">Filter</button>
-                    </div>
-                </div>
             </div>
 
             <div class="row g-3 mb-4">
@@ -406,8 +399,26 @@
             <div class="row g-3 mb-4">
                 <div class="col-md-8">
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="card-title mb-0">Workout History</h5>
+                            <div class="d-flex gap-2 align-items-end">
+                                <div>
+                                    <label for="liftingStartDate" class="form-label mb-1 small">Start Date</label>
+                                    <input type="date" id="liftingStartDate" class="form-control form-control-sm">
+                                </div>
+                                <div>
+                                    <label for="liftingEndDate" class="form-label mb-1 small">End Date</label>
+                                    <input type="date" id="liftingEndDate" class="form-control form-control-sm">
+                                </div>
+                                <div>
+                                    <label class="form-label mb-1 small">&nbsp;</label>
+                                    <button class="btn btn-primary btn-sm" id="liftingFilterBtn">Filter</button>
+                                </div>
+                                <div>
+                                    <label class="form-label mb-1 small">&nbsp;</label>
+                                    <button class="btn btn-secondary btn-sm" id="liftingClearFilterBtn">Clear</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body">
                             <div id="liftingWorkoutHistory"></div>
@@ -476,7 +487,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="playerEmail" class="form-label">Email Address</label>
-                                <input type="email" class="form-control" id="playerEmail" required>
+                                <input type="email" class="form-control" id="playerEmail" placeholder="example@crimson.ua.edu" required>
                                 <div class="form-text">The email address the player will use to log in</div>
                             </div>
                             <div class="col-md-6">
@@ -508,15 +519,20 @@
                 <div class="card-body">
                     <form id="editPlayerFormElement">
                         <div class="row g-3">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label for="editPlayerFirstName" class="form-label">First Name</label>
                                 <input type="text" class="form-control" id="editPlayerFirstName" required>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label for="editPlayerLastName" class="form-label">Last Name</label>
                                 <input type="text" class="form-control" id="editPlayerLastName" required>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
+                                <label for="editPlayerEmail" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="editPlayerEmail" placeholder="example@crimson.ua.edu" required>
+                                <div class="form-text">The email address the player will use to log in</div>
+                            </div>
+                            <div class="col-md-6">
                                 <label for="editPlayerPosition" class="form-label">Position</label>
                                 <select class="form-select" id="editPlayerPosition">
                                     <option value="PG">Point Guard</option>
@@ -706,18 +722,14 @@
                         profilePosition.textContent = user.position;
                     }
                     if (profilePhoto) {
-                        if (user.photoUrl) {
-                            profilePhoto.src = user.photoUrl;
-                        } else {
-                            // Default avatar with initials
-                            const initials = `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
-                            profilePhoto.src = `data:image/svg+xml;base64,${btoa(`
-                                <svg width="40" height="40" xmlns="http://www.w3.org/2000/svg">
-                                    <rect width="40" height="40" fill="#6c757d"/>
-                                    <text x="20" y="26" text-anchor="middle" fill="white" font-family="Arial" font-size="14" font-weight="bold">${initials}</text>
-                                </svg>
-                            `)}`;
-                        }
+                        // Default avatar with initials
+                        const initials = `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
+                        profilePhoto.src = `data:image/svg+xml;base64,${btoa(`
+                            <svg width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="40" height="40" fill="#6c757d"/>
+                                <text x="20" y="26" text-anchor="middle" fill="white" font-family="Arial" font-size="14" font-weight="bold">${initials}</text>
+                            </svg>
+                        `)}`;
                     }
                 })
                 .catch(error => {
@@ -739,91 +751,6 @@
                     if (profilePosition) profilePosition.textContent = 'Unknown';
                 });
             
-            // Photo upload functionality
-            const photoUpload = document.getElementById('photoUpload');
-            const removePhotoBtn = document.getElementById('removePhotoBtn');
-            
-            if (photoUpload) {
-                photoUpload.addEventListener('change', function(e) {
-                    const file = e.target.files[0];
-                    if (file) {
-                        // Convert to base64
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            const base64Data = e.target.result;
-                            updateProfilePhoto(base64Data);
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                });
-            }
-            
-            if (removePhotoBtn) {
-                removePhotoBtn.addEventListener('click', function() {
-                    updateProfilePhoto(null);
-                });
-            }
-            
-            // Function to update profile photo
-            function updateProfilePhoto(photoData) {
-                const userEmail = localStorage.getItem('tideHoopsUserEmail');
-                if (!userEmail) return;
-                
-                // First get current user data
-                fetch(`http://localhost:5038/api/Player/email/${encodeURIComponent(userEmail)}`)
-                    .then(response => response.json())
-                    .then(user => {
-                        // Update user with new photo
-                        const updatedUser = {
-                            ...user,
-                            photoUrl: photoData
-                        };
-                        
-                        // Send update to API
-                        return fetch(`http://localhost:5038/api/Player/${user.id}`, {
-                            method: 'PUT',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(updatedUser)
-                        });
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            // Update profile photo display
-                            if (profilePhoto) {
-                                if (photoData) {
-                                    profilePhoto.src = photoData;
-                                } else {
-                                    // Reset to default avatar
-                                    const userEmail = localStorage.getItem('tideHoopsUserEmail');
-                                    const username = userEmail.split('@')[0];
-                                    const initials = username.substring(0, 2).toUpperCase();
-                                    profilePhoto.src = `data:image/svg+xml;base64,${btoa(`
-                                        <svg width="40" height="40" xmlns="http://www.w3.org/2000/svg">
-                                            <rect width="40" height="40" fill="#6c757d"/>
-                                            <text x="20" y="26" text-anchor="middle" fill="white" font-family="Arial" font-size="14" font-weight="bold">${initials}</text>
-                                        </svg>
-                                    `)}`;
-                                }
-                            }
-                            
-                            // Clear file input
-                            if (photoUpload) {
-                                photoUpload.value = '';
-                            }
-                            
-                            // Show success message
-                            alert('Profile photo updated successfully!');
-                        } else {
-                            throw new Error('Failed to update photo');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error updating profile photo:', error);
-                        alert('Failed to update profile photo. Please try again.');
-                    });
-            }
         });
     </script>
 
