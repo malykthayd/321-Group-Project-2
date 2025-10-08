@@ -1,0 +1,48 @@
+### Get all users
+GET https://localhost:7000/api/users
+
+### Get user by ID
+GET https://localhost:7000/api/users/1
+
+### Create new user
+POST https://localhost:7000/api/users
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "email": "test@example.com"
+}
+
+### Get all lessons
+GET https://localhost:7000/api/lessons
+
+### Get lesson by ID
+GET https://localhost:7000/api/lessons/1
+
+### Create new lesson
+POST https://localhost:7000/api/lessons
+Content-Type: application/json
+
+{
+  "title": "Introduction to Programming",
+  "content": "Learn the basics of programming concepts.",
+  "category": "Programming",
+  "difficulty": 1
+}
+
+### Get all progress records
+GET https://localhost:7000/api/progress
+
+### Get progress by user ID
+GET https://localhost:7000/api/progress/user/1
+
+### Create progress record
+POST https://localhost:7000/api/progress
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "lessonId": 1,
+  "completed": true,
+  "score": 85
+}
