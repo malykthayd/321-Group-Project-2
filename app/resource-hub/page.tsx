@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/components/AuthProvider'
 import { useRouter } from 'next/navigation'
+import { LessonCard } from '@/components/LessonCard'
 import { 
   BookOpen, 
   BarChart3, 
@@ -81,6 +82,11 @@ export default function ResourceHub() {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<'lessons' | 'library' | 'progress' | 'practice'>('lessons')
+  const [books, setBooks] = useState<any[]>([])
+  const [practiceItems, setPracticeItems] = useState<any[]>([])
+  const [lessons, setLessons] = useState<any[]>([])
+  const [subjects, setSubjects] = useState<string[]>([])
+  const [selectedSubject, setSelectedSubject] = useState<string>('All')
 
   useEffect(() => {
     if (!user) {
@@ -92,21 +98,41 @@ export default function ResourceHub() {
 
   const loadDashboardData = async () => {
     try {
-      // Mock data for demo - in real app, this would fetch from API
+      // Fetch real data from API
+      const [booksRes, practiceRes, progressRes, lessonsRes, subjectsRes] = await Promise.all([
+        fetch('/api/books', { credentials: 'include' }).catch(() => null),
+        fetch('/api/practice', { credentials: 'include' }).catch(() => null),
+        fetch('/api/progress', { credentials: 'include' }).catch(() => null),
+        fetch('/api/lessons', { credentials: 'include' }).catch(() => null),
+        fetch('/api/lessons/subjects', { credentials: 'include' }).catch(() => null)
+      ])
+
+      const booksData = booksRes && booksRes.ok ? await booksRes.json() : { books: [] }
+      const practiceData = practiceRes && practiceRes.ok ? await practiceRes.json() : { practiceItems: [] }
+      const progress = progressRes && progressRes.ok ? await progressRes.json() : null
+      const lessonsData = lessonsRes && lessonsRes.ok ? await lessonsRes.json() : { lessons: [] }
+      const subjectsData = subjectsRes && subjectsRes.ok ? await subjectsRes.json() : { subjects: [] }
+
+      // Set data
+      setBooks(booksData.books || [])
+      setPracticeItems(practiceData.practiceItems || [])
+      setLessons(lessonsData.lessons || [])
+      setSubjects(['All', ...(subjectsData.subjects || [])])
+
       const mockData: DashboardData = {
         stats: {
-          totalLessons: 24,
-          completedLessons: 18,
-          totalBooks: 12,
-          checkedOutBooks: 3,
-          badges: 8,
-          streak: 7
+          totalLessons: lessonsData.lessons?.length || 0,
+          completedLessons: progress?.completedLessons || 0,
+          totalBooks: booksData.books?.length || 0,
+          checkedOutBooks: progress?.checkedOutBooks || 0,
+          badges: progress?.badges || 5,
+          streak: progress?.streak || 0
         },
         recentActivity: [
           {
             id: '1',
             type: 'lesson',
-            title: 'Introduction to Fractions',
+            title: 'Introduction to Addition',
             timestamp: '2 hours ago',
             status: 'completed'
           },
@@ -120,16 +146,16 @@ export default function ResourceHub() {
           {
             id: '3',
             type: 'assignment',
-            title: 'Math Practice Problems',
+            title: 'Understanding Fractions',
             timestamp: '2 days ago',
             status: 'pending'
           },
           {
             id: '4',
             type: 'quiz',
-            title: 'Science Quiz - Plants',
+            title: 'Plant Life Cycle Quiz',
             timestamp: '3 days ago',
-            status: 'overdue'
+            status: 'completed'
           }
         ],
         progressData: {
@@ -150,10 +176,10 @@ export default function ResourceHub() {
           ]
         },
         masteryData: {
-          labels: ['Math', 'Science', 'Reading', 'Writing'],
+          labels: ['Addition', 'Fractions', 'Reading', 'Plants'],
           datasets: [
             {
-              data: [85, 72, 90, 68],
+              data: [80, 60, 90, 70],
               backgroundColor: [
                 'rgba(59, 130, 246, 0.8)',
                 'rgba(34, 197, 94, 0.8)',
@@ -337,6 +363,43 @@ export default function ResourceHub() {
             {activeTab === 'lessons' && (
               <div className="space-y-6">
                 <div className="card">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900">Available Lessons</h3>
+                    {subjects.length > 0 && (
+                      <div className="flex gap-2 flex-wrap">
+                        {subjects.map((subject) => (
+                          <button
+                            key={subject}
+                            onClick={() => setSelectedSubject(subject)}
+                            className={`px-3 py-1 rounded-full text-xs border transition-colors ${
+                              selectedSubject === subject
+                                ? 'bg-blue-600 text-white border-blue-600'
+                                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                            }`}
+                          >
+                            {subject}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  {lessons.length === 0 ? (
+                    <p className="text-gray-600">No lessons available</p>
+                  ) : (
+                    <div className="space-y-3">
+                      {lessons
+                        .filter((lesson) => selectedSubject === 'All' || lesson.subject === selectedSubject)
+                        .map((lesson) => (
+                          <LessonCard key={lesson.id} lesson={lesson} />
+                        ))}
+                      {lessons.filter((lesson) => selectedSubject === 'All' || lesson.subject === selectedSubject).length === 0 && (
+                        <p className="text-gray-600 text-sm">No lessons found for {selectedSubject}</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                <div className="card">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
                   <div className="space-y-3">
                     {dashboardData.recentActivity.map((activity) => (
@@ -374,9 +437,36 @@ export default function ResourceHub() {
             )}
 
             {activeTab === 'library' && (
-              <div className="card">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Digital Library</h3>
-                <p className="text-gray-600">Library content will be displayed here...</p>
+              <div className="space-y-4">
+                <div className="card">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Digital Library</h3>
+                  {books.length === 0 ? (
+                    <p className="text-gray-600">No books available</p>
+                  ) : (
+                    <div className="grid gap-4">
+                      {books.map((book) => (
+                        <div key={book.id} className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <h4 className="font-semibold text-gray-900">{book.title}</h4>
+                              <p className="text-sm text-gray-600">by {book.author}</p>
+                              <div className="flex gap-2 mt-2">
+                                <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">{book.subject}</span>
+                                <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">Grade {book.grade_level}</span>
+                              </div>
+                              {book.description && (
+                                <p className="text-sm text-gray-600 mt-2">{book.description}</p>
+                              )}
+                            </div>
+                            <button className="btn btn-primary text-sm ml-4">
+                              {book.is_available ? 'Checkout' : 'Checked Out'}
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             )}
 
@@ -395,9 +485,38 @@ export default function ResourceHub() {
             )}
 
             {activeTab === 'practice' && (
-              <div className="card">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Practice Materials</h3>
-                <p className="text-gray-600">Practice materials will be displayed here...</p>
+              <div className="space-y-4">
+                <div className="card">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Practice Materials</h3>
+                  {practiceItems.length === 0 ? (
+                    <p className="text-gray-600">No practice items available</p>
+                  ) : (
+                    <div className="space-y-4">
+                      {practiceItems.map((item, idx) => (
+                        <div key={item.id || idx} className="p-4 border border-gray-200 rounded-lg">
+                          <div className="flex items-start justify-between mb-3">
+                            <h4 className="font-medium text-gray-900">Question {idx + 1}</h4>
+                            <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded">
+                              Level {item.difficulty_level || 1}
+                            </span>
+                          </div>
+                          <p className="text-gray-700 mb-3">{item.question}</p>
+                          {item.options && typeof item.options === 'string' && (
+                            <div className="space-y-2">
+                              {JSON.parse(item.options).map((option: string, optIdx: number) => (
+                                <div key={optIdx} className="flex items-center space-x-2 p-2 bg-gray-50 rounded">
+                                  <span className="font-medium text-gray-600">{String.fromCharCode(65 + optIdx)}.</span>
+                                  <span className="text-gray-700">{option}</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          <button className="btn btn-primary text-sm mt-3">Start Practice</button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>

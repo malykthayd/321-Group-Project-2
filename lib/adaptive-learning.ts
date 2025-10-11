@@ -44,6 +44,7 @@ export interface PracticeAttempt {
 
 export class AdaptiveLearningEngine {
   static async getStudentMastery(studentId: number): Promise<Mastery[]> {
+    if (!db) return []
     const stmt = db.prepare(`
       SELECT * FROM mastery WHERE student_id = ?
     `)
@@ -56,6 +57,8 @@ export class AdaptiveLearningEngine {
     isCorrect: boolean, 
     timeSpent: number = 0
   ): Promise<void> {
+    if (!db) return
+    
     const existingMastery = db.prepare(`
       SELECT * FROM mastery WHERE student_id = ? AND concept_id = ?
     `).get(studentId, conceptId) as Mastery | null
@@ -82,6 +85,8 @@ export class AdaptiveLearningEngine {
   }
 
   static async getRecommendedDifficulty(studentId: number, conceptId: number): Promise<number> {
+    if (!db) return 1
+    
     const mastery = db.prepare(`
       SELECT mastery_level FROM mastery WHERE student_id = ? AND concept_id = ?
     `).get(studentId, conceptId) as { mastery_level: number } | null
@@ -105,6 +110,8 @@ export class AdaptiveLearningEngine {
     difficulty?: number,
     limit: number = 10
   ): Promise<PracticeItem[]> {
+    if (!db) return []
+    
     let query = `
       SELECT pi.*, 
              COALESCE(m.mastery_level, 0) as current_mastery
@@ -147,6 +154,8 @@ export class AdaptiveLearningEngine {
     selectedAnswer: number,
     timeSpent: number
   ): Promise<boolean> {
+    if (!db) return false
+    
     const practiceItem = db.prepare(`
       SELECT correct_answer, concept_id FROM practice_items WHERE id = ?
     `).get(practiceItemId) as { correct_answer: number, concept_id: number }
@@ -181,6 +190,16 @@ export class AdaptiveLearningEngine {
       improvement: number
     }>
   }> {
+    if (!db) {
+      return {
+        totalAttempts: 0,
+        correctAttempts: 0,
+        averageTime: 0,
+        conceptsMastered: 0,
+        recentImprovements: []
+      }
+    }
+    
     const stats = db.prepare(`
       SELECT 
         COUNT(*) as total_attempts,
@@ -235,6 +254,14 @@ export class AdaptiveLearningEngine {
     }>
     nextSteps: string[]
   }> {
+    if (!db) {
+      return {
+        weakConcepts: [],
+        strongConcepts: [],
+        nextSteps: []
+      }
+    }
+    
     const weakConcepts = db.prepare(`
       SELECT c.*, m.mastery_level
       FROM concepts c

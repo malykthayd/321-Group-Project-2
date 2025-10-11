@@ -8,68 +8,33 @@ interface DatabaseInterface {
   close(): void;
 }
 
-// Declare global variables for Node.js environment
-declare const process: any;
-declare const __dirname: string;
+// Database imports
+import BetterSqlite3 from 'better-sqlite3';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-// Database imports with fallbacks
-let Database: any = null;
-let path: any = null;
+const Database = BetterSqlite3;
+const path = { join };
 
-// Try to load dependencies safely
-try {
-  // Use dynamic imports for better compatibility
-  Database = eval('require')('better-sqlite3');
-  path = eval('require')('path');
-} catch (error) {
-  console.warn('Database dependencies not available - using fallback mode');
-}
-
-// Get the current working directory safely
+// Get the database path
 const getDbPath = (): string => {
-  try {
-    // Try different methods to get the current directory
-    if (typeof process !== 'undefined' && process.cwd) {
-      return path ? path.join(process.cwd(), 'data', 'aqe.db') : './data/aqe.db';
-    }
-    
-    // Fallback for other environments
-    if (typeof __dirname !== 'undefined') {
-      return path ? path.join(__dirname, '..', 'data', 'aqe.db') : './data/aqe.db';
-    }
-    
-    // Ultimate fallback
-    return './data/aqe.db';
-  } catch (error) {
-    console.warn('Could not determine database path, using fallback:', error);
-    return './data/aqe.db';
-  }
+  return path.join(process.cwd(), 'data', 'aqe.db');
 };
 
 const dbPath = getDbPath();
 
-// Create database instance with error handling
+// Create database instance
 let db: DatabaseInterface | null = null;
 
-if (Database) {
-  try {
-    db = new Database(dbPath);
-    console.log(`Database connected: ${dbPath}`);
-    
-    // Enable foreign keys
-    try {
-      if (db) {
-        db.pragma('foreign_keys = ON');
-      }
-    } catch (error) {
-      console.error('Failed to enable foreign keys:', error);
-    }
-  } catch (error) {
-    console.error('Failed to connect to database:', error);
-    db = null;
-  }
-} else {
-  console.warn('Database module not available - running in mock mode');
+try {
+  db = new Database(dbPath);
+  console.log(`Database connected: ${dbPath}`);
+  
+  // Enable foreign keys
+  db.pragma('foreign_keys = ON');
+} catch (error) {
+  console.error('Failed to connect to database:', error);
+  db = null;
 }
 
 export { db };
@@ -77,8 +42,7 @@ export { db };
 // Create tables
 export function createTables(): void {
   if (!db) {
-    console.warn('Database not available - skipping table creation');
-    return;
+    throw new Error('Database not initialized');
   }
   
   try {
@@ -453,8 +417,7 @@ export function createTables(): void {
 // Create indexes for better performance
 export function createIndexes(): void {
   if (!db) {
-    console.warn('Database not available - skipping index creation');
-    return;
+    throw new Error('Database not initialized');
   }
   
   try {
@@ -507,7 +470,6 @@ export function initializeDatabase(): void {
 // Database health check
 export function checkDatabaseHealth(): boolean {
   if (!db) {
-    console.warn('Database not available');
     return false;
   }
   
@@ -524,7 +486,6 @@ export function checkDatabaseHealth(): boolean {
 // Close database connection
 export function closeDatabase(): void {
   if (!db) {
-    console.warn('Database not available - nothing to close');
     return;
   }
   

@@ -62,7 +62,8 @@ export function createAuthResponse(user: User, token: string) {
       first_name: user.first_name,
       last_name: user.last_name,
       phone: user.phone,
-      language: user.language
+      language: user.language,
+      grade_level: user.grade_level
     },
     token
   })
@@ -71,8 +72,9 @@ export function createAuthResponse(user: User, token: string) {
   response.cookies.set('auth-token', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: 7 * 24 * 60 * 60 // 7 days
+    sameSite: 'lax',
+    maxAge: 7 * 24 * 60 * 60, // 7 days
+    path: '/'
   })
 
   return response

@@ -51,6 +51,8 @@ export class DigitalLibraryService {
     language: string = 'en',
     availableOnly: boolean = true
   ): Promise<Book[]> {
+    if (!db) return []
+    
     let query = 'SELECT * FROM books WHERE language = ?'
     const params = [language]
 

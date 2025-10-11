@@ -4,7 +4,7 @@ import { createAuthResponse } from '@/lib/middleware'
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password, role, first_name, last_name, phone, language } = await req.json()
+    const { email, password, role, first_name, last_name, phone, language, grade_level } = await req.json()
 
     if (!email || !password || !role || !first_name || !last_name) {
       return NextResponse.json(
@@ -36,7 +36,8 @@ export async function POST(req: NextRequest) {
       first_name,
       last_name,
       phone,
-      language
+      language,
+      grade_level
     })
 
     const token = AuthService.generateToken(user)

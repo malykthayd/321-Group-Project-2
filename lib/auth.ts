@@ -10,6 +10,7 @@ export interface User {
   last_name: string
   phone?: string
   language: string
+  grade_level?: number
   is_active: boolean
   created_at: string
   updated_at: string
@@ -58,12 +59,15 @@ export class AuthService {
     last_name: string
     phone?: string
     language?: string
+    grade_level?: number
   }): Promise<User> {
+    if (!db) throw new Error('Database not initialized')
+    
     const password_hash = await this.hashPassword(userData.password)
     
     const stmt = db.prepare(`
-      INSERT INTO users (email, password_hash, role, first_name, last_name, phone, language)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO users (email, password_hash, role, first_name, last_name, phone, language, grade_level)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `)
     
     const result = stmt.run(
@@ -73,13 +77,16 @@ export class AuthService {
       userData.first_name,
       userData.last_name,
       userData.phone || null,
-      userData.language || 'en'
+      userData.language || 'en',
+      userData.grade_level || null
     )
 
     return this.getUserById(result.lastInsertRowid as number)!
   }
 
   static async authenticate(email: string, password: string): Promise<User | null> {
+    if (!db) return null
+    
     const stmt = db.prepare(`
       SELECT * FROM users WHERE email = ? AND is_active = 1
     `)
@@ -102,8 +109,10 @@ export class AuthService {
   }
 
   static getUserById(id: number): User | null {
+    if (!db) return null
+    
     const stmt = db.prepare(`
-      SELECT id, email, role, first_name, last_name, phone, language, is_active, created_at, updated_at
+      SELECT id, email, role, first_name, last_name, phone, language, grade_level, is_active, created_at, updated_at
       FROM users WHERE id = ? AND is_active = 1
     `)
     
@@ -111,8 +120,10 @@ export class AuthService {
   }
 
   static getUserByEmail(email: string): User | null {
+    if (!db) return null
+    
     const stmt = db.prepare(`
-      SELECT id, email, role, first_name, last_name, phone, language, is_active, created_at, updated_at
+      SELECT id, email, role, first_name, last_name, phone, language, grade_level, is_active, created_at, updated_at
       FROM users WHERE email = ? AND is_active = 1
     `)
     
@@ -120,7 +131,9 @@ export class AuthService {
   }
 
   static async updateUser(id: number, updates: Partial<User>): Promise<User | null> {
-    const allowedFields = ['first_name', 'last_name', 'phone', 'language']
+    if (!db) return null
+    
+    const allowedFields = ['first_name', 'last_name', 'phone', 'language', 'grade_level']
     const updateFields = Object.keys(updates).filter(key => 
       allowedFields.includes(key) && updates[key as keyof User] !== undefined
     )
@@ -143,6 +156,8 @@ export class AuthService {
   }
 
   static async changePassword(id: number, currentPassword: string, newPassword: string): Promise<boolean> {
+    if (!db) return false
+    
     const stmt = db.prepare(`
       SELECT password_hash FROM users WHERE id = ? AND is_active = 1
     `)
@@ -172,6 +187,8 @@ export class AuthService {
   }
 
   static async linkStudentParent(studentId: number, parentId: number): Promise<void> {
+    if (!db) return
+    
     const stmt = db.prepare(`
       INSERT OR IGNORE INTO students_parents (student_id, parent_id)
       VALUES (?, ?)
@@ -181,8 +198,10 @@ export class AuthService {
   }
 
   static getStudentParents(studentId: number): User[] {
+    if (!db) return []
+    
     const stmt = db.prepare(`
-      SELECT u.id, u.email, u.role, u.first_name, u.last_name, u.phone, u.language, u.is_active, u.created_at, u.updated_at
+      SELECT u.id, u.email, u.role, u.first_name, u.last_name, u.phone, u.language, u.grade_level, u.is_active, u.created_at, u.updated_at
       FROM users u
       JOIN students_parents sp ON u.id = sp.parent_id
       WHERE sp.student_id = ? AND u.is_active = 1
@@ -192,8 +211,10 @@ export class AuthService {
   }
 
   static getParentStudents(parentId: number): User[] {
+    if (!db) return []
+    
     const stmt = db.prepare(`
-      SELECT u.id, u.email, u.role, u.first_name, u.last_name, u.phone, u.language, u.is_active, u.created_at, u.updated_at
+      SELECT u.id, u.email, u.role, u.first_name, u.last_name, u.phone, u.language, u.grade_level, u.is_active, u.created_at, u.updated_at
       FROM users u
       JOIN students_parents sp ON u.id = sp.student_id
       WHERE sp.parent_id = ? AND u.is_active = 1
