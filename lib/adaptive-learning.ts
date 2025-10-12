@@ -108,7 +108,8 @@ export class AdaptiveLearningEngine {
     studentId: number, 
     conceptId?: number, 
     difficulty?: number,
-    limit: number = 10
+    limit: number = 10,
+    gradeLevel?: number
   ): Promise<PracticeItem[]> {
     if (!db) return []
     
@@ -121,6 +122,11 @@ export class AdaptiveLearningEngine {
     
     const conditions = []
     const params = [studentId]
+
+    if (gradeLevel !== undefined) {
+      conditions.push('pi.grade_level = ?')
+      params.push(gradeLevel)
+    }
 
     if (conceptId) {
       conditions.push('pi.concept_id = ?')

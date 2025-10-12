@@ -7,13 +7,17 @@ export const GET = withAuth(async (req) => {
     const { searchParams } = new URL(req.url)
     const conceptId = searchParams.get('concept_id')
     const difficulty = searchParams.get('difficulty')
-    const limit = searchParams.get('limit') || '10'
+    const limit = searchParams.get('limit') || '20'
+    
+    // Use logged-in user's grade level
+    const userGradeLevel = req.user?.grade_level
 
     const practiceItems = await AdaptiveLearningEngine.getPracticeItems(
       req.user!.id,
       conceptId ? parseInt(conceptId) : undefined,
       difficulty ? parseInt(difficulty) : undefined,
-      parseInt(limit)
+      parseInt(limit),
+      userGradeLevel
     )
 
     return NextResponse.json({ practiceItems })

@@ -5,8 +5,8 @@ export interface AuthenticatedRequest extends NextRequest {
   user?: User
 }
 
-export function withAuth(handler: (req: AuthenticatedRequest) => Promise<NextResponse>) {
-  return async (req: NextRequest): Promise<NextResponse> => {
+export function withAuth(handler: (req: AuthenticatedRequest, context?: any) => Promise<NextResponse>) {
+  return async (req: NextRequest, context?: any): Promise<NextResponse> => {
     try {
       const token = req.headers.get('authorization')?.replace('Bearer ', '') ||
                    req.cookies.get('auth-token')?.value
@@ -30,7 +30,7 @@ export function withAuth(handler: (req: AuthenticatedRequest) => Promise<NextRes
       const authenticatedReq = req as AuthenticatedRequest
       authenticatedReq.user = user
 
-      return handler(authenticatedReq)
+      return handler(authenticatedReq, context)
     } catch (error) {
       return NextResponse.json({ error: 'Authentication failed' }, { status: 401 })
     }

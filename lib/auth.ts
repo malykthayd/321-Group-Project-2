@@ -11,6 +11,7 @@ export interface User {
   phone?: string
   language: string
   grade_level?: number
+  subject_area?: string
   is_active: boolean
   created_at: string
   updated_at: string
@@ -60,14 +61,15 @@ export class AuthService {
     phone?: string
     language?: string
     grade_level?: number
+    subject_area?: string
   }): Promise<User> {
     if (!db) throw new Error('Database not initialized')
     
     const password_hash = await this.hashPassword(userData.password)
     
     const stmt = db.prepare(`
-      INSERT INTO users (email, password_hash, role, first_name, last_name, phone, language, grade_level)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO users (email, password_hash, role, first_name, last_name, phone, language, grade_level, subject_area)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `)
     
     const result = stmt.run(
@@ -78,7 +80,8 @@ export class AuthService {
       userData.last_name,
       userData.phone || null,
       userData.language || 'en',
-      userData.grade_level || null
+      userData.grade_level || null,
+      userData.subject_area || null
     )
 
     return this.getUserById(result.lastInsertRowid as number)!
@@ -112,7 +115,7 @@ export class AuthService {
     if (!db) return null
     
     const stmt = db.prepare(`
-      SELECT id, email, role, first_name, last_name, phone, language, grade_level, is_active, created_at, updated_at
+      SELECT id, email, role, first_name, last_name, phone, language, grade_level, subject_area, is_active, created_at, updated_at
       FROM users WHERE id = ? AND is_active = 1
     `)
     
@@ -123,7 +126,7 @@ export class AuthService {
     if (!db) return null
     
     const stmt = db.prepare(`
-      SELECT id, email, role, first_name, last_name, phone, language, grade_level, is_active, created_at, updated_at
+      SELECT id, email, role, first_name, last_name, phone, language, grade_level, subject_area, is_active, created_at, updated_at
       FROM users WHERE email = ? AND is_active = 1
     `)
     

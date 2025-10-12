@@ -53,7 +53,9 @@ export default function LoginPage() {
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [gradeLevel, setGradeLevel] = useState('')
+  const [gradeLevel, setGradeLevel] = useState<number | ''>('')
+  const [phone, setPhone] = useState('')
+  const [subjectArea, setSubjectArea] = useState('')
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -89,7 +91,12 @@ export default function LoginPage() {
     }
 
     if (selectedRole === 'student' && !gradeLevel) {
-      toast.error('Please enter your grade level')
+      toast.error('Please select your grade level')
+      return
+    }
+
+    if (selectedRole === 'parent' && !phone) {
+      toast.error('Please enter your phone number')
       return
     }
 
@@ -107,7 +114,9 @@ export default function LoginPage() {
         role: selectedRole as 'student' | 'teacher' | 'parent' | 'admin',
         first_name: firstName,
         last_name: lastName,
-        grade_level: selectedRole === 'student' ? parseInt(gradeLevel) : undefined
+        grade_level: selectedRole === 'student' ? gradeLevel : undefined,
+        phone: selectedRole === 'parent' ? phone : undefined,
+        subject_area: selectedRole === 'teacher' ? subjectArea : undefined
       }
 
       const success = await register(userData)
@@ -125,68 +134,86 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50 flex items-center justify-center p-4">
-      <div className="max-w-5xl w-full">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Accessible Quality Education
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Decorative background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-primary-200/30 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-200/30 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-200/20 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="max-w-5xl w-full relative z-10 animate-fade-in">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary-500 to-purple-600 rounded-3xl shadow-xl mb-6 transform hover:rotate-6 transition-transform">
+            <BookOpen className="w-10 h-10 text-white" />
+          </div>
+          <h1 className="text-5xl md:text-6xl font-bold mb-4">
+            <span className="gradient-text">Accessible</span>
+            <br />
+            <span className="text-gray-900">Quality Education</span>
           </h1>
-          <p className="text-lg text-gray-600">
-            Personalized learning experiences designed for offline-capable education
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Personalized learning experiences designed for students of all levels
           </p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden border border-white/50">
           {/* Tabs */}
-          <div className="flex border-b">
+          <div className="flex bg-gray-50/50">
             <button
               onClick={() => setMode('login')}
-              className={`flex-1 py-4 px-6 text-center font-semibold transition-colors ${
+              className={`flex-1 py-5 px-8 text-center font-bold text-lg transition-all duration-300 relative ${
                 mode === 'login'
-                  ? 'text-primary-600 border-b-2 border-primary-600 bg-primary-50'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  ? 'text-primary-700 bg-white shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700 hover:bg-white/50'
               }`}
             >
+              {mode === 'login' && (
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 to-purple-500"></div>
+              )}
               Login
             </button>
             <button
               onClick={() => setMode('register')}
-              className={`flex-1 py-4 px-6 text-center font-semibold transition-colors ${
+              className={`flex-1 py-5 px-8 text-center font-bold text-lg transition-all duration-300 relative ${
                 mode === 'register'
-                  ? 'text-primary-600 border-b-2 border-primary-600 bg-primary-50'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  ? 'text-primary-700 bg-white shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700 hover:bg-white/50'
               }`}
             >
+              {mode === 'register' && (
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 to-purple-500"></div>
+              )}
               Create Account
             </button>
           </div>
 
-          <div className="p-8">
+          <div className="p-10 bg-white">
             {mode === 'login' ? (
               <form onSubmit={handleLogin} className="space-y-6 max-w-md mx-auto">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Email
+                <div className="space-y-2">
+                  <label className="label">
+                    Email Address
                   </label>
                   <input
                     type="email"
                     value={loginEmail}
                     onChange={(e) => setLoginEmail(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="input"
                     placeholder="your.email@example.com"
                     required
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div className="space-y-2">
+                  <label className="label">
                     Password
                   </label>
                   <input
                     type="password"
                     value={loginPassword}
                     onChange={(e) => setLoginPassword(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="input"
                     placeholder="••••••••"
                     required
                   />
@@ -195,104 +222,112 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full btn btn-primary py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full btn btn-primary py-4 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isLoading ? 'Logging in...' : 'Login'}
+                  {isLoading ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      Logging in...
+                    </span>
+                  ) : 'Login'}
                 </button>
 
-                <div className="text-center text-sm text-gray-600 mt-4">
-                  <p className="mb-2">Demo accounts:</p>
-                  <p>student@demo.com / demo123</p>
-                  <p>teacher@demo.com / demo123</p>
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gray-200"></div>
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="px-4 bg-white text-gray-500 font-medium">Demo Accounts</span>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 border border-blue-100">
+                  <p className="text-xs font-semibold text-gray-600 mb-2">Try these credentials:</p>
+                  <div className="space-y-1 text-sm">
+                    <p className="font-mono text-gray-800">📚 malyk@example.com / password123</p>
+                    <p className="font-mono text-gray-800">👨‍🏫 teacher@example.com / password123</p>
+                    <p className="font-mono text-gray-800">👨‍👩‍👧‍👦 parent@example.com / password123</p>
+                    <p className="font-mono text-gray-800">⚙️ admin@aqe.com / admin123</p>
+                  </div>
                 </div>
               </form>
             ) : (
               <form onSubmit={handleRegister} className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                <div className="space-y-2">
+                  <label className="label">
                     Select Your Role <span className="text-red-500">*</span>
                   </label>
-                  <div className="grid grid-cols-2 gap-4">
-                    {roles.map((role) => {
-                      const Icon = role.icon
-                      return (
-                        <button
-                          key={role.id}
-                          type="button"
-                          onClick={() => setSelectedRole(role.id)}
-                          className={`p-4 rounded-lg border-2 transition-all duration-200 text-left ${
-                            selectedRole === role.id
-                              ? 'border-primary-500 bg-primary-50'
-                              : 'border-gray-200 hover:border-gray-300'
-                          }`}
-                        >
-                          <div className="flex items-center space-x-3">
-                            <div className={`p-2 rounded-lg ${role.color} text-white`}>
-                              <Icon className="w-5 h-5" />
-                            </div>
-                            <div>
-                              <h3 className="font-semibold text-gray-900">{role.name}</h3>
-                            </div>
-                          </div>
-                        </button>
-                      )
-                    })}
-                  </div>
+                  <select
+                    value={selectedRole}
+                    onChange={(e) => setSelectedRole(e.target.value)}
+                    className="input"
+                    required
+                  >
+                    <option value="">Choose your role...</option>
+                    {roles.map((role) => (
+                      <option key={role.id} value={role.id}>
+                        {role.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <div className="space-y-2">
+                    <label className="label">
                       First Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="input"
                       placeholder="John"
                       required
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <div className="space-y-2">
+                    <label className="label">
                       Last Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="input"
                       placeholder="Doe"
                       required
                     />
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Email <span className="text-red-500">*</span>
+                <div className="space-y-2">
+                  <label className="label">
+                    Email Address <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="input"
                     placeholder="your.email@example.com"
                     required
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div className="space-y-2">
+                  <label className="label">
                     Password <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="input"
                     placeholder="At least 6 characters"
                     required
                     minLength={6}
@@ -300,33 +335,79 @@ export default function LoginPage() {
                 </div>
 
                 {selectedRole === 'student' && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <div className="space-y-2">
+                    <label className="label">
                       Grade Level <span className="text-red-500">*</span>
                     </label>
                     <select
                       value={gradeLevel}
-                      onChange={(e) => setGradeLevel(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      onChange={(e) => setGradeLevel(parseInt(e.target.value))}
+                      className="input"
                       required
                     >
-                      <option value="">Select grade level</option>
+                      <option value="">Select your grade...</option>
                       <option value="0">Kindergarten</option>
-                      {[1, 2, 3, 4, 5, 6].map((grade) => (
-                        <option key={grade} value={grade}>
-                          Grade {grade}
-                        </option>
-                      ))}
+                      <option value="1">1st Grade</option>
+                      <option value="2">2nd Grade</option>
+                      <option value="3">3rd Grade</option>
+                      <option value="4">4th Grade</option>
+                      <option value="5">5th Grade</option>
+                      <option value="6">6th Grade</option>
                     </select>
                   </div>
                 )}
 
+                {selectedRole === 'parent' && (
+                  <div className="space-y-2">
+                    <label className="label">
+                      Phone Number <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="input"
+                      placeholder="+1 (555) 123-4567"
+                      required
+                    />
+                  </div>
+                )}
+
+                {selectedRole === 'teacher' && (
+                  <div className="space-y-2">
+                    <label className="label">
+                      Subject Area (Optional)
+                    </label>
+                    <select
+                      value={subjectArea}
+                      onChange={(e) => setSubjectArea(e.target.value)}
+                      className="input"
+                    >
+                      <option value="">Select subject area...</option>
+                      <option value="Mathematics">Mathematics</option>
+                      <option value="Science">Science</option>
+                      <option value="English">English</option>
+                      <option value="Technology">Technology</option>
+                      <option value="General">General/All Subjects</option>
+                    </select>
+                  </div>
+                )}
+
+
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full btn btn-primary py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full btn btn-primary py-4 text-lg disabled:opacity-50 disabled:cursor-not-allowed mt-8"
                 >
-                  {isLoading ? 'Creating Account...' : 'Create Account'}
+                  {isLoading ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      Creating Account...
+                    </span>
+                  ) : '✨ Create Account'}
                 </button>
               </form>
             )}

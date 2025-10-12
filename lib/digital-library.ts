@@ -284,10 +284,10 @@ export class DigitalLibraryService {
     return stmt.all(...params) as Book[]
   }
 
-  static async addBook(bookData: Omit<Book, 'id' | 'created_at'>): Promise<number> {
+  static async addBook(bookData: Omit<Book, 'id' | 'created_at'> & { content?: string }): Promise<number> {
     const stmt = db.prepare(`
-      INSERT INTO books (title, author, isbn, grade_level, subject, language, file_path, cover_image, description, is_available)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO books (title, author, isbn, grade_level, subject, language, file_path, cover_image, description, content, is_available)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `)
 
     const result = stmt.run(
@@ -300,6 +300,7 @@ export class DigitalLibraryService {
       bookData.file_path || null,
       bookData.cover_image || null,
       bookData.description || null,
+      (bookData as any).content || null,
       bookData.is_available ? 1 : 0
     )
 

@@ -5,7 +5,6 @@ import { TranslationService } from '../lib/translations.js'
 import { AdaptiveLearningEngine } from '../lib/adaptive-learning.js'
 import { db } from '../lib/database.js'
 import { generateLessonContent } from './lesson-content.js'
-import { generateAllBooks } from './comprehensive-books.js'
 
 async function seedDatabase() {
   console.log('Starting database seeding...')
@@ -295,46 +294,42 @@ async function seedDatabase() {
     }
     console.log(`Inserted ${practiceQuestions.length} practice questions into database`)
 
-    // Create comprehensive books for all subjects and grades
+    // Create some sample books
     console.log('Creating books...')
-    const books = generateAllBooks()
-    console.log(`Generated ${books.length} books total (2 per subject per grade K-6)`)
-    
-    for (const book of books) {
-      await DigitalLibraryService.addBook({
-        title: book.title,
-        author: book.author,
-        isbn: book.isbn,
-        grade_level: book.grade_level,
-        subject: book.subject,
+    const books = [
+      {
+        title: 'The Magic Tree House',
+        author: 'Mary Pope Osborne',
+        isbn: '9780679824114',
+        genre: 'Fantasy',
+        grade_level: 2,
         language: 'en',
-        description: book.description,
-        content: book.content,
-        is_available: true
-      } as any)
+        available_copies: 3
+      },
+      {
+        title: 'Charlotte\'s Web',
+        author: 'E.B. White',
+        isbn: '9780064400558',
+        genre: 'Classic',
+        grade_level: 3,
+        language: 'en',
+        available_copies: 2
+      },
+      {
+        title: 'The Cat in the Hat',
+        author: 'Dr. Seuss',
+        isbn: '9780394800011',
+        genre: 'Children\'s',
+        grade_level: 1,
+        language: 'en',
+        available_copies: 5
+      }
+    ]
+
+    for (const book of books) {
+      await DigitalLibraryService.addBook(book)
     }
     console.log(`Created ${books.length} books`)
-    
-    // Create comprehension questions for each book
-    console.log('Creating book comprehension questions...')
-    for (const book of books) {
-      for (const question of book.questions) {
-        db.prepare(`
-          INSERT OR IGNORE INTO practice_items (question, options, correct_answer, explanation, difficulty_level, grade_level, subject, lesson_id)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        `).run(
-          `[Book: ${book.title}] ${question.q}`,
-          JSON.stringify(question.opts),
-          question.ans,
-          question.exp,
-          1, // difficulty_level
-          book.grade_level,
-          book.subject,
-          null // lesson_id (these are book questions, not lesson questions)
-        )
-      }
-    }
-    console.log(`Created comprehension questions for all books`)
 
     console.log('Database seeding completed successfully!')
     console.log('\nDemo accounts created:')

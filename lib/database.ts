@@ -59,6 +59,7 @@ export function createTables(): void {
         last_name TEXT NOT NULL,
         phone TEXT,
         language TEXT DEFAULT 'en',
+        grade_level INTEGER,
         is_active BOOLEAN DEFAULT 1,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -236,6 +237,8 @@ export function createTables(): void {
         lesson_id INTEGER,
         concept_id INTEGER,
         difficulty_level INTEGER DEFAULT 1,
+        grade_level INTEGER,
+        subject TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE SET NULL,
         FOREIGN KEY (concept_id) REFERENCES concepts(id) ON DELETE SET NULL

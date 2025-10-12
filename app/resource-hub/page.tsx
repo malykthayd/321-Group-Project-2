@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '@/components/AuthProvider'
 import { useRouter } from 'next/navigation'
 import { LessonCard } from '@/components/LessonCard'
+import { PracticeQuiz } from '@/components/PracticeQuiz'
 import { 
   BookOpen, 
   BarChart3, 
@@ -16,6 +17,7 @@ import {
   CheckCircle,
   AlertCircle
 } from 'lucide-react'
+import toast from 'react-hot-toast'
 import { Line, Bar, Doughnut } from 'react-chartjs-2'
 import {
   Chart as ChartJS,
@@ -76,8 +78,12 @@ interface DashboardData {
   }
 }
 
+// Simple cache to avoid refetching on every refresh
+const dataCache: { [key: string]: { data: any; timestamp: number } } = {}
+const CACHE_DURATION = 60000 // 1 minute
+
 export default function ResourceHub() {
-  const { user, logout } = useAuth()
+  const { user, logout, loading: authLoading } = useAuth()
   const router = useRouter()
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -87,17 +93,38 @@ export default function ResourceHub() {
   const [lessons, setLessons] = useState<any[]>([])
   const [subjects, setSubjects] = useState<string[]>([])
   const [selectedSubject, setSelectedSubject] = useState<string>('All')
+  const [bookFilter, setBookFilter] = useState<'all' | 'available' | 'checked-out'>('all')
 
   useEffect(() => {
-    if (!user) {
+    if (!authLoading && !user) {
       router.push('/')
       return
     }
-    loadDashboardData()
-  }, [user, router])
+    if (!authLoading && user) {
+      loadDashboardData()
+    }
+  }, [user, authLoading, router])
 
   const loadDashboardData = async () => {
     try {
+      setLoading(true)
+      
+      // Check cache first
+      const cacheKey = `dashboard-${user?.id}`
+      const cached = dataCache[cacheKey]
+      const now = Date.now()
+      
+      if (cached && (now - cached.timestamp) < CACHE_DURATION) {
+        // Use cached data
+        setBooks(cached.data.books)
+        setPracticeItems(cached.data.practiceItems)
+        setLessons(cached.data.lessons)
+        setSubjects(cached.data.subjects)
+        setDashboardData(cached.data.dashboardData)
+        setLoading(false)
+        return
+      }
+      
       // Fetch real data from API
       const [booksRes, practiceRes, progressRes, lessonsRes, subjectsRes] = await Promise.all([
         fetch('/api/books', { credentials: 'include' }).catch(() => null),
@@ -114,10 +141,15 @@ export default function ResourceHub() {
       const subjectsData = subjectsRes && subjectsRes.ok ? await subjectsRes.json() : { subjects: [] }
 
       // Set data
-      setBooks(booksData.books || [])
-      setPracticeItems(practiceData.practiceItems || [])
-      setLessons(lessonsData.lessons || [])
-      setSubjects(['All', ...(subjectsData.subjects || [])])
+      const booksArray = booksData.books || []
+      const practiceArray = practiceData.practiceItems || []
+      const lessonsArray = lessonsData.lessons || []
+      const subjectsArray = ['All', ...(subjectsData.subjects || [])]
+      
+      setBooks(booksArray)
+      setPracticeItems(practiceArray)
+      setLessons(lessonsArray)
+      setSubjects(subjectsArray)
 
       const mockData: DashboardData = {
         stats: {
@@ -192,10 +224,52 @@ export default function ResourceHub() {
       }
       
       setDashboardData(mockData)
+      
+      // Cache the data for faster reloads
+      dataCache[cacheKey] = {
+        data: {
+          books: booksArray,
+          practiceItems: practiceArray,
+          lessons: lessonsArray,
+          subjects: subjectsArray,
+          dashboardData: mockData
+        },
+        timestamp: now
+      }
     } catch (error) {
       console.error('Failed to load dashboard data:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleCheckoutBook = async (bookId: number) => {
+    try {
+      const response = await fetch('/api/books/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ bookId })
+      })
+
+      if (response.ok) {
+        toast.success('Book checked out successfully! Click "View Book" to start reading.')
+        
+        // Immediately update the local state to show the book as checked out
+        setBooks(prevBooks => 
+          prevBooks.map(book => 
+            book.id === bookId 
+              ? { ...book, is_checked_out: true }
+              : book
+          )
+        )
+      } else {
+        const error = await response.json()
+        toast.error(error.error || 'Failed to checkout book')
+      }
+    } catch (error) {
+      console.error('Failed to checkout book:', error)
+      toast.error('An error occurred while checking out the book')
     }
   }
 
@@ -225,12 +299,35 @@ export default function ResourceHub() {
     }
   }
 
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30 flex items-center justify-center">
+        <div className="text-center">
+          <div className="relative">
+            <div className="w-20 h-20 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin mx-auto mb-6"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <BookOpen className="w-8 h-8 text-primary-600 animate-pulse" />
+            </div>
+          </div>
+          <p className="text-gray-700 font-semibold text-lg">Checking authentication...</p>
+          <p className="text-gray-500 text-sm mt-2">Please wait while we verify your session</p>
+        </div>
+      </div>
+    )
+  }
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your dashboard...</p>
+          <div className="relative">
+            <div className="w-20 h-20 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin mx-auto mb-6"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <BookOpen className="w-8 h-8 text-primary-600 animate-pulse" />
+            </div>
+          </div>
+          <p className="text-gray-700 font-semibold text-lg">Loading your dashboard...</p>
+          <p className="text-gray-500 text-sm mt-2">Getting everything ready for you</p>
         </div>
       </div>
     )
@@ -238,32 +335,53 @@ export default function ResourceHub() {
 
   if (!dashboardData) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-600">Failed to load dashboard data</p>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30 flex items-center justify-center">
+        <div className="text-center card max-w-md">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
+            <AlertCircle className="w-8 h-8 text-red-600" />
+          </div>
+          <p className="text-gray-900 font-bold text-lg mb-2">Oops! Something went wrong</p>
+          <p className="text-gray-600 mb-4">Failed to load dashboard data</p>
+          <button onClick={() => window.location.reload()} className="btn btn-primary">
+            Try Again
+          </button>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="glass-effect border-b border-gray-200/50 sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Resource Hub</h1>
-              <p className="text-gray-600">Welcome back, {user?.first_name}!</p>
+          <div className="flex justify-between items-center py-5">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                <BookOpen className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold gradient-text">Learning Hub</h1>
+                <p className="text-sm text-gray-600">Welcome back, <span className="font-semibold text-gray-900">{user?.first_name}</span>! 👋</p>
+              </div>
             </div>
             <div className="flex items-center space-x-4">
-              <div className="text-right">
-                <p className="text-sm font-medium text-gray-900">{user?.first_name} {user?.last_name}</p>
-                <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+              <div className="hidden sm:block text-right bg-white/60 backdrop-blur-sm px-4 py-2 rounded-xl border border-gray-200/50">
+                <p className="text-sm font-bold text-gray-900">{user?.first_name} {user?.last_name}</p>
+                <p className="text-xs text-gray-600 capitalize flex items-center gap-1">
+                  {user?.role === 'student' && '🎓'}
+                  {user?.role === 'teacher' && '👨‍🏫'}
+                  {user?.role === 'parent' && '👪'}
+                  {user?.role === 'admin' && '⚙️'}
+                  {user?.role}
+                  {user?.grade_level !== undefined && user?.grade_level !== null && (
+                    <span className="ml-1">• Grade {user.grade_level === 0 ? 'K' : user.grade_level}</span>
+                  )}
+                </p>
               </div>
               <button
                 onClick={logout}
-                className="btn btn-secondary text-sm"
+                className="btn btn-secondary text-sm px-5"
               >
                 Logout
               </button>
@@ -272,88 +390,94 @@ export default function ResourceHub() {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="card">
-            <div className="flex items-center">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <BookOpen className="w-6 h-6 text-blue-600" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Lessons</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {dashboardData.stats.completedLessons}/{dashboardData.stats.totalLessons}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+          <div className="stat-card group bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm font-semibold text-blue-700 mb-1">Total Lessons</p>
+                <p className="text-3xl font-black text-blue-900">
+                  {dashboardData.stats.completedLessons}<span className="text-xl text-blue-600">/{dashboardData.stats.totalLessons}</span>
+                </p>
+                <p className="text-xs text-blue-600 mt-1">
+                  {dashboardData.stats.totalLessons > 0 ? Math.round((dashboardData.stats.completedLessons / dashboardData.stats.totalLessons) * 100) : 0}% Complete
                 </p>
               </div>
+              <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-lg group-hover:scale-110 transition-transform">
+                <BookOpen className="w-7 h-7 text-white" />
+              </div>
             </div>
           </div>
 
-          <div className="card">
-            <div className="flex items-center">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <FileText className="w-6 h-6 text-green-600" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Books</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {dashboardData.stats.checkedOutBooks}/{dashboardData.stats.totalBooks}
+          <div className="stat-card group bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm font-semibold text-green-700 mb-1">Books Read</p>
+                <p className="text-3xl font-black text-green-900">
+                  {dashboardData.stats.checkedOutBooks}<span className="text-xl text-green-600">/{dashboardData.stats.totalBooks}</span>
                 </p>
+                <p className="text-xs text-green-600 mt-1">Keep reading!</p>
+              </div>
+              <div className="p-3 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-lg group-hover:scale-110 transition-transform">
+                <FileText className="w-7 h-7 text-white" />
               </div>
             </div>
           </div>
 
-          <div className="card">
-            <div className="flex items-center">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <Award className="w-6 h-6 text-purple-600" />
+          <div className="stat-card group bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm font-semibold text-purple-700 mb-1">Achievements</p>
+                <p className="text-3xl font-black text-purple-900">{dashboardData.stats.badges}</p>
+                <p className="text-xs text-purple-600 mt-1">Badges earned</p>
               </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Badges</p>
-                <p className="text-2xl font-bold text-gray-900">{dashboardData.stats.badges}</p>
+              <div className="p-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-lg group-hover:scale-110 transition-transform">
+                <Award className="w-7 h-7 text-white" />
               </div>
             </div>
           </div>
 
-          <div className="card">
-            <div className="flex items-center">
-              <div className="p-2 bg-orange-100 rounded-lg">
-                <TrendingUp className="w-6 h-6 text-orange-600" />
+          <div className="stat-card group bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm font-semibold text-orange-700 mb-1">Learning Streak</p>
+                <p className="text-3xl font-black text-orange-900">{dashboardData.stats.streak}</p>
+                <p className="text-xs text-orange-600 mt-1">Days in a row 🔥</p>
               </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Streak</p>
-                <p className="text-2xl font-bold text-gray-900">{dashboardData.stats.streak} days</p>
+              <div className="p-3 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl shadow-lg group-hover:scale-110 transition-transform">
+                <TrendingUp className="w-7 h-7 text-white" />
               </div>
             </div>
           </div>
         </div>
 
         {/* Navigation Tabs */}
-        <div className="mb-8">
-          <nav className="flex space-x-8">
+        <div className="mb-10">
+          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-2 shadow-lg border border-gray-200/50 inline-flex gap-2">
             {[
               { id: 'lessons', label: 'My Lessons', icon: BookOpen },
               { id: 'library', label: 'Digital Library', icon: FileText },
-              { id: 'progress', label: 'Progress & Insights', icon: BarChart3 },
-              { id: 'practice', label: 'Practice Materials', icon: Target }
+              { id: 'progress', label: 'Progress', icon: BarChart3 },
+              { id: 'practice', label: 'Practice', icon: Target }
             ].map((tab) => {
               const Icon = tab.icon
               return (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center space-x-2 py-2 px-1 border-b-2 font-medium text-sm ${
+                  className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 ${
                     activeTab === tab.id
-                      ? 'border-primary-500 text-primary-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      ? 'bg-gradient-to-r from-primary-600 to-purple-600 text-white shadow-md scale-105'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-white/80'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
-                  <span>{tab.label}</span>
+                  <Icon className="w-5 h-5" />
+                  <span className="hidden sm:inline">{tab.label}</span>
                 </button>
               )
             })}
-          </nav>
+          </div>
         </div>
 
         {/* Tab Content */}
@@ -363,37 +487,56 @@ export default function ResourceHub() {
             {activeTab === 'lessons' && (
               <div className="space-y-6">
                 <div className="card">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-gray-900">Available Lessons</h3>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                    <div>
+                      <h3 className="text-2xl font-bold text-gray-900 mb-1">Your Lessons</h3>
+                      <p className="text-sm text-gray-600">
+                        {lessons.filter((lesson) => selectedSubject === 'All' || lesson.subject === selectedSubject).length} lessons available
+                      </p>
+                    </div>
                     {subjects.length > 0 && (
                       <div className="flex gap-2 flex-wrap">
                         {subjects.map((subject) => (
                           <button
                             key={subject}
                             onClick={() => setSelectedSubject(subject)}
-                            className={`px-3 py-1 rounded-full text-xs border transition-colors ${
+                            className={`px-4 py-2 rounded-xl text-sm font-semibold border-2 transition-all duration-300 ${
                               selectedSubject === subject
-                                ? 'bg-blue-600 text-white border-blue-600'
-                                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                                ? 'bg-gradient-to-r from-primary-600 to-purple-600 text-white border-transparent shadow-lg scale-105'
+                                : 'bg-white text-gray-700 border-gray-200 hover:border-primary-300 hover:shadow-md'
                             }`}
                           >
-                            {subject}
+                            {subject === 'All' && '📚'}
+                            {subject === 'Mathematics' && '🔢'}
+                            {subject === 'English' && '📖'}
+                            {subject === 'Science' && '🔬'}
+                            {subject === 'Technology' && '💻'}
+                            <span className="ml-1.5">{subject}</span>
                           </button>
                         ))}
                       </div>
                     )}
                   </div>
                   {lessons.length === 0 ? (
-                    <p className="text-gray-600">No lessons available</p>
+                    <div className="text-center py-12">
+                      <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
+                        <BookOpen className="w-8 h-8 text-gray-400" />
+                      </div>
+                      <p className="text-gray-600 font-medium">No lessons available yet</p>
+                      <p className="text-sm text-gray-500 mt-1">Check back soon for new content!</p>
+                    </div>
                   ) : (
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                       {lessons
                         .filter((lesson) => selectedSubject === 'All' || lesson.subject === selectedSubject)
                         .map((lesson) => (
                           <LessonCard key={lesson.id} lesson={lesson} />
                         ))}
                       {lessons.filter((lesson) => selectedSubject === 'All' || lesson.subject === selectedSubject).length === 0 && (
-                        <p className="text-gray-600 text-sm">No lessons found for {selectedSubject}</p>
+                        <div className="text-center py-12">
+                          <p className="text-gray-600 font-medium">No lessons found for {selectedSubject}</p>
+                          <p className="text-sm text-gray-500 mt-1">Try selecting a different subject</p>
+                        </div>
                       )}
                     </div>
                   )}
@@ -439,31 +582,113 @@ export default function ResourceHub() {
             {activeTab === 'library' && (
               <div className="space-y-4">
                 <div className="card">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Digital Library</h3>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                    <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                      <span className="text-3xl">📚</span>
+                      Digital Library
+                    </h3>
+                    <div className="flex gap-2 flex-wrap">
+                      {[
+                        { id: 'all', label: 'All Books', icon: '📚' },
+                        { id: 'available', label: 'Available', icon: '✅' },
+                        { id: 'checked-out', label: 'Checked Out', icon: '📖' }
+                      ].map((filter) => (
+                        <button
+                          key={filter.id}
+                          onClick={() => setBookFilter(filter.id as any)}
+                          className={`px-4 py-2 rounded-xl text-sm font-semibold border-2 transition-all duration-300 ${
+                            bookFilter === filter.id
+                              ? 'bg-gradient-to-r from-primary-600 to-purple-600 text-white border-transparent shadow-lg scale-105'
+                              : 'bg-white text-gray-700 border-gray-200 hover:border-primary-300 hover:shadow-md'
+                          }`}
+                        >
+                          <span className="mr-1.5">{filter.icon}</span>
+                          {filter.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Book Count Display */}
+                  <div className="mb-4 text-sm text-gray-600">
+                    {bookFilter === 'all' && `Showing ${books.length} books total`}
+                    {bookFilter === 'available' && `Showing ${books.filter(b => !b.is_checked_out).length} available books`}
+                    {bookFilter === 'checked-out' && `Showing ${books.filter(b => b.is_checked_out).length} checked-out books`}
+                  </div>
+                  
                   {books.length === 0 ? (
-                    <p className="text-gray-600">No books available</p>
+                    <div className="text-center py-12">
+                      <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
+                        <FileText className="w-8 h-8 text-gray-400" />
+                      </div>
+                      <p className="text-gray-600 font-medium">No books available yet</p>
+                    </div>
                   ) : (
-                    <div className="grid gap-4">
-                      {books.map((book) => (
-                        <div key={book.id} className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <h4 className="font-semibold text-gray-900">{book.title}</h4>
-                              <p className="text-sm text-gray-600">by {book.author}</p>
-                              <div className="flex gap-2 mt-2">
-                                <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">{book.subject}</span>
-                                <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">Grade {book.grade_level}</span>
+                    <div className="grid gap-5">
+                      {books
+                        .filter((book) => {
+                          if (bookFilter === 'all') return true
+                          if (bookFilter === 'available') return !book.is_checked_out
+                          if (bookFilter === 'checked-out') return book.is_checked_out
+                          return true
+                        })
+                        .map((book) => (
+                        <div key={book.id} className="group relative">
+                          <div className="absolute -inset-0.5 bg-gradient-to-r from-green-400 to-blue-500 rounded-2xl opacity-0 group-hover:opacity-100 blur transition-opacity"></div>
+                          <div className="relative p-5 border-2 border-gray-200 rounded-2xl bg-white hover:border-transparent transition-all">
+                            <div className="flex items-start justify-between gap-4">
+                              <div className="flex-1">
+                                <h4 className="font-bold text-lg text-gray-900 mb-1">{book.title}</h4>
+                                <p className="text-sm text-gray-600 mb-3">by <span className="font-semibold">{book.author}</span></p>
+                                <div className="flex gap-2 mb-3 flex-wrap">
+                                  <span className="badge badge-primary">{book.subject}</span>
+                                  <span className="badge badge-gray">{book.grade_level === 0 ? 'Kindergarten' : `Grade ${book.grade_level}`}</span>
+                                </div>
+                                {book.description && (
+                                  <p className="text-sm text-gray-600 leading-relaxed">{book.description}</p>
+                                )}
                               </div>
-                              {book.description && (
-                                <p className="text-sm text-gray-600 mt-2">{book.description}</p>
+                              {book.is_checked_out ? (
+                                <button 
+                                  onClick={() => router.push(`/book/${book.id}`)}
+                                  className="btn btn-primary text-sm ml-4 whitespace-nowrap"
+                                >
+                                  📖 View Book
+                                </button>
+                              ) : (
+                                <button 
+                                  onClick={() => handleCheckoutBook(book.id)}
+                                  className="btn btn-success text-sm ml-4 whitespace-nowrap"
+                                >
+                                  ✓ Checkout
+                                </button>
                               )}
                             </div>
-                            <button className="btn btn-primary text-sm ml-4">
-                              {book.is_available ? 'Checkout' : 'Checked Out'}
-                            </button>
                           </div>
                         </div>
                       ))}
+                      {books.filter((book) => {
+                        if (bookFilter === 'all') return true
+                        if (bookFilter === 'available') return !book.is_checked_out
+                        if (bookFilter === 'checked-out') return book.is_checked_out
+                        return true
+                      }).length === 0 && (
+                        <div className="text-center py-12">
+                          <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
+                            <FileText className="w-8 h-8 text-gray-400" />
+                          </div>
+                          <p className="text-gray-600 font-medium">
+                            {bookFilter === 'available' && 'No books available for checkout'}
+                            {bookFilter === 'checked-out' && 'No books currently checked out'}
+                            {bookFilter === 'all' && 'No books found'}
+                          </p>
+                          <p className="text-sm text-gray-500 mt-1">
+                            {bookFilter === 'available' && 'Check back later for new books!'}
+                            {bookFilter === 'checked-out' && 'Check out some books from the library to start reading!'}
+                            {bookFilter === 'all' && 'Try selecting a different filter'}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -485,34 +710,44 @@ export default function ResourceHub() {
             )}
 
             {activeTab === 'practice' && (
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div className="card">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Practice Materials</h3>
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h3 className="text-2xl font-bold text-gray-900 mb-1 flex items-center gap-2">
+                        <span className="text-3xl">🎯</span>
+                        Practice Quiz
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        {practiceItems.length} questions for your grade level
+                      </p>
+                    </div>
+                  </div>
+                  
                   {practiceItems.length === 0 ? (
-                    <p className="text-gray-600">No practice items available</p>
+                    <div className="text-center py-16">
+                      <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full mb-4">
+                        <Target className="w-10 h-10 text-purple-600" />
+                      </div>
+                      <p className="text-gray-900 font-bold text-lg mb-2">No practice questions yet</p>
+                      <p className="text-gray-600">Check back soon for new practice materials!</p>
+                    </div>
                   ) : (
-                    <div className="space-y-4">
+                    <div className="space-y-6">
                       {practiceItems.map((item, idx) => (
-                        <div key={item.id || idx} className="p-4 border border-gray-200 rounded-lg">
-                          <div className="flex items-start justify-between mb-3">
-                            <h4 className="font-medium text-gray-900">Question {idx + 1}</h4>
-                            <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded">
-                              Level {item.difficulty_level || 1}
-                            </span>
-                          </div>
-                          <p className="text-gray-700 mb-3">{item.question}</p>
-                          {item.options && typeof item.options === 'string' && (
-                            <div className="space-y-2">
-                              {JSON.parse(item.options).map((option: string, optIdx: number) => (
-                                <div key={optIdx} className="flex items-center space-x-2 p-2 bg-gray-50 rounded">
-                                  <span className="font-medium text-gray-600">{String.fromCharCode(65 + optIdx)}.</span>
-                                  <span className="text-gray-700">{option}</span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                          <button className="btn btn-primary text-sm mt-3">Start Practice</button>
-                        </div>
+                        <PracticeQuiz
+                          key={item.id || idx}
+                          question={{
+                            id: item.id,
+                            question: item.question,
+                            options: Array.isArray(item.options) ? item.options : JSON.parse(item.options || '[]'),
+                            correct_answer: item.correct_answer,
+                            explanation: item.explanation || 'No explanation available.',
+                            subject: item.subject || 'General',
+                            difficulty_level: item.difficulty_level || 1
+                          }}
+                          questionNumber={idx + 1}
+                        />
                       ))}
                     </div>
                   )}
@@ -523,36 +758,58 @@ export default function ResourceHub() {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            <div className="card">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
-              <div className="space-y-2">
-                <button className="w-full btn btn-primary text-left">
-                  Start New Lesson
+            <div className="card bg-gradient-to-br from-primary-50 to-purple-50 border-primary-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-5 flex items-center gap-2">
+                <span className="text-2xl">⚡</span>
+                Quick Actions
+              </h3>
+              <div className="space-y-3">
+                <button 
+                  onClick={() => setActiveTab('lessons')}
+                  className="w-full btn btn-primary text-left justify-between group"
+                >
+                  <span>Start New Lesson</span>
+                  <BookOpen className="w-5 h-5 group-hover:scale-110 transition-transform" />
                 </button>
-                <button className="w-full btn btn-secondary text-left">
-                  Browse Library
+                <button 
+                  onClick={() => setActiveTab('library')}
+                  className="w-full btn btn-secondary text-left justify-between group hover:bg-gradient-to-r hover:from-green-50 hover:to-green-100 hover:border-green-300"
+                >
+                  <span>Browse Library</span>
+                  <FileText className="w-5 h-5 group-hover:scale-110 transition-transform" />
                 </button>
-                <button className="w-full btn btn-secondary text-left">
-                  Take Practice Quiz
+                <button 
+                  onClick={() => setActiveTab('practice')}
+                  className="w-full btn btn-secondary text-left justify-between group hover:bg-gradient-to-r hover:from-orange-50 hover:to-orange-100 hover:border-orange-300"
+                >
+                  <span>Take Practice Quiz</span>
+                  <Target className="w-5 h-5 group-hover:scale-110 transition-transform" />
                 </button>
               </div>
             </div>
 
-            <div className="card">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Achievements</h3>
-              <div className="space-y-3">
-                <div className="flex items-center space-x-3">
-                  <Award className="w-5 h-5 text-yellow-500" />
-                  <div>
-                    <p className="font-medium text-gray-900">Reading Champion</p>
-                    <p className="text-sm text-gray-500">Completed 10 books</p>
+            <div className="card bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-5 flex items-center gap-2">
+                <span className="text-2xl">🏆</span>
+                Achievements
+              </h3>
+              <div className="space-y-4">
+                <div className="flex items-start space-x-3 p-3 bg-white/60 rounded-xl border border-yellow-200">
+                  <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-xl flex items-center justify-center shadow-md">
+                    <Award className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-bold text-gray-900">Reading Champion</p>
+                    <p className="text-xs text-gray-600">Completed 10 books</p>
                   </div>
                 </div>
-                <div className="flex items-center space-x-3">
-                  <Target className="w-5 h-5 text-green-500" />
-                  <div>
-                    <p className="font-medium text-gray-900">Math Master</p>
-                    <p className="text-sm text-gray-500">Perfect score on 5 quizzes</p>
+                <div className="flex items-start space-x-3 p-3 bg-white/60 rounded-xl border border-green-200">
+                  <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-green-500 rounded-xl flex items-center justify-center shadow-md">
+                    <Target className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-bold text-gray-900">Math Master</p>
+                    <p className="text-xs text-gray-600">Perfect score on 5 quizzes</p>
                   </div>
                 </div>
               </div>
