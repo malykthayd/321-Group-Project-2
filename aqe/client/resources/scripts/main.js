@@ -147,6 +147,33 @@ class AQEPlatform {
 
     // Show/hide student metrics based on user role
     this.updateRoleBasedVisibility();
+
+    // Initialize role-specific managers
+    if (this.currentUser.role === 'teacher' && !window.teacherManager) {
+      setTimeout(() => {
+        if (window.TeacherManager) {
+          window.teacherManager = new TeacherManager();
+        }
+      }, 100);
+    } else if (this.currentUser.role === 'student' && !window.studentManager) {
+      setTimeout(() => {
+        if (window.StudentManager) {
+          window.studentManager = new StudentManager();
+        }
+      }, 100);
+    } else if (this.currentUser.role === 'parent' && !window.parentManager) {
+      setTimeout(() => {
+        if (window.ParentManager) {
+          window.parentManager = new ParentManager();
+        }
+      }, 100);
+    } else if (this.currentUser.role === 'admin' && !window.adminManager) {
+      setTimeout(() => {
+        if (window.AdminManager) {
+          window.adminManager = new AdminManager();
+        }
+      }, 100);
+    }
   }
 
   // Update user dropdown menu

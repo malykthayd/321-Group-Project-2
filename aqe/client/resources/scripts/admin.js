@@ -1,593 +1,678 @@
-// Admin module for AQE Platform
-// Handles administrative functionality
-
+// Admin Manager for handling admin-specific functionality
 class AdminManager {
-  constructor() {
-    this.users = [];
-    this.lessons = [];
-    this.books = [];
-    this.analytics = {};
-    
-    this.init();
-  }
-
-  init() {
-    this.loadAdminData();
-    this.setupEventListeners();
-  }
-
-  // Load admin data
-  async loadAdminData() {
-    try {
-      // In a real app, this would fetch from the API
-      await Promise.all([
-        this.loadUsers(),
-        this.loadLessons(),
-        this.loadBooks(),
-        this.loadAnalytics()
-      ]);
-      
-      this.renderAdminDashboard();
-    } catch (error) {
-      console.error('Error loading admin data:', error);
-      this.showError('Failed to load admin data. Please try again.');
+    constructor() {
+        this.apiBaseUrl = 'http://localhost:5000/api';
+        this.currentAdmin = null;
+        this.digitalLibrary = [];
+        this.users = [];
+        
+        this.initializeEventListeners();
+        this.loadAdminData();
     }
-  }
 
-  // Load users data
-  async loadUsers() {
-    this.users = [
-      {
-        id: 1,
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        role: 'student',
-        status: 'active',
-        joinDate: new Date('2024-01-15'),
-        lastLogin: new Date('2024-01-25'),
-        lessonsCompleted: 5,
-        booksRead: 2,
-        totalStudyTime: 1200 // minutes
-      },
-      {
-        id: 2,
-        name: 'Jane Smith',
-        email: 'jane.smith@example.com',
-        role: 'teacher',
-        status: 'active',
-        joinDate: new Date('2024-01-10'),
-        lastLogin: new Date('2024-01-24'),
-        lessonsCompleted: 0,
-        booksRead: 0,
-        totalStudyTime: 0
-      },
-      {
-        id: 3,
-        name: 'Bob Johnson',
-        email: 'bob.johnson@example.com',
-        role: 'student',
-        status: 'inactive',
-        joinDate: new Date('2024-01-05'),
-        lastLogin: new Date('2024-01-20'),
-        lessonsCompleted: 3,
-        booksRead: 1,
-        totalStudyTime: 800
-      },
-      {
-        id: 4,
-        name: 'Alice Brown',
-        email: 'alice.brown@example.com',
-        role: 'admin',
-        status: 'active',
-        joinDate: new Date('2024-01-01'),
-        lastLogin: new Date('2024-01-25'),
-        lessonsCompleted: 0,
-        booksRead: 0,
-        totalStudyTime: 0
-      }
-    ];
-  }
+    async loadAdminData() {
+        if (!window.multiRoleAuth || !window.multiRoleAuth.currentUser) {
+            console.error('No authenticated user found');
+            return;
+        }
 
-  // Load lessons data
-  async loadLessons() {
-    this.lessons = [
-      {
-        id: 1,
-        title: 'Introduction to Mathematics',
-        category: 'Mathematics',
-        difficulty: 'Beginner',
-        status: 'published',
-        createdAt: new Date('2024-01-15'),
-        updatedAt: new Date('2024-01-20'),
-        enrolledStudents: 25,
-        completionRate: 80,
-        averageRating: 4.5
-      },
-      {
-        id: 2,
-        title: 'Basic Algebra',
-        category: 'Mathematics',
-        difficulty: 'Intermediate',
-        status: 'published',
-        createdAt: new Date('2024-01-20'),
-        updatedAt: new Date('2024-01-25'),
-        enrolledStudents: 18,
-        completionRate: 65,
-        averageRating: 4.2
-      },
-      {
-        id: 3,
-        title: 'World History',
-        category: 'History',
-        difficulty: 'Beginner',
-        status: 'draft',
-        createdAt: new Date('2024-01-10'),
-        updatedAt: new Date('2024-01-18'),
-        enrolledStudents: 0,
-        completionRate: 0,
-        averageRating: 0
-      }
-    ];
-  }
+        this.currentAdmin = window.multiRoleAuth.currentUser;
+        console.log('Admin data loaded:', this.currentAdmin);
 
-  // Load books data
-  async loadBooks() {
-    this.books = [
-      {
-        id: 1,
-        title: 'Mathematics Fundamentals',
-        author: 'Dr. Sarah Johnson',
-        category: 'Mathematics',
-        status: 'available',
-        totalReads: 15,
-        averageRating: 4.5,
-        createdAt: new Date('2024-01-15')
-      },
-      {
-        id: 2,
-        title: 'History of the World',
-        author: 'Prof. Michael Chen',
-        category: 'History',
-        status: 'available',
-        totalReads: 8,
-        averageRating: 4.2,
-        createdAt: new Date('2024-01-10')
-      },
-      {
-        id: 3,
-        title: 'Science Experiments for Kids',
-        author: 'Dr. Emily Rodriguez',
-        category: 'Science',
-        status: 'maintenance',
-        totalReads: 12,
-        averageRating: 4.8,
-        createdAt: new Date('2024-01-20')
-      }
-    ];
-  }
+        // Load dashboard data
+        await this.loadDashboard();
+    }
 
-  // Load analytics data
-  async loadAnalytics() {
-    this.analytics = {
-      totalUsers: this.users.length,
-      activeUsers: this.users.filter(u => u.status === 'active').length,
-      totalLessons: this.lessons.length,
-      publishedLessons: this.lessons.filter(l => l.status === 'published').length,
-      totalBooks: this.books.length,
-      availableBooks: this.books.filter(b => b.status === 'available').length,
-      totalStudyTime: this.users.reduce((total, user) => total + user.totalStudyTime, 0),
-      averageCompletionRate: this.lessons.reduce((total, lesson) => total + lesson.completionRate, 0) / this.lessons.length,
-      monthlyGrowth: 15.5, // percentage
-      topCategories: [
-        { name: 'Mathematics', count: 2 },
-        { name: 'History', count: 1 },
-        { name: 'Science', count: 1 }
-      ]
-    };
-  }
+    initializeEventListeners() {
+        // Tab change listeners
+        document.addEventListener('shown.bs.tab', (event) => {
+            const tabTarget = event.target.getAttribute('data-bs-target');
+            if (tabTarget === '#admin-dashboard-content') {
+                this.loadDashboard();
+            } else if (tabTarget === '#admin-digital-library-content') {
+                this.loadDigitalLibrary();
+            } else if (tabTarget === '#admin-user-management-content') {
+                this.loadUserManagement();
+            }
+        });
+    }
 
-  // Setup event listeners
-  setupEventListeners() {
-    // Admin tab switching
-    const adminTabs = document.querySelectorAll('#adminTabs button[data-bs-toggle="tab"]');
-    adminTabs.forEach(tab => {
-      tab.addEventListener('shown.bs.tab', this.handleAdminTabSwitch.bind(this));
-    });
-  }
+    async loadDashboard() {
+        if (!this.currentAdmin) {
+            console.error('No current admin found');
+            return;
+        }
 
-  // Render admin dashboard
-  renderAdminDashboard() {
-    this.renderAnalyticsCards();
-    this.renderUsersTable();
-    this.renderLessonsTable();
-    this.renderBooksTable();
-  }
+        try {
+            const response = await fetch(`${this.apiBaseUrl}/admin/${this.currentAdmin.adminId}/dashboard`);
+            const data = await response.json();
 
-  // Render analytics cards
-  renderAnalyticsCards() {
-    const analyticsContainer = document.getElementById('adminAnalytics');
-    if (!analyticsContainer) return;
+            if (response.ok) {
+                this.updateDashboard(data);
+            } else {
+                console.error('Error loading dashboard:', data.message);
+            }
+        } catch (error) {
+            console.error('Error loading dashboard:', error);
+        }
+    }
 
-    analyticsContainer.innerHTML = `
-      <div class="row g-4">
-        <div class="col-md-3">
-          <div class="card text-center">
-            <div class="card-body">
-              <i class="bi bi-people-fill text-primary fs-1 mb-2"></i>
-              <h3 class="card-title">${this.analytics.totalUsers}</h3>
-              <p class="card-text text-muted">Total Users</p>
-              <small class="text-success">${this.analytics.activeUsers} active</small>
+    updateDashboard(dashboardData) {
+        // Update stat cards
+        const statCards = {
+            'totalUsers': dashboardData.totalUsers || 0,
+            'totalTeachers': dashboardData.totalTeachers || 0,
+            'totalStudents': dashboardData.totalStudents || 0,
+            'totalParents': dashboardData.totalParents || 0,
+            'totalLessons': dashboardData.totalLessons || 0,
+            'totalPracticeMaterials': dashboardData.totalPracticeMaterials || 0,
+            'totalLessonsCompleted': dashboardData.totalLessonsCompleted || 0,
+            'averageScore': Math.round(dashboardData.averageScore || 0)
+        };
+
+        Object.keys(statCards).forEach(key => {
+            const element = document.getElementById(`admin-${key}`);
+            if (element) {
+                element.textContent = statCards[key];
+            }
+        });
+
+        // Update recent activity
+        this.updateRecentActivity(dashboardData.recentActivity || []);
+    }
+
+    updateRecentActivity(activities) {
+        const activityContainer = document.getElementById('adminRecentActivity');
+        if (!activityContainer) return;
+
+        if (activities.length === 0) {
+            activityContainer.innerHTML = '<p class="text-muted">No recent activity</p>';
+            return;
+        }
+
+        activityContainer.innerHTML = activities.map(activity => `
+            <div class="activity-item d-flex align-items-center p-2 border-bottom">
+                <div class="activity-icon me-3">
+                    <i class="bi bi-${activity.type === 'user_registered' ? 'person-plus-fill' : 'book-fill'} text-info"></i>
+                </div>
+                <div class="activity-content flex-grow-1">
+                    <h6 class="mb-1">
+                        ${activity.type === 'user_registered' ? 
+                            `New ${activity.role} registered: ${activity.userName}` : 
+                            `${activity.studentName} completed: ${activity.lessonTitle}`
+                        }
+                    </h6>
+                    <p class="mb-0 text-muted small">
+                        ${this.formatDate(activity.createdAt || activity.completedAt)}
+                        ${activity.score ? `• Score: ${activity.score}%` : ''}
+                    </p>
+                </div>
             </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card text-center">
-            <div class="card-body">
-              <i class="bi bi-book-fill text-success fs-1 mb-2"></i>
-              <h3 class="card-title">${this.analytics.totalLessons}</h3>
-              <p class="card-text text-muted">Total Lessons</p>
-              <small class="text-success">${this.analytics.publishedLessons} published</small>
+        `).join('');
+    }
+
+    async loadDigitalLibrary() {
+        if (!this.currentAdmin) return;
+
+        try {
+            const response = await fetch(`${this.apiBaseUrl}/admin/${this.currentAdmin.adminId}/digital-library`);
+            const data = await response.json();
+
+            if (response.ok) {
+                this.digitalLibrary = data;
+                this.updateDigitalLibrary(data);
+            } else {
+                console.error('Error loading digital library:', data.message);
+            }
+        } catch (error) {
+            console.error('Error loading digital library:', error);
+        }
+    }
+
+    updateDigitalLibrary(lessons) {
+        const container = document.getElementById('adminDigitalLibraryContent');
+        if (!container) return;
+
+        // Add create lesson button
+        container.innerHTML = `
+            <div class="mb-3">
+                <button class="btn btn-primary" onclick="window.adminManager.showCreateLessonModal()">
+                    <i class="bi bi-plus-circle me-2"></i>Create New Lesson
+                </button>
             </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card text-center">
-            <div class="card-body">
-              <i class="bi bi-collection-fill text-info fs-1 mb-2"></i>
-              <h3 class="card-title">${this.analytics.totalBooks}</h3>
-              <p class="card-text text-muted">Total Books</p>
-              <small class="text-success">${this.analytics.availableBooks} available</small>
+        `;
+
+        if (lessons.length === 0) {
+            container.innerHTML += '<p class="text-muted text-center">No lessons created yet</p>';
+            return;
+        }
+
+        container.innerHTML += lessons.map(lesson => `
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <h5 class="card-title">${lesson.title}</h5>
+                            <p class="card-text text-muted">${lesson.description}</p>
+                            <div class="lesson-meta">
+                                <span class="badge bg-primary me-2">${lesson.subject}</span>
+                                <span class="badge bg-secondary me-2">${lesson.gradeLevel}</span>
+                                <span class="badge ${lesson.isActive ? 'bg-success' : 'bg-danger'} me-2">${lesson.isActive ? 'Active' : 'Inactive'}</span>
+                                <span class="badge ${lesson.isAvailable ? 'bg-info' : 'bg-warning'}">${lesson.isAvailable ? 'Available' : 'Unavailable'}</span>
+                            </div>
+                            <div class="lesson-stats mt-2">
+                                <small class="text-muted">
+                                    Assignments: ${lesson.totalAssignments} • Completions: ${lesson.totalCompletions} • 
+                                    Created: ${this.formatDate(lesson.createdAt)}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="lesson-actions">
+                            <button class="btn btn-outline-primary btn-sm me-2" onclick="window.adminManager.showEditLessonModal(${lesson.id})">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm" onclick="window.adminManager.deleteLesson(${lesson.id})">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card text-center">
-            <div class="card-body">
-              <i class="bi bi-graph-up text-warning fs-1 mb-2"></i>
-              <h3 class="card-title">${this.analytics.monthlyGrowth}%</h3>
-              <p class="card-text text-muted">Monthly Growth</p>
-              <small class="text-success">+${this.analytics.monthlyGrowth}% this month</small>
+        `).join('');
+    }
+
+    showCreateLessonModal() {
+        const modalHtml = `
+            <div class="modal fade" id="createLessonModal" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Create New Lesson</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="createLessonForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="lessonTitle" class="form-label">Title</label>
+                                            <input type="text" class="form-control" id="lessonTitle" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="lessonSubject" class="form-label">Subject</label>
+                                            <select class="form-select" id="lessonSubject" required>
+                                                <option value="">Select Subject</option>
+                                                <option value="Science">Science</option>
+                                                <option value="Technology">Technology</option>
+                                                <option value="English">English</option>
+                                                <option value="Math">Math</option>
+                                                <option value="Geography">Geography</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="lessonGradeLevel" class="form-label">Grade Level</label>
+                                            <select class="form-select" id="lessonGradeLevel" required>
+                                                <option value="">Select Grade Level</option>
+                                                <option value="Kindergarten">Kindergarten</option>
+                                                <option value="1st Grade">1st Grade</option>
+                                                <option value="2nd Grade">2nd Grade</option>
+                                                <option value="3rd Grade">3rd Grade</option>
+                                                <option value="4th Grade">4th Grade</option>
+                                                <option value="5th Grade">5th Grade</option>
+                                                <option value="6th Grade">6th Grade</option>
+                                                <option value="7th Grade">7th Grade</option>
+                                                <option value="8th Grade">8th Grade</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="lessonTags" class="form-label">Tags (comma-separated)</label>
+                                            <input type="text" class="form-control" id="lessonTags" placeholder="e.g., interactive, quiz, video">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="lessonDescription" class="form-label">Description</label>
+                                    <textarea class="form-control" id="lessonDescription" rows="3" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="lessonContent" class="form-label">Content</label>
+                                    <textarea class="form-control" id="lessonContent" rows="8" required placeholder="Enter the lesson content here..."></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="lessonResourceUrl" class="form-label">Resource URL (Optional)</label>
+                                    <input type="url" class="form-control" id="lessonResourceUrl" placeholder="https://example.com">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="lessonIsActive" checked>
+                                            <label class="form-check-label" for="lessonIsActive">Active</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="lessonIsAvailable" checked>
+                                            <label class="form-check-label" for="lessonIsAvailable">Available to Users</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" onclick="window.adminManager.createLesson()">Create Lesson</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    `;
-  }
+        `;
 
-  // Render users table
-  renderUsersTable() {
-    const usersContainer = document.getElementById('adminUsers');
-    if (!usersContainer) return;
+        // Remove existing modal if any
+        const existingModal = document.getElementById('createLessonModal');
+        if (existingModal) {
+            existingModal.remove();
+        }
 
-    usersContainer.innerHTML = `
-      <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h6 class="mb-0">User Management</h6>
-          <button class="btn btn-primary btn-sm" onclick="app.adminManager.showAddUserModal()">
-            <i class="bi bi-plus-circle me-1"></i>Add User
-          </button>
-        </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Role</th>
-                  <th>Status</th>
-                  <th>Join Date</th>
-                  <th>Last Login</th>
-                  <th>Progress</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${this.users.map(user => `
-                  <tr>
-                    <td>${user.name}</td>
-                    <td>${user.email}</td>
-                    <td>
-                      <span class="badge bg-${this.getRoleBadgeColor(user.role)}">${user.role}</span>
-                    </td>
-                    <td>
-                      <span class="badge bg-${user.status === 'active' ? 'success' : 'secondary'}">${user.status}</span>
-                    </td>
-                    <td>${this.formatDate(user.joinDate)}</td>
-                    <td>${this.formatDate(user.lastLogin)}</td>
-                    <td>
-                      <small>${user.lessonsCompleted} lessons, ${user.booksRead} books</small>
-                    </td>
-                    <td>
-                      <div class="btn-group btn-group-sm">
-                        <button class="btn btn-outline-primary" onclick="app.adminManager.editUser(${user.id})">
-                          <i class="bi bi-pencil"></i>
-                        </button>
-                        <button class="btn btn-outline-danger" onclick="app.adminManager.deleteUser(${user.id})">
-                          <i class="bi bi-trash"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    `;
-  }
+        // Add new modal to body
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
 
-  // Render lessons table
-  renderLessonsTable() {
-    const lessonsContainer = document.getElementById('adminLessons');
-    if (!lessonsContainer) return;
-
-    lessonsContainer.innerHTML = `
-      <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h6 class="mb-0">Lesson Management</h6>
-          <button class="btn btn-primary btn-sm" onclick="app.adminManager.showAddLessonModal()">
-            <i class="bi bi-plus-circle me-1"></i>Add Lesson
-          </button>
-        </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th>Title</th>
-                  <th>Category</th>
-                  <th>Difficulty</th>
-                  <th>Status</th>
-                  <th>Students</th>
-                  <th>Completion Rate</th>
-                  <th>Rating</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${this.lessons.map(lesson => `
-                  <tr>
-                    <td>${lesson.title}</td>
-                    <td>${lesson.category}</td>
-                    <td>
-                      <span class="badge bg-${this.getDifficultyBadgeColor(lesson.difficulty)}">${lesson.difficulty}</span>
-                    </td>
-                    <td>
-                      <span class="badge bg-${lesson.status === 'published' ? 'success' : 'warning'}">${lesson.status}</span>
-                    </td>
-                    <td>${lesson.enrolledStudents}</td>
-                    <td>${lesson.completionRate}%</td>
-                    <td>
-                      <div class="d-flex align-items-center">
-                        <i class="bi bi-star-fill text-warning me-1"></i>
-                        ${lesson.averageRating.toFixed(1)}
-                      </div>
-                    </td>
-                    <td>
-                      <div class="btn-group btn-group-sm">
-                        <button class="btn btn-outline-primary" onclick="app.adminManager.editLesson(${lesson.id})">
-                          <i class="bi bi-pencil"></i>
-                        </button>
-                        <button class="btn btn-outline-danger" onclick="app.adminManager.deleteLesson(${lesson.id})">
-                          <i class="bi bi-trash"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  // Render books table
-  renderBooksTable() {
-    const booksContainer = document.getElementById('adminBooks');
-    if (!booksContainer) return;
-
-    booksContainer.innerHTML = `
-      <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h6 class="mb-0">Book Management</h6>
-          <button class="btn btn-primary btn-sm" onclick="app.adminManager.showAddBookModal()">
-            <i class="bi bi-plus-circle me-1"></i>Add Book
-          </button>
-        </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th>Title</th>
-                  <th>Author</th>
-                  <th>Category</th>
-                  <th>Status</th>
-                  <th>Total Reads</th>
-                  <th>Rating</th>
-                  <th>Created</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${this.books.map(book => `
-                  <tr>
-                    <td>${book.title}</td>
-                    <td>${book.author}</td>
-                    <td>${book.category}</td>
-                    <td>
-                      <span class="badge bg-${this.getBookStatusBadgeColor(book.status)}">${book.status}</span>
-                    </td>
-                    <td>${book.totalReads}</td>
-                    <td>
-                      <div class="d-flex align-items-center">
-                        <i class="bi bi-star-fill text-warning me-1"></i>
-                        ${book.averageRating.toFixed(1)}
-                      </div>
-                    </td>
-                    <td>${this.formatDate(book.createdAt)}</td>
-                    <td>
-                      <div class="btn-group btn-group-sm">
-                        <button class="btn btn-outline-primary" onclick="app.adminManager.editBook(${book.id})">
-                          <i class="bi bi-pencil"></i>
-                        </button>
-                        <button class="btn btn-outline-danger" onclick="app.adminManager.deleteBook(${book.id})">
-                          <i class="bi bi-trash"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  // Handle admin tab switching
-  handleAdminTabSwitch(event) {
-    const tabId = event.target.getAttribute('data-bs-target');
-    console.log('Switched to admin tab:', tabId);
-  }
-
-  // Show add user modal
-  showAddUserModal() {
-    this.showNotification('Add user functionality coming soon!', 'info');
-  }
-
-  // Show add lesson modal
-  showAddLessonModal() {
-    this.showNotification('Add lesson functionality coming soon!', 'info');
-  }
-
-  // Show add book modal
-  showAddBookModal() {
-    this.showNotification('Add book functionality coming soon!', 'info');
-  }
-
-  // Edit user
-  editUser(userId) {
-    const user = this.users.find(u => u.id === userId);
-    if (user) {
-      this.showNotification(`Edit user: ${user.name}`, 'info');
+        // Show modal
+        const modal = new bootstrap.Modal(document.getElementById('createLessonModal'));
+        modal.show();
     }
-  }
 
-  // Delete user
-  deleteUser(userId) {
-    const user = this.users.find(u => u.id === userId);
-    if (user) {
-      if (confirm(`Are you sure you want to delete user: ${user.name}?`)) {
-        this.users = this.users.filter(u => u.id !== userId);
-        this.renderUsersTable();
-        this.showNotification(`User ${user.name} deleted successfully`, 'success');
-      }
+    async createLesson() {
+        const title = document.getElementById('lessonTitle').value;
+        const description = document.getElementById('lessonDescription').value;
+        const subject = document.getElementById('lessonSubject').value;
+        const gradeLevel = document.getElementById('lessonGradeLevel').value;
+        const content = document.getElementById('lessonContent').value;
+        const resourceUrl = document.getElementById('lessonResourceUrl').value;
+        const tags = document.getElementById('lessonTags').value;
+        const isActive = document.getElementById('lessonIsActive').checked;
+        const isAvailable = document.getElementById('lessonIsAvailable').checked;
+
+        if (!title || !description || !subject || !gradeLevel || !content) {
+            alert('Please fill in all required fields');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${this.apiBaseUrl}/admin/${this.currentAdmin.adminId}/create-lesson`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    title,
+                    description,
+                    subject,
+                    gradeLevel,
+                    content,
+                    resourceUrl: resourceUrl || null,
+                    tags: tags || null,
+                    isAvailable
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert('Lesson created successfully!');
+                // Close modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('createLessonModal'));
+                if (modal) {
+                    modal.hide();
+                }
+                // Refresh digital library
+                this.loadDigitalLibrary();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        } catch (error) {
+            console.error('Error creating lesson:', error);
+            alert('An error occurred while creating the lesson');
+        }
     }
-  }
 
-  // Edit lesson
-  editLesson(lessonId) {
-    const lesson = this.lessons.find(l => l.id === lessonId);
-    if (lesson) {
-      this.showNotification(`Edit lesson: ${lesson.title}`, 'info');
+    showEditLessonModal(lessonId) {
+        // Find the lesson data
+        const lesson = this.digitalLibrary.find(l => l.id === lessonId);
+        if (!lesson) {
+            alert('Lesson not found');
+            return;
+        }
+
+        const modalHtml = `
+            <div class="modal fade" id="editLessonModal" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Lesson: ${lesson.title}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editLessonForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="editLessonTitle" class="form-label">Title</label>
+                                            <input type="text" class="form-control" id="editLessonTitle" value="${lesson.title}" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="editLessonSubject" class="form-label">Subject</label>
+                                            <select class="form-select" id="editLessonSubject" required>
+                                                <option value="Science" ${lesson.subject === 'Science' ? 'selected' : ''}>Science</option>
+                                                <option value="Technology" ${lesson.subject === 'Technology' ? 'selected' : ''}>Technology</option>
+                                                <option value="English" ${lesson.subject === 'English' ? 'selected' : ''}>English</option>
+                                                <option value="Math" ${lesson.subject === 'Math' ? 'selected' : ''}>Math</option>
+                                                <option value="Geography" ${lesson.subject === 'Geography' ? 'selected' : ''}>Geography</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="editLessonGradeLevel" class="form-label">Grade Level</label>
+                                            <select class="form-select" id="editLessonGradeLevel" required>
+                                                <option value="Kindergarten" ${lesson.gradeLevel === 'Kindergarten' ? 'selected' : ''}>Kindergarten</option>
+                                                <option value="1st Grade" ${lesson.gradeLevel === '1st Grade' ? 'selected' : ''}>1st Grade</option>
+                                                <option value="2nd Grade" ${lesson.gradeLevel === '2nd Grade' ? 'selected' : ''}>2nd Grade</option>
+                                                <option value="3rd Grade" ${lesson.gradeLevel === '3rd Grade' ? 'selected' : ''}>3rd Grade</option>
+                                                <option value="4th Grade" ${lesson.gradeLevel === '4th Grade' ? 'selected' : ''}>4th Grade</option>
+                                                <option value="5th Grade" ${lesson.gradeLevel === '5th Grade' ? 'selected' : ''}>5th Grade</option>
+                                                <option value="6th Grade" ${lesson.gradeLevel === '6th Grade' ? 'selected' : ''}>6th Grade</option>
+                                                <option value="7th Grade" ${lesson.gradeLevel === '7th Grade' ? 'selected' : ''}>7th Grade</option>
+                                                <option value="8th Grade" ${lesson.gradeLevel === '8th Grade' ? 'selected' : ''}>8th Grade</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="editLessonTags" class="form-label">Tags (comma-separated)</label>
+                                            <input type="text" class="form-control" id="editLessonTags" value="${lesson.tags || ''}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editLessonDescription" class="form-label">Description</label>
+                                    <textarea class="form-control" id="editLessonDescription" rows="3" required>${lesson.description}</textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editLessonContent" class="form-label">Content</label>
+                                    <textarea class="form-control" id="editLessonContent" rows="8" required>${lesson.content || ''}</textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editLessonResourceUrl" class="form-label">Resource URL (Optional)</label>
+                                    <input type="url" class="form-control" id="editLessonResourceUrl" value="${lesson.resourceUrl || ''}">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="editLessonIsActive" ${lesson.isActive ? 'checked' : ''}>
+                                            <label class="form-check-label" for="editLessonIsActive">Active</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="editLessonIsAvailable" ${lesson.isAvailable ? 'checked' : ''}>
+                                            <label class="form-check-label" for="editLessonIsAvailable">Available to Users</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" onclick="window.adminManager.updateLesson(${lessonId})">Update Lesson</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Remove existing modal if any
+        const existingModal = document.getElementById('editLessonModal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+
+        // Add new modal to body
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+        // Show modal
+        const modal = new bootstrap.Modal(document.getElementById('editLessonModal'));
+        modal.show();
     }
-  }
 
-  // Delete lesson
-  deleteLesson(lessonId) {
-    const lesson = this.lessons.find(l => l.id === lessonId);
-    if (lesson) {
-      if (confirm(`Are you sure you want to delete lesson: ${lesson.title}?`)) {
-        this.lessons = this.lessons.filter(l => l.id !== lessonId);
-        this.renderLessonsTable();
-        this.showNotification(`Lesson ${lesson.title} deleted successfully`, 'success');
-      }
+    async updateLesson(lessonId) {
+        const title = document.getElementById('editLessonTitle').value;
+        const description = document.getElementById('editLessonDescription').value;
+        const subject = document.getElementById('editLessonSubject').value;
+        const gradeLevel = document.getElementById('editLessonGradeLevel').value;
+        const content = document.getElementById('editLessonContent').value;
+        const resourceUrl = document.getElementById('editLessonResourceUrl').value;
+        const tags = document.getElementById('editLessonTags').value;
+        const isActive = document.getElementById('editLessonIsActive').checked;
+        const isAvailable = document.getElementById('editLessonIsAvailable').checked;
+
+        if (!title || !description || !subject || !gradeLevel || !content) {
+            alert('Please fill in all required fields');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${this.apiBaseUrl}/admin/${this.currentAdmin.adminId}/lesson/${lessonId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    title,
+                    description,
+                    subject,
+                    gradeLevel,
+                    content,
+                    resourceUrl: resourceUrl || null,
+                    tags: tags || null,
+                    isActive,
+                    isAvailable
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert('Lesson updated successfully!');
+                // Close modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('editLessonModal'));
+                if (modal) {
+                    modal.hide();
+                }
+                // Refresh digital library
+                this.loadDigitalLibrary();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        } catch (error) {
+            console.error('Error updating lesson:', error);
+            alert('An error occurred while updating the lesson');
+        }
     }
-  }
 
-  // Edit book
-  editBook(bookId) {
-    const book = this.books.find(b => b.id === bookId);
-    if (book) {
-      this.showNotification(`Edit book: ${book.title}`, 'info');
+    async deleteLesson(lessonId) {
+        if (!confirm('Are you sure you want to delete this lesson? This action cannot be undone.')) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`${this.apiBaseUrl}/admin/${this.currentAdmin.adminId}/lesson/${lessonId}`, {
+                method: 'DELETE'
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert('Lesson deleted successfully!');
+                this.loadDigitalLibrary();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        } catch (error) {
+            console.error('Error deleting lesson:', error);
+            alert('An error occurred while deleting the lesson');
+        }
     }
-  }
 
-  // Delete book
-  deleteBook(bookId) {
-    const book = this.books.find(b => b.id === bookId);
-    if (book) {
-      if (confirm(`Are you sure you want to delete book: ${book.title}?`)) {
-        this.books = this.books.filter(b => b.id !== bookId);
-        this.renderBooksTable();
-        this.showNotification(`Book ${book.title} deleted successfully`, 'success');
-      }
+    async loadUserManagement() {
+        if (!this.currentAdmin) return;
+
+        try {
+            const response = await fetch(`${this.apiBaseUrl}/admin/${this.currentAdmin.adminId}/user-management`);
+            const data = await response.json();
+
+            if (response.ok) {
+                this.users = data;
+                this.updateUserManagement(data);
+            } else {
+                console.error('Error loading users:', data.message);
+            }
+        } catch (error) {
+            console.error('Error loading users:', error);
+        }
     }
-  }
 
-  // Get role badge color
-  getRoleBadgeColor(role) {
-    const colors = {
-      'admin': 'danger',
-      'teacher': 'warning',
-      'student': 'primary'
-    };
-    return colors[role] || 'secondary';
-  }
+    updateUserManagement(users) {
+        const container = document.getElementById('adminUserManagementContent');
+        if (!container) return;
 
-  // Get difficulty badge color
-  getDifficultyBadgeColor(difficulty) {
-    const colors = {
-      'Beginner': 'success',
-      'Intermediate': 'warning',
-      'Advanced': 'danger'
-    };
-    return colors[difficulty] || 'secondary';
-  }
+        if (users.length === 0) {
+            container.innerHTML = '<p class="text-muted text-center">No users found</p>';
+            return;
+        }
 
-  // Get book status badge color
-  getBookStatusBadgeColor(status) {
-    const colors = {
-      'available': 'success',
-      'maintenance': 'warning',
-      'unavailable': 'danger'
-    };
-    return colors[status] || 'secondary';
-  }
-
-  // Format date
-  formatDate(date) {
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    }).format(date);
-  }
-
-  // Show error
-  showError(message) {
-    if (window.app) {
-      window.app.showNotification(message, 'danger');
+        container.innerHTML = `
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Created</th>
+                            <th>Last Login</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${users.map(user => `
+                            <tr>
+                                <td>${user.name}</td>
+                                <td>${user.email}</td>
+                                <td><span class="badge bg-primary">${user.role}</span></td>
+                                <td>${this.formatDate(user.createdAt)}</td>
+                                <td>${user.lastLogin ? this.formatDate(user.lastLogin) : 'Never'}</td>
+                                <td><span class="badge ${user.isActive ? 'bg-success' : 'bg-danger'}">${user.isActive ? 'Active' : 'Inactive'}</span></td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn btn-outline-primary" onclick="window.adminManager.showEditUserModal(${user.id})">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <button class="btn btn-outline-danger" onclick="window.adminManager.deleteUser(${user.id})">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
     }
-  }
 
-  // Show notification
-  showNotification(message, type = 'info') {
-    if (window.app) {
-      window.app.showNotification(message, type);
+    showEditUserModal(userId) {
+        // Find the user data
+        const user = this.users.find(u => u.id === userId);
+        if (!user) {
+            alert('User not found');
+            return;
+        }
+
+        alert('Edit user functionality would be implemented here. User: ' + user.name);
+        // In a real implementation, this would show a modal with user editing capabilities
     }
-  }
+
+    async deleteUser(userId) {
+        if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`${this.apiBaseUrl}/admin/${this.currentAdmin.adminId}/user/${userId}`, {
+                method: 'DELETE'
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert('User deleted successfully!');
+                this.loadUserManagement();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            alert('An error occurred while deleting the user');
+        }
+    }
+
+    // Helper methods
+    formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    }
 }
 
-// Initialize admin manager when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-  if (window.app) {
-    window.app.adminManager = new AdminManager();
-  }
-});
+// Global functions for HTML onclick events
+function showCreateLessonModal() {
+    if (window.adminManager) {
+        window.adminManager.showCreateLessonModal();
+    }
+}
+
+function createLesson() {
+    if (window.adminManager) {
+        window.adminManager.createLesson();
+    }
+}
+
+function showEditLessonModal(lessonId) {
+    if (window.adminManager) {
+        window.adminManager.showEditLessonModal(lessonId);
+    }
+}
+
+function updateLesson(lessonId) {
+    if (window.adminManager) {
+        window.adminManager.updateLesson(lessonId);
+    }
+}
+
+function deleteLesson(lessonId) {
+    if (window.adminManager) {
+        window.adminManager.deleteLesson(lessonId);
+    }
+}

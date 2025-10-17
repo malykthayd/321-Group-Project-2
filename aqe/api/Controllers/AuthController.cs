@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.Sqlite;
-using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
+using api.Data;
+using api.Models;
 
 namespace api.Controllers
 {
@@ -8,11 +9,11 @@ namespace api.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly string _connectionString;
+        private readonly AQEDbContext _context;
 
-        public AuthController(IConfiguration configuration)
+        public AuthController(AQEDbContext context)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection");
+            _context = context;
         }
 
         [HttpPost("login")]
@@ -20,9 +21,6 @@ namespace api.Controllers
         {
             try
             {
-                using var connection = new SqliteConnection(_connectionString);
-                await connection.OpenAsync();
-
                 // Validate input
                 if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
                 {
@@ -35,49 +33,92 @@ namespace api.Controllers
                 }
 
                 // Check if user exists and password matches
-                var query = @"
-                    SELECT u.id, u.name, u.email, u.role, u.last_login,
-                           s.grade_level,
-                           t.subject_taught, t.grade_level_taught,
-                           p.children_emails,
-                           a.permissions
-                    FROM users u
-                    LEFT JOIN students s ON u.id = s.user_id
-                    LEFT JOIN teachers t ON u.id = t.user_id
-                    LEFT JOIN parents p ON u.id = p.user_id
-                    LEFT JOIN admins a ON u.id = a.user_id
-                    WHERE u.email = @email AND u.password = @password AND u.is_active = 1";
+                var user = await _context.Users
+                    .Include(u => u.Student)
+                    .Include(u => u.Teacher)
+                    .Include(u => u.Parent)
+                    .Include(u => u.Admin)
+                    .FirstOrDefaultAsync(u => u.Email == request.Email && u.Password == request.Password && u.IsActive);
 
-                using var command = new SqliteCommand(query, connection);
-                command.Parameters.AddWithValue("@email", request.Email);
-                command.Parameters.AddWithValue("@password", request.Password);
-
-                using var reader = await command.ExecuteReaderAsync();
-                
-                if (await reader.ReadAsync())
+                if (user != null)
                 {
-                    var user = new
+                    var userResponse = new
                     {
-                        id = reader.GetInt32(0),
-                        name = reader.GetString(1),
-                        email = reader.GetString(2),
-                        role = reader.GetString(3),
-                        lastLogin = reader.IsDBNull(4) ? (DateTime?)null : reader.GetDateTime(4),
-                        gradeLevel = reader.IsDBNull(5) ? null : reader.GetString(5),
-                        subjectTaught = reader.IsDBNull(6) ? null : reader.GetString(6),
-                        gradeLevelTaught = reader.IsDBNull(7) ? null : reader.GetString(7),
-                        childrenEmails = reader.IsDBNull(8) ? null : reader.GetString(8),
-                        permissions = reader.IsDBNull(9) ? null : reader.GetString(9)
+                        id = user.Id,
+                        name = user.Name,
+                        email = user.Email,
+                        role = user.Role,
+                        lastLogin = user.LastLogin,
+                        gradeLevel = user.Student?.GradeLevel,
+                        subjectTaught = user.Teacher?.SubjectTaught,
+                        gradeLevelTaught = user.Teacher?.GradeLevelTaught,
+                        childrenEmails = user.Parent?.ChildrenEmails,
+                        permissions = user.Admin?.Permissions,
+                        teacherId = user.Teacher?.Id,
+                        studentId = user.Student?.Id,
+                        parentId = user.Parent?.Id,
+                        adminId = user.Admin?.Id
                     };
 
                     // Update last login
-                    await UpdateLastLogin(connection, user.id);
+                    user.LastLogin = DateTime.UtcNow;
+                    await _context.SaveChangesAsync();
 
-                    return Ok(new { message = "Login successful", user });
+                    return Ok(new { message = "Login successful", user = userResponse });
                 }
                 else
                 {
                     return Unauthorized(new { message = "Invalid email or password" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred during login", error = ex.Message });
+            }
+        }
+
+        [HttpPost("login-student-access-code")]
+        public async Task<IActionResult> LoginStudentWithAccessCode([FromBody] StudentAccessCodeLoginRequest request)
+        {
+            try
+            {
+                // Validate input
+                if (string.IsNullOrEmpty(request.Name) || string.IsNullOrEmpty(request.AccessCode))
+                {
+                    return BadRequest(new { message = "Name and access code are required" });
+                }
+
+                // Find student by name and access code
+                var student = await _context.Students
+                    .Include(s => s.User)
+                    .Include(s => s.Teacher)
+                    .FirstOrDefaultAsync(s => s.User.Name == request.Name && s.AccessCode == request.AccessCode);
+
+                if (student != null)
+                {
+                    var userResponse = new
+                    {
+                        id = student.User.Id,
+                        studentId = student.Id,
+                        name = student.User.Name,
+                        email = student.User.Email,
+                        role = "student",
+                        gradeLevel = student.GradeLevel,
+                        accessCode = student.AccessCode,
+                        teacherId = student.TeacherId,
+                        isIndependent = student.IsIndependent,
+                        lastLogin = student.User.LastLogin
+                    };
+
+                    // Update last login
+                    student.User.LastLogin = DateTime.UtcNow;
+                    await _context.SaveChangesAsync();
+
+                    return Ok(new { message = "Login successful", user = userResponse });
+                }
+                else
+                {
+                    return Unauthorized(new { message = "Invalid name or access code" });
                 }
             }
             catch (Exception ex)
@@ -91,40 +132,23 @@ namespace api.Controllers
         {
             try
             {
-                using var connection = new SqliteConnection(_connectionString);
-                await connection.OpenAsync();
-
-                var query = @"
-                    SELECT u.name, u.email, u.role,
-                           s.grade_level,
-                           t.subject_taught, t.grade_level_taught,
-                           p.children_emails
-                    FROM users u
-                    LEFT JOIN students s ON u.id = s.user_id
-                    LEFT JOIN teachers t ON u.id = t.user_id
-                    LEFT JOIN parents p ON u.id = p.user_id
-                    ORDER BY u.role, u.name";
-
-                using var command = new SqliteCommand(query, connection);
-                using var reader = await command.ExecuteReaderAsync();
-
-                var accounts = new List<object>();
-
-                while (await reader.ReadAsync())
-                {
-                    var account = new
+                var accounts = await _context.Users
+                    .Include(u => u.Student)
+                    .Include(u => u.Teacher)
+                    .Include(u => u.Parent)
+                    .OrderBy(u => u.Role)
+                    .ThenBy(u => u.Name)
+                    .Select(u => new
                     {
-                        name = reader.GetString(0),
-                        email = reader.GetString(1),
-                        role = reader.GetString(2),
-                        gradeLevel = reader.IsDBNull(3) ? null : reader.GetString(3),
-                        subjectTaught = reader.IsDBNull(4) ? null : reader.GetString(4),
-                        gradeLevelTaught = reader.IsDBNull(5) ? null : reader.GetString(5),
-                        childrenEmails = reader.IsDBNull(6) ? null : reader.GetString(6)
-                    };
-
-                    accounts.Add(account);
-                }
+                        name = u.Name,
+                        email = u.Email,
+                        role = u.Role,
+                        gradeLevel = u.Student != null ? u.Student.GradeLevel : null,
+                        subjectTaught = u.Teacher != null ? u.Teacher.SubjectTaught : null,
+                        gradeLevelTaught = u.Teacher != null ? u.Teacher.GradeLevelTaught : null,
+                        childrenEmails = u.Parent != null ? u.Parent.ChildrenEmails : null
+                    })
+                    .ToListAsync();
 
                 return Ok(accounts);
             }
@@ -141,13 +165,354 @@ namespace api.Controllers
             return Ok(new { message = "Logout successful" });
         }
 
-        private async Task UpdateLastLogin(SqliteConnection connection, int userId)
+        [HttpPost("register-teacher")]
+        public async Task<IActionResult> RegisterTeacher([FromBody] RegisterTeacherRequest request)
         {
-            var updateQuery = "UPDATE users SET last_login = @lastLogin WHERE id = @userId";
-            using var updateCommand = new SqliteCommand(updateQuery, connection);
-            updateCommand.Parameters.AddWithValue("@lastLogin", DateTime.UtcNow);
-            updateCommand.Parameters.AddWithValue("@userId", userId);
-            await updateCommand.ExecuteNonQueryAsync();
+            try
+            {
+                // Validate input
+                if (string.IsNullOrEmpty(request.Name) || string.IsNullOrEmpty(request.Email) || 
+                    string.IsNullOrEmpty(request.Password) || string.IsNullOrEmpty(request.GradeLevelTaught))
+                {
+                    return BadRequest(new { message = "Name, email, password, and grade level are required" });
+                }
+
+                if (request.Password.Length < 8)
+                {
+                    return BadRequest(new { message = "Password must be at least 8 characters long" });
+                }
+
+                // Check if email already exists
+                var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+                if (existingUser != null)
+                {
+                    return BadRequest(new { message = "Email already exists" });
+                }
+
+                // Create new user
+                var user = new User
+                {
+                    Name = request.Name,
+                    Email = request.Email,
+                    Password = request.Password,
+                    Role = "teacher",
+                    CreatedAt = DateTime.UtcNow,
+                    IsActive = true
+                };
+
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+
+                // Create teacher profile
+                var teacher = new Teacher
+                {
+                    UserId = user.Id,
+                    SubjectTaught = request.SubjectTaught ?? "General",
+                    GradeLevelTaught = request.GradeLevelTaught
+                };
+
+                _context.Teachers.Add(teacher);
+                await _context.SaveChangesAsync();
+
+                var response = new
+                {
+                    id = user.Id,
+                    teacherId = teacher.Id,
+                    name = user.Name,
+                    email = user.Email,
+                    role = user.Role,
+                    gradeLevelTaught = teacher.GradeLevelTaught,
+                    subjectTaught = teacher.SubjectTaught,
+                    message = "Teacher registered successfully"
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred during registration", error = ex.Message });
+            }
+        }
+
+        [HttpPost("register-parent")]
+        public async Task<IActionResult> RegisterParent([FromBody] RegisterParentRequest request)
+        {
+            try
+            {
+                // Validate input
+                if (string.IsNullOrEmpty(request.Name) || string.IsNullOrEmpty(request.Email) || 
+                    string.IsNullOrEmpty(request.Password) || request.Children == null || !request.Children.Any())
+                {
+                    return BadRequest(new { message = "Name, email, password, and at least one child are required" });
+                }
+
+                if (request.Password.Length < 8)
+                {
+                    return BadRequest(new { message = "Password must be at least 8 characters long" });
+                }
+
+                // Check if email already exists
+                var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+                if (existingUser != null)
+                {
+                    return BadRequest(new { message = "Email already exists" });
+                }
+
+                // Validate access codes for all children
+                var validatedChildren = new List<object>();
+                foreach (var child in request.Children)
+                {
+                    var student = await _context.Students
+                        .Include(s => s.User)
+                        .FirstOrDefaultAsync(s => s.User.Name == child.Name && s.AccessCode == child.AccessCode);
+                    
+                    if (student == null)
+                    {
+                        return BadRequest(new { message = $"Invalid access code for child: {child.Name}" });
+                    }
+                    
+                    validatedChildren.Add(new { name = student.User.Name, studentId = student.Id });
+                }
+
+                // Create new user
+                var user = new User
+                {
+                    Name = request.Name,
+                    Email = request.Email,
+                    Password = request.Password,
+                    Role = "parent",
+                    CreatedAt = DateTime.UtcNow,
+                    IsActive = true
+                };
+
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+
+                // Create parent profile
+                var parent = new Parent
+                {
+                    UserId = user.Id,
+                    ChildrenEmails = string.Join(",", request.Children.Select(c => c.Name))
+                };
+
+                _context.Parents.Add(parent);
+                await _context.SaveChangesAsync();
+
+                // Create parent-student relationships
+                foreach (var child in request.Children)
+                {
+                    var student = await _context.Students
+                        .FirstOrDefaultAsync(s => s.User.Name == child.Name && s.AccessCode == child.AccessCode);
+                    
+                    if (student != null)
+                    {
+                        var parentStudent = new ParentStudent
+                        {
+                            ParentId = parent.Id,
+                            StudentId = student.Id,
+                            LinkedAt = DateTime.UtcNow
+                        };
+                        _context.ParentStudents.Add(parentStudent);
+                    }
+                }
+                await _context.SaveChangesAsync();
+
+                var response = new
+                {
+                    id = user.Id,
+                    parentId = parent.Id,
+                    name = user.Name,
+                    email = user.Email,
+                    role = user.Role,
+                    children = validatedChildren,
+                    message = "Parent registered successfully"
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred during registration", error = ex.Message });
+            }
+        }
+
+        [HttpPost("register-student")]
+        public async Task<IActionResult> RegisterStudent([FromBody] RegisterStudentRequest request)
+        {
+            try
+            {
+                // Validate input
+                if (string.IsNullOrEmpty(request.Name) || string.IsNullOrEmpty(request.Email) || 
+                    string.IsNullOrEmpty(request.Password) || string.IsNullOrEmpty(request.GradeLevel))
+                {
+                    return BadRequest(new { message = "Name, email, password, and grade level are required" });
+                }
+
+                if (request.Password.Length < 8)
+                {
+                    return BadRequest(new { message = "Password must be at least 8 characters long" });
+                }
+
+                // Check if email already exists
+                var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+                if (existingUser != null)
+                {
+                    return BadRequest(new { message = "Email already exists" });
+                }
+
+                // Create new user
+                var user = new User
+                {
+                    Name = request.Name,
+                    Email = request.Email,
+                    Password = request.Password,
+                    Role = "student",
+                    CreatedAt = DateTime.UtcNow,
+                    IsActive = true
+                };
+
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+
+                // Create student profile (independent student)
+                var student = new Student
+                {
+                    UserId = user.Id,
+                    GradeLevel = request.GradeLevel,
+                    IsIndependent = true // Independent student, not part of a teacher's class
+                };
+
+                _context.Students.Add(student);
+                await _context.SaveChangesAsync();
+
+                var response = new
+                {
+                    id = user.Id,
+                    studentId = student.Id,
+                    name = user.Name,
+                    email = user.Email,
+                    role = user.Role,
+                    gradeLevel = student.GradeLevel,
+                    isIndependent = student.IsIndependent,
+                    message = "Student registered successfully"
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred during registration", error = ex.Message });
+            }
+        }
+
+        [HttpPost("register-admin")]
+        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterAdminRequest request)
+        {
+            try
+            {
+                // Validate input
+                if (string.IsNullOrEmpty(request.Name) || string.IsNullOrEmpty(request.Email) || 
+                    string.IsNullOrEmpty(request.Password) || string.IsNullOrEmpty(request.AdminPassword))
+                {
+                    return BadRequest(new { message = "Name, email, password, and admin password are required" });
+                }
+
+                if (request.Password.Length < 8)
+                {
+                    return BadRequest(new { message = "Password must be at least 8 characters long" });
+                }
+
+                // Validate admin password
+                if (request.AdminPassword != "admin")
+                {
+                    return BadRequest(new { message = "Invalid admin password" });
+                }
+
+                // Check if email already exists
+                var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+                if (existingUser != null)
+                {
+                    return BadRequest(new { message = "Email already exists" });
+                }
+
+                // Create new user
+                var user = new User
+                {
+                    Name = request.Name,
+                    Email = request.Email,
+                    Password = request.Password,
+                    Role = "admin",
+                    CreatedAt = DateTime.UtcNow,
+                    IsActive = true
+                };
+
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+
+                // Create admin profile
+                var admin = new Admin
+                {
+                    UserId = user.Id,
+                    Permissions = "full"
+                };
+
+                _context.Admins.Add(admin);
+                await _context.SaveChangesAsync();
+
+                var response = new
+                {
+                    id = user.Id,
+                    adminId = admin.Id,
+                    name = user.Name,
+                    email = user.Email,
+                    role = user.Role,
+                    permissions = admin.Permissions,
+                    message = "Admin registered successfully"
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred during registration", error = ex.Message });
+            }
+        }
+
+        [HttpPost("validate-access-code")]
+        public async Task<IActionResult> ValidateAccessCode([FromBody] ValidateAccessCodeRequest request)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(request.AccessCode))
+                {
+                    return BadRequest(new { message = "Access code is required" });
+                }
+
+                var student = await _context.Students
+                    .Include(s => s.User)
+                    .FirstOrDefaultAsync(s => s.AccessCode == request.AccessCode);
+
+                if (student != null)
+                {
+                    return Ok(new { 
+                        isValid = true, 
+                        studentName = student.User.Name,
+                        gradeLevel = student.GradeLevel,
+                        message = "Access code is valid" 
+                    });
+                }
+                else
+                {
+                    return Ok(new { 
+                        isValid = false, 
+                        message = "Invalid access code" 
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while validating access code", error = ex.Message });
+            }
         }
     }
 
@@ -155,5 +520,55 @@ namespace api.Controllers
     {
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
+    }
+
+    public class RegisterTeacherRequest
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string GradeLevelTaught { get; set; } = string.Empty;
+        public string? SubjectTaught { get; set; }
+    }
+
+    public class StudentAccessCodeLoginRequest
+    {
+        public string Name { get; set; } = string.Empty;
+        public string AccessCode { get; set; } = string.Empty;
+    }
+
+    public class RegisterParentRequest
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public List<ChildInfo> Children { get; set; } = new List<ChildInfo>();
+    }
+
+    public class ChildInfo
+    {
+        public string Name { get; set; } = string.Empty;
+        public string AccessCode { get; set; } = string.Empty;
+    }
+
+    public class RegisterStudentRequest
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string GradeLevel { get; set; } = string.Empty;
+    }
+
+    public class RegisterAdminRequest
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string AdminPassword { get; set; } = string.Empty;
+    }
+
+    public class ValidateAccessCodeRequest
+    {
+        public string AccessCode { get; set; } = string.Empty;
     }
 }

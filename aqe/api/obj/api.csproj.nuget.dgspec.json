@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/malykhayden/Desktop/321-Group-Project-2.1/aqe/api/api.csproj": {}
+    "/Users/malykhayden/Desktop/321-Group-Project-2/aqe/api/api.csproj": {}
   },
   "projects": {
-    "/Users/malykhayden/Desktop/321-Group-Project-2.1/aqe/api/api.csproj": {
+    "/Users/malykhayden/Desktop/321-Group-Project-2/aqe/api/api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/malykhayden/Desktop/321-Group-Project-2.1/aqe/api/api.csproj",
+        "projectUniqueName": "/Users/malykhayden/Desktop/321-Group-Project-2/aqe/api/api.csproj",
         "projectName": "api",
-        "projectPath": "/Users/malykhayden/Desktop/321-Group-Project-2.1/aqe/api/api.csproj",
+        "projectPath": "/Users/malykhayden/Desktop/321-Group-Project-2/aqe/api/api.csproj",
         "packagesPath": "/Users/malykhayden/.nuget/packages/",
-        "outputPath": "/Users/malykhayden/Desktop/321-Group-Project-2.1/aqe/api/obj/",
+        "outputPath": "/Users/malykhayden/Desktop/321-Group-Project-2/aqe/api/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/malykhayden/.nuget/NuGet/NuGet.Config"
@@ -38,9 +38,33 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "Microsoft.Data.Sqlite": {
+            "DotNetEnv": {
               "target": "Package",
-              "version": "[9.0.9, )"
+              "version": "[3.1.1, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.EnvironmentVariables": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[8.0.2, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

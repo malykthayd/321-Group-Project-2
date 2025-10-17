@@ -3,3 +3,18 @@ data/
 # Build output
 .next/
 node_modules/
+
+# Environment variables (keep passwords secure)
+.env
+.env.local
+.env.*.local
+
+# Database files
+*.db
+*.db-journal
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
