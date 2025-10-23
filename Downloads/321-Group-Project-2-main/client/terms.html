@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms of Service - AQE</title>
+  
+  <!-- Bootstrap 5.x CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link href="resources/styles/main.css" rel="stylesheet">
+  <link href="resources/styles/dark-mode.css" rel="stylesheet">
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="header-professional">
+      <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center py-3">
+          <div class="d-flex align-items-center">
+            <div class="logo-container me-3">
+              <div class="logo-icon">
+                <i class="bi bi-mortarboard-fill"></i>
+              </div>
+            </div>
+            <div class="brand-info">
+              <h1 class="brand-title mb-0">
+                <a href="index.html" class="text-decoration-none" style="color: inherit;">Accessible Quality Education</a>
+              </h1>
+              <p class="brand-subtitle mb-0">Terms of Service</p>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-3">
+            <!-- Language Selector -->
+            <div class="dropdown">
+              <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-translate me-1"></i>
+                <span id="currentLanguage">English</span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('en')">🇺🇸 English</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('es')">🇪🇸 Español</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('fr')">🇫🇷 Français</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('de')">🇩🇪 Deutsch</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('zh')">🇨🇳 中文</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('ar')">🇸🇦 العربية</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('sw')">🇰🇪 Kiswahili</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('am')">🇪🇹 አማርኛ</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('zu')">🇿🇦 isiZulu</a></li>
+              </ul>
+            </div>
+
+            <!-- Dark Mode Toggle -->
+            <button class="btn btn-outline-secondary" id="darkModeToggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+              <i class="bi bi-moon-fill" id="darkModeIcon"></i>
+              <i class="bi bi-sun-fill d-none" id="lightModeIcon"></i>
+            </button>
+
+            <!-- Back to Home -->
+            <a href="index.html" class="btn btn-outline-primary">
+              <i class="bi bi-house-fill me-2"></i><span data-translate="policyPages" data-translate-key="backToHome">Back to Home</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container-fluid py-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-8">
+          <div class="card shadow-sm">
+            <div class="card-body p-5">
+              <div class="alert alert-info mb-4">
+                <i class="bi bi-translate me-2"></i>
+                <strong data-translate="policyPages" data-translate-key="languageLabel">Language:</strong> <span data-translate="policyPages" data-translate-key="languageNotice">This page is currently available in English. Use the language selector above to change the site interface language. Full page translation coming soon for all 9 languages.</span>
+              </div>
+              
+              <h1 class="mb-4">Terms of Service</h1>
+              <p class="text-muted">Last Updated: October 21, 2025</p>
+              
+              <hr class="my-4">
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">1. Acceptance of Terms</h2>
+                <p>Welcome to Accessible Quality Education (AQE). By accessing or using our platform, you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, please do not use our services.</p>
+                <p>These Terms apply to all users, including students, teachers, parents, administrators, and visitors.</p>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">2. Description of Service</h2>
+                <p>AQE provides an online educational platform that offers:</p>
+                <ul>
+                  <li>Personalized learning experiences for students</li>
+                  <li>Tools for teachers to create and assign educational content</li>
+                  <li>Progress tracking and reporting for parents</li>
+                  <li>Administrative tools for content and user management</li>
+                  <li>Offline learning capabilities through Progressive Web App technology</li>
+                  <li>SMS/USSD-based learning for accessible education</li>
+                  <li>Adaptive learning algorithms and achievement tracking</li>
+                </ul>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">3. User Accounts and Registration</h2>
+                <h3 class="h5 mb-2">3.1 Account Creation</h3>
+                <ul>
+                  <li>You must provide accurate and complete information during registration</li>
+                  <li>You are responsible for maintaining the confidentiality of your password</li>
+                  <li>You are responsible for all activities that occur under your account</li>
+                  <li>You must notify us immediately of any unauthorized use of your account</li>
+                </ul>
+
+                <h3 class="h5 mb-2 mt-4">3.2 Age Requirements</h3>
+                <ul>
+                  <li><strong>Students under 13:</strong> Must have accounts created by a parent, guardian, or teacher with proper authority</li>
+                  <li><strong>Students 13-17:</strong> Require parental consent to create an account</li>
+                  <li><strong>Adults 18+:</strong> May create accounts independently</li>
+                  <li><strong>Teachers & Admins:</strong> Must be 18+ and authorized by an educational institution</li>
+                </ul>
+
+                <h3 class="h5 mb-2 mt-4">3.3 Account Suspension</h3>
+                <p>We reserve the right to suspend or terminate accounts that violate these Terms or engage in inappropriate behavior.</p>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">4. Acceptable Use Policy</h2>
+                <p><strong>You agree NOT to:</strong></p>
+                <ul>
+                  <li>Use the platform for any illegal or unauthorized purpose</li>
+                  <li>Harass, abuse, or harm other users</li>
+                  <li>Share inappropriate, offensive, or harmful content</li>
+                  <li>Attempt to hack, disrupt, or compromise platform security</li>
+                  <li>Impersonate another person or entity</li>
+                  <li>Collect or store personal information about other users</li>
+                  <li>Use automated tools (bots, scrapers) without permission</li>
+                  <li>Share account credentials with unauthorized individuals</li>
+                  <li>Upload viruses, malware, or malicious code</li>
+                  <li>Interfere with other users' access to the platform</li>
+                </ul>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">5. Educational Content and Intellectual Property</h2>
+                <h3 class="h5 mb-2">5.1 Our Content</h3>
+                <ul>
+                  <li>All lessons, practice materials, and educational content are owned by AQE or licensed to us</li>
+                  <li>Content is provided for personal, non-commercial educational use only</li>
+                  <li>You may not copy, distribute, modify, or create derivative works without permission</li>
+                  <li>Teachers may use our content within their authorized classrooms</li>
+                </ul>
+
+                <h3 class="h5 mb-2 mt-4">5.2 User-Generated Content</h3>
+                <ul>
+                  <li>Teachers and admins may create custom content on the platform</li>
+                  <li>You retain ownership of content you create but grant us a license to use it for platform operation</li>
+                  <li>You are responsible for ensuring your content does not infringe on others' rights</li>
+                  <li>We reserve the right to remove content that violates our policies</li>
+                </ul>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">6. Teacher and Parent Responsibilities</h2>
+                <h3 class="h5 mb-2">6.1 Teachers</h3>
+                <ul>
+                  <li>Must be authorized by an educational institution or have parental consent to create student accounts</li>
+                  <li>Responsible for appropriate use of student data</li>
+                  <li>Must not share student information inappropriately</li>
+                  <li>Should monitor student activity and report concerns</li>
+                  <li>Must create age-appropriate assignments and content</li>
+                </ul>
+
+                <h3 class="h5 mb-2 mt-4">6.2 Parents</h3>
+                <ul>
+                  <li>Responsible for monitoring their child's platform usage</li>
+                  <li>Should review their child's progress and activity regularly</li>
+                  <li>Can access and control their child's account settings</li>
+                  <li>Must ensure their child follows platform rules</li>
+                  <li>Can request deletion of their child's data at any time</li>
+                </ul>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">7. Data Usage and Privacy</h2>
+                <p>Your use of AQE is also governed by our <a href="privacy.html">Privacy Policy</a>. Key points:</p>
+                <ul>
+                  <li>We collect data necessary to provide educational services</li>
+                  <li>Student data is used solely for educational purposes</li>
+                  <li>We do not sell personal information</li>
+                  <li>Parents can access, modify, or delete their child's data</li>
+                  <li>Data is stored securely and protected against unauthorized access</li>
+                </ul>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">8. SMS/USSD Services</h2>
+                <p>If you use our SMS or USSD learning features:</p>
+                <ul>
+                  <li>Standard message and data rates apply</li>
+                  <li>You can opt-out at any time by texting "STOP"</li>
+                  <li>We will not send excessive or spam messages</li>
+                  <li>SMS content is educational and appropriate for all ages</li>
+                  <li>You consent to receiving educational messages when you opt-in</li>
+                </ul>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">9. Payment and Subscriptions</h2>
+                <p><em>(If applicable to your use case)</em></p>
+                <ul>
+                  <li>AQE currently offers services free of charge for demo purposes</li>
+                  <li>Future paid features or subscriptions will be clearly disclosed</li>
+                  <li>Refund policies will be provided before any purchase</li>
+                  <li>Schools or institutions may have separate licensing agreements</li>
+                </ul>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">10. Disclaimers and Limitations of Liability</h2>
+                <h3 class="h5 mb-2">10.1 Service Availability</h3>
+                <ul>
+                  <li>We strive for 99.9% uptime but cannot guarantee uninterrupted service</li>
+                  <li>Offline features require prior online access to cache content</li>
+                  <li>We may perform maintenance or updates that temporarily limit access</li>
+                  <li>We are not liable for losses due to service interruptions</li>
+                </ul>
+
+                <h3 class="h5 mb-2 mt-4">10.2 Educational Outcomes</h3>
+                <ul>
+                  <li>AQE is a tool to support learning but does not guarantee specific educational outcomes</li>
+                  <li>We are not responsible for grades, test scores, or academic performance</li>
+                  <li>Content is provided "as is" without warranties of accuracy or completeness</li>
+                  <li>Users should verify critical information with qualified educators</li>
+                </ul>
+
+                <h3 class="h5 mb-2 mt-4">10.3 Limitation of Liability</h3>
+                <p><strong>TO THE MAXIMUM EXTENT PERMITTED BY LAW:</strong></p>
+                <ul>
+                  <li>AQE is provided "AS IS" without warranties of any kind</li>
+                  <li>We are not liable for indirect, incidental, or consequential damages</li>
+                  <li>Our total liability shall not exceed $100 or the amount you paid (if any)</li>
+                  <li>Some jurisdictions do not allow these limitations; they may not apply to you</li>
+                </ul>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">11. Indemnification</h2>
+                <p>You agree to indemnify and hold harmless AQE, its officers, directors, employees, and agents from any claims, damages, losses, liabilities, and expenses (including legal fees) arising from:</p>
+                <ul>
+                  <li>Your use or misuse of the platform</li>
+                  <li>Your violation of these Terms</li>
+                  <li>Your violation of any rights of another party</li>
+                  <li>Content you submit or share on the platform</li>
+                </ul>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">12. Termination</h2>
+                <p>We may terminate or suspend your account and access to the platform:</p>
+                <ul>
+                  <li>For violation of these Terms</li>
+                  <li>For fraudulent or illegal activity</li>
+                  <li>If required by law</li>
+                  <li>At our discretion for operational reasons</li>
+                </ul>
+                <p>You may terminate your account at any time by contacting support. Upon termination, your right to access the platform ceases immediately.</p>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">13. Modifications to Terms</h2>
+                <p>We reserve the right to modify these Terms at any time. We will notify users of material changes by:</p>
+                <ul>
+                  <li>Updating the "Last Updated" date at the top of this page</li>
+                  <li>Sending email notifications to registered users</li>
+                  <li>Displaying a notice on the platform</li>
+                </ul>
+                <p>Your continued use after changes constitutes acceptance of the modified Terms.</p>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">14. Governing Law and Dispute Resolution</h2>
+                <ul>
+                  <li>These Terms are governed by the laws of [Your State/Country]</li>
+                  <li>Disputes should first be resolved through good-faith negotiation</li>
+                  <li>If negotiation fails, disputes will be resolved through binding arbitration</li>
+                  <li>You waive the right to participate in class-action lawsuits</li>
+                  <li>Some jurisdictions may have different requirements that supersede these terms</li>
+                </ul>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">15. Miscellaneous</h2>
+                <ul>
+                  <li><strong>Entire Agreement:</strong> These Terms constitute the entire agreement between you and AQE</li>
+                  <li><strong>Severability:</strong> If any provision is found invalid, the remaining provisions remain in effect</li>
+                  <li><strong>No Waiver:</strong> Our failure to enforce any provision does not waive our right to do so later</li>
+                  <li><strong>Assignment:</strong> You may not assign these Terms; we may assign them to affiliates or successors</li>
+                </ul>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">16. Contact Information</h2>
+                <p>For questions about these Terms of Service, please contact:</p>
+                <div class="alert alert-primary">
+                  <p class="mb-2"><strong>Legal Department</strong></p>
+                  <p class="mb-1"><i class="bi bi-envelope-fill me-2"></i>Email: <a href="mailto:legal@aqeducation.org">legal@aqeducation.org</a></p>
+                  <p class="mb-1"><i class="bi bi-telephone-fill me-2"></i>Phone: +1 (555) 123-4567</p>
+                  <p class="mb-0"><i class="bi bi-clock-fill me-2"></i>Response Time: Within 48 hours</p>
+                </div>
+              </section>
+
+              <hr class="my-4">
+
+              <div class="alert alert-info">
+                <p class="mb-0"><strong>By using Accessible Quality Education, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.</strong></p>
+              </div>
+
+              <div class="text-center mt-4">
+                <a href="index.html" class="btn btn-primary">
+                  <i class="bi bi-house-fill me-2"></i>Return to Home
+                </a>
+                <a href="privacy.html" class="btn btn-outline-secondary ms-2">
+                  <i class="bi bi-shield-check me-2"></i>View Privacy Policy
+                </a>
+                <a href="support.html" class="btn btn-outline-secondary ms-2">
+                  <i class="bi bi-question-circle me-2"></i>Get Support
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-modern">
+      <div class="container-fluid">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <p class="mb-0">&copy; 2025 Accessible Quality Education</p>
+          </div>
+          <div class="col-md-6 text-md-end">
+            <a href="privacy.html" class="footer-link me-3">Privacy</a>
+            <a href="terms.html" class="footer-link me-3">Terms</a>
+            <a href="support.html" class="footer-link">Support</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Bootstrap 5.x JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- AQE Scripts for Dark Mode and Translations -->
+  <script src="resources/scripts/translations.js"></script>
+  <script>
+    // Initialize dark mode
+    function loadDarkModePreference() {
+      const savedDarkMode = localStorage.getItem('darkMode');
+      if (savedDarkMode === 'true') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.documentElement.setAttribute('data-bs-theme', 'dark');
+        document.body.setAttribute('data-theme', 'dark');
+        document.getElementById('darkModeIcon')?.classList.add('d-none');
+        document.getElementById('lightModeIcon')?.classList.remove('d-none');
+      }
+    }
+
+    function toggleDarkMode() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.documentElement.removeAttribute('data-theme');
+        document.documentElement.removeAttribute('data-bs-theme');
+        document.body.removeAttribute('data-theme');
+        document.getElementById('darkModeIcon')?.classList.remove('d-none');
+        document.getElementById('lightModeIcon')?.classList.add('d-none');
+        localStorage.setItem('darkMode', 'false');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.documentElement.setAttribute('data-bs-theme', 'dark');
+        document.body.setAttribute('data-theme', 'dark');
+        document.getElementById('darkModeIcon')?.classList.add('d-none');
+        document.getElementById('lightModeIcon')?.classList.remove('d-none');
+        localStorage.setItem('darkMode', 'true');
+      }
+    }
+
+    function changeLanguage(lang) {
+      // Store in all keys for compatibility
+      localStorage.setItem('aqe_language', lang);
+      localStorage.setItem('preferredLanguage', lang);
+      localStorage.setItem('language', lang);
+      
+      // Update the current language display
+      const languageNames = {
+        'en': 'English',
+        'es': 'Español',
+        'fr': 'Français',
+        'de': 'Deutsch',
+        'zh': '中文',
+        'ar': 'العربية',
+        'sw': 'Kiswahili',
+        'am': 'አማርኛ',
+        'zu': 'isiZulu'
+      };
+      document.getElementById('currentLanguage').textContent = languageNames[lang] || 'English';
+      
+      // Apply language if translation manager is available
+      if (window.translationManager) {
+        window.translationManager.changeLanguage(lang);
+        // Force manual translation update
+        setTimeout(() => {
+          window.translationManager.applyLanguage(lang);
+        }, 50);
+      } else if (window.AQETranslations) {
+        window.AQETranslations.changeLanguage(lang);
+      }
+      
+      // Manual translation for policy pages elements
+      const translations = {
+        en: { 
+          backToHome: "Back to Home", 
+          languageLabel: "Language:", 
+          languageNotice: "This page is currently available in English. Use the language selector above to change the site interface language. Full page translation coming soon for all 9 languages.",
+          siteName: "Accessible Quality Education",
+          termsOfService: "Terms of Service"
+        },
+        es: { 
+          backToHome: "Volver al Inicio", 
+          languageLabel: "Idioma:", 
+          languageNotice: "Esta página está actualmente disponible en inglés. Usa el selector de idioma arriba para cambiar el idioma de la interfaz del sitio. La traducción completa de la página estará disponible pronto en los 9 idiomas.",
+          siteName: "Educación de Calidad Accesible",
+          termsOfService: "Términos de Servicio"
+        },
+        fr: { 
+          backToHome: "Retour à l'Accueil", 
+          languageLabel: "Langue:", 
+          languageNotice: "Cette page est actuellement disponible en anglais. Utilisez le sélecteur de langue ci-dessus pour changer la langue de l'interface du site. La traduction complète de la page sera bientôt disponible dans les 9 langues.",
+          siteName: "Éducation de Qualité Accessible",
+          termsOfService: "Conditions d'Utilisation"
+        },
+        de: { 
+          backToHome: "Zurück zur Startseite", 
+          languageLabel: "Sprache:", 
+          languageNotice: "Diese Seite ist derzeit auf Englisch verfügbar. Verwenden Sie die Sprachauswahl oben, um die Sprache der Site-Oberfläche zu ändern. Die vollständige Seitenübersetzung wird bald in allen 9 Sprachen verfügbar sein.",
+          siteName: "Zugängliche Qualitätsbildung",
+          termsOfService: "Nutzungsbedingungen"
+        },
+        zh: { 
+          backToHome: "返回首页", 
+          languageLabel: "语言：", 
+          languageNotice: "此页面目前仅提供英文版本。使用上面的语言选择器更改网站界面语言。完整的页面翻译将很快提供所有9种语言。",
+          siteName: "无障碍优质教育",
+          termsOfService: "服务条款"
+        },
+        ar: { 
+          backToHome: "العودة إلى الصفحة الرئيسية", 
+          languageLabel: "اللغة:", 
+          languageNotice: "هذه الصفحة متاحة حاليًا باللغة الإنجليزية. استخدم محدد اللغة أعلاه لتغيير لغة واجهة الموقع. سيتوفر ترجمة الصفحة الكاملة قريبًا في جميع اللغات التسع.",
+          siteName: "التعليم الجيد المتاح",
+          termsOfService: "شروط الخدمة"
+        },
+        sw: { 
+          backToHome: "Rudi Mwanzoni", 
+          languageLabel: "Lugha:", 
+          languageNotice: "Ukurasa huu kwa sasa unapatikana kwa Kiingereza. Tumia kichaguzi cha lugha hapo juu kubadilisha lugha ya kiolesura cha tovuti. Tafsiri kamili ya ukurasa itapatikana hivi karibuni katika lugha zote 9.",
+          siteName: "Elimu ya Kufikika na Ubora",
+          termsOfService: "Masharti ya Huduma"
+        },
+        am: { 
+          backToHome: "ወደ መነሻ ይመለሱ", 
+          languageLabel: "ቋንቋ:", 
+          languageNotice: "ይህ ገጽ በአሁኑ ጊዜ በእንግሊዝኛ ይገኛል። የጣቢያውን በይነገጽ ቋንቋ ለመቀየር ከላይ ያለውን የቋንቋ መራጭ ይጠቀሙ። ሙሉ የገጽ ትርጉም በቅርቡ በሁሉም 9 ቋንቋዎች ይገኛል።",
+          siteName: "ተደራሽ የሆነ ጥራት ትምህርት",
+          termsOfService: "የአገልግሎት ውሎች"
+        },
+        zu: { 
+          backToHome: "Buyela Ekhaya", 
+          languageLabel: "Ulimi:", 
+          languageNotice: "Leli khasi manje litholakala ngesiNgisi. Sebenzisa isikhetheli solimi esiphezulu ukuze ushintshe ulimi lwesixhumi sewebhusayithi. Ukuhunyushwa kwekhas eliphelele kuzotholakala maduze ezilimini zonke ezi-9.",
+          siteName: "Imfundo Yekhwalithi Engatholakali",
+          termsOfService: "Imigomo Yesevisi"
+        }
+      };
+      
+      const langTranslations = translations[lang] || translations.en;
+      
+      // Manually update header elements
+      document.querySelectorAll('[data-translate="header"][data-translate-key="siteName"]').forEach(el => {
+        el.textContent = langTranslations.siteName || "Accessible Quality Education";
+      });
+      
+      document.querySelectorAll('[data-translate="privacyPage"][data-translate-key="termsOfService"]').forEach(el => {
+        el.textContent = langTranslations.termsOfService || "Terms of Service";
+      });
+      
+      // Manually update policy page elements
+      document.querySelectorAll('[data-translate="policyPages"][data-translate-key="backToHome"]').forEach(el => {
+        el.textContent = langTranslations.backToHome;
+      });
+      
+      document.querySelectorAll('[data-translate="policyPages"][data-translate-key="languageLabel"]').forEach(el => {
+        el.textContent = langTranslations.languageLabel;
+      });
+      
+      document.querySelectorAll('[data-translate="policyPages"][data-translate-key="languageNotice"]').forEach(el => {
+        el.textContent = langTranslations.languageNotice;
+      });
+      
+      console.log('Language changed to:', lang);
+      console.log('Manual translation applied for policy pages');
+    }
+
+    // Load dark mode preference on page load
+    loadDarkModePreference();
+
+    // Initialize translations when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Terms Page - DOM loaded');
+      
+      // Wait a bit for translations.js to fully initialize
+      setTimeout(function() {
+        // Load language preference from localStorage
+        const savedLanguage = localStorage.getItem('aqe_language') || 
+                             localStorage.getItem('preferredLanguage') || 
+                             localStorage.getItem('language') || 
+                             'en';
+        
+        console.log('Terms Page - Language loaded:', savedLanguage);
+        console.log('Terms Page - Dark mode:', localStorage.getItem('darkMode'));
+        console.log('Terms Page - Translation Manager available:', !!window.translationManager);
+        console.log('Terms Page - AQETranslations available:', !!window.AQETranslations);
+        
+        // Apply the saved language
+        changeLanguage(savedLanguage);
+        
+        // Force update all elements with data-translate attributes
+        if (window.translationManager) {
+          console.log('Terms Page - Forcing translation update...');
+          window.translationManager.applyLanguage(savedLanguage);
+        }
+      }, 200);
+    });
+  </script>
+</body>
+</html>
+

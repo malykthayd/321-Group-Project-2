@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy - AQE</title>
+  
+  <!-- Bootstrap 5.x CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link href="resources/styles/main.css" rel="stylesheet">
+  <link href="resources/styles/dark-mode.css" rel="stylesheet">
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="header-professional">
+      <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center py-3">
+          <div class="d-flex align-items-center">
+            <div class="logo-container me-3">
+              <div class="logo-icon">
+                <i class="bi bi-mortarboard-fill"></i>
+              </div>
+            </div>
+            <div class="brand-info">
+              <h1 class="brand-title mb-0">
+                <a href="index.html" class="text-decoration-none" style="color: inherit;">Accessible Quality Education</a>
+              </h1>
+              <p class="brand-subtitle mb-0">Privacy Policy</p>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-3">
+            <!-- Language Selector -->
+            <div class="dropdown">
+              <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-translate me-1"></i>
+                <span id="currentLanguage">English</span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('en')">🇺🇸 English</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('es')">🇪🇸 Español</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('fr')">🇫🇷 Français</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('de')">🇩🇪 Deutsch</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('zh')">🇨🇳 中文</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('ar')">🇸🇦 العربية</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('sw')">🇰🇪 Kiswahili</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('am')">🇪🇹 አማርኛ</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('zu')">🇿🇦 isiZulu</a></li>
+              </ul>
+            </div>
+
+            <!-- Dark Mode Toggle -->
+            <button class="btn btn-outline-secondary" id="darkModeToggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+              <i class="bi bi-moon-fill" id="darkModeIcon"></i>
+              <i class="bi bi-sun-fill d-none" id="lightModeIcon"></i>
+            </button>
+
+            <!-- Back to Home -->
+            <a href="index.html" class="btn btn-outline-primary">
+              <i class="bi bi-house-fill me-2"></i><span data-translate="policyPages" data-translate-key="backToHome">Back to Home</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container-fluid py-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-8">
+          <div class="card shadow-sm">
+            <div class="card-body p-5">
+              <div class="alert alert-info mb-4">
+                <i class="bi bi-translate me-2"></i>
+                <strong data-translate="policyPages" data-translate-key="languageLabel">Language:</strong> <span data-translate="policyPages" data-translate-key="languageNotice">This page is currently available in English. Use the language selector above to change the site interface language. Full page translation coming soon for all 9 languages.</span>
+              </div>
+              
+              <h1 class="mb-4">Privacy Policy</h1>
+              <p class="text-muted">Last Updated: October 21, 2025</p>
+              
+              <hr class="my-4">
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">1. Introduction</h2>
+                <p>Welcome to Accessible Quality Education (AQE). We are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our educational platform.</p>
+                <p>By using AQE, you agree to the collection and use of information in accordance with this policy.</p>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">2. Information We Collect</h2>
+                <h3 class="h5 mb-2">2.1 Personal Information</h3>
+                <p>We collect information that you provide directly to us, including:</p>
+                <ul>
+                  <li><strong>Account Information:</strong> Name, email address, password, and role (student, teacher, parent, or admin)</li>
+                  <li><strong>Profile Information:</strong> Grade level, subjects of interest, learning preferences</li>
+                  <li><strong>Educational Data:</strong> Lesson progress, quiz scores, badges earned, practice material completion</li>
+                  <li><strong>Communication Data:</strong> Messages sent through the platform, support inquiries</li>
+                </ul>
+
+                <h3 class="h5 mb-2 mt-4">2.2 Automatically Collected Information</h3>
+                <ul>
+                  <li><strong>Usage Data:</strong> Pages visited, time spent on lessons, features used</li>
+                  <li><strong>Device Information:</strong> Browser type, operating system, device identifiers</li>
+                  <li><strong>Log Data:</strong> IP address, access times, error logs</li>
+                  <li><strong>Offline Data:</strong> Content cached locally for offline access via our PWA functionality</li>
+                </ul>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">3. How We Use Your Information</h2>
+                <p>We use the collected information for the following purposes:</p>
+                <ul>
+                  <li><strong>Educational Services:</strong> Provide personalized learning experiences, track progress, and award achievements</li>
+                  <li><strong>Account Management:</strong> Create and manage user accounts, authenticate users</li>
+                  <li><strong>Communication:</strong> Send updates, notifications, and respond to inquiries</li>
+                  <li><strong>Improvement:</strong> Analyze usage patterns to improve our platform and content</li>
+                  <li><strong>Safety & Security:</strong> Detect and prevent fraud, abuse, and security threats</li>
+                  <li><strong>Compliance:</strong> Meet legal obligations and enforce our Terms of Service</li>
+                </ul>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">4. Children's Privacy (COPPA Compliance)</h2>
+                <p><strong>We take children's privacy seriously.</strong> Our platform is designed to be safe for students of all ages, including children under 13.</p>
+                <ul>
+                  <li>We do not knowingly collect personal information from children under 13 without parental consent</li>
+                  <li>Student accounts created by teachers or parents are covered under school or parental consent</li>
+                  <li>We do not display targeted advertising to children</li>
+                  <li>Student data is used solely for educational purposes</li>
+                  <li>Parents have the right to review and delete their child's information</li>
+                </ul>
+                <p>If you believe we have collected information from a child under 13 without proper consent, please contact us immediately at <a href="mailto:privacy@aqeducation.org">privacy@aqeducation.org</a>.</p>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">5. Data Sharing and Disclosure</h2>
+                <p><strong>We do not sell your personal information.</strong> We may share information in the following circumstances:</p>
+                <ul>
+                  <li><strong>With Teachers & Parents:</strong> Student progress data is shared with assigned teachers and linked parents</li>
+                  <li><strong>Educational Institutions:</strong> Schools may access data for students in their programs</li>
+                  <li><strong>Service Providers:</strong> Third-party vendors who assist in operating our platform (all bound by confidentiality agreements)</li>
+                  <li><strong>Legal Requirements:</strong> When required by law, court order, or to protect rights and safety</li>
+                  <li><strong>With Your Consent:</strong> Any other disclosure will be made only with your explicit permission</li>
+                </ul>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">6. Data Security</h2>
+                <p>We implement industry-standard security measures to protect your information:</p>
+                <ul>
+                  <li>Password encryption using BCrypt hashing</li>
+                  <li>Secure HTTPS connections for data transmission</li>
+                  <li>Regular security audits and updates</li>
+                  <li>Access controls limiting who can view personal information</li>
+                  <li>Offline data stored securely in your browser's IndexedDB</li>
+                </ul>
+                <p><em>However, no method of transmission over the internet is 100% secure. While we strive to protect your data, we cannot guarantee absolute security.</em></p>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">7. Your Rights and Choices</h2>
+                <p>You have the following rights regarding your personal information:</p>
+                <ul>
+                  <li><strong>Access:</strong> Request a copy of the personal data we hold about you</li>
+                  <li><strong>Correction:</strong> Update or correct inaccurate information</li>
+                  <li><strong>Deletion:</strong> Request deletion of your account and associated data</li>
+                  <li><strong>Data Portability:</strong> Receive your data in a structured, machine-readable format</li>
+                  <li><strong>Opt-Out:</strong> Unsubscribe from marketing communications (educational notifications may continue)</li>
+                  <li><strong>Parental Access:</strong> Parents can review, modify, or delete their child's information</li>
+                </ul>
+                <p>To exercise these rights, contact us at <a href="mailto:privacy@aqeducation.org">privacy@aqeducation.org</a>.</p>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">8. SMS/USSD Privacy</h2>
+                <p>If you use our SMS or USSD learning features:</p>
+                <ul>
+                  <li>We collect your phone number and message content for educational delivery</li>
+                  <li>You can opt-out at any time by texting "STOP"</li>
+                  <li>Standard message and data rates may apply</li>
+                  <li>We do not share your phone number with third parties for marketing</li>
+                  <li>SMS/USSD data is subject to the same privacy protections as web data</li>
+                </ul>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">9. Cookies and Tracking</h2>
+                <p>We use cookies and similar technologies to:</p>
+                <ul>
+                  <li>Remember your login session and preferences</li>
+                  <li>Enable offline functionality (Service Workers, IndexedDB)</li>
+                  <li>Analyze platform usage and performance</li>
+                  <li>Personalize your learning experience</li>
+                </ul>
+                <p>You can control cookie preferences through your browser settings. Note that disabling cookies may limit platform functionality.</p>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">10. Data Retention</h2>
+                <ul>
+                  <li><strong>Active Accounts:</strong> Data is retained while your account is active</li>
+                  <li><strong>Inactive Accounts:</strong> After 3 years of inactivity, we may delete your data</li>
+                  <li><strong>Deleted Accounts:</strong> Data is permanently deleted within 30 days of account deletion request</li>
+                  <li><strong>Legal Requirements:</strong> Some data may be retained longer to comply with legal obligations</li>
+                </ul>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">11. International Users</h2>
+                <p>AQE is designed for a global audience. If you access our platform from outside the United States, your information may be transferred to, stored, and processed in the U.S. By using AQE, you consent to this transfer.</p>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">12. Changes to This Policy</h2>
+                <p>We may update this Privacy Policy from time to time. We will notify you of significant changes by:</p>
+                <ul>
+                  <li>Posting the new policy on this page</li>
+                  <li>Updating the "Last Updated" date</li>
+                  <li>Sending an email notification for material changes</li>
+                </ul>
+                <p>Your continued use of AQE after changes constitutes acceptance of the updated policy.</p>
+              </section>
+
+              <section class="mb-5">
+                <h2 class="h4 mb-3">13. Contact Us</h2>
+                <p>If you have questions, concerns, or requests regarding this Privacy Policy or your personal information, please contact us:</p>
+                <div class="alert alert-primary">
+                  <p class="mb-2"><strong>Privacy Team</strong></p>
+                  <p class="mb-1"><i class="bi bi-envelope-fill me-2"></i>Email: <a href="mailto:privacy@aqeducation.org">privacy@aqeducation.org</a></p>
+                  <p class="mb-1"><i class="bi bi-telephone-fill me-2"></i>Phone: +1 (555) 123-4567</p>
+                  <p class="mb-0"><i class="bi bi-clock-fill me-2"></i>Response Time: Within 48 hours</p>
+                </div>
+              </section>
+
+              <hr class="my-4">
+
+              <div class="text-center">
+                <a href="index.html" class="btn btn-primary">
+                  <i class="bi bi-house-fill me-2"></i>Return to Home
+                </a>
+                <a href="terms.html" class="btn btn-outline-secondary ms-2">
+                  <i class="bi bi-file-text me-2"></i>View Terms of Service
+                </a>
+                <a href="support.html" class="btn btn-outline-secondary ms-2">
+                  <i class="bi bi-question-circle me-2"></i>Get Support
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-modern">
+      <div class="container-fluid">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <p class="mb-0">&copy; 2025 Accessible Quality Education</p>
+          </div>
+          <div class="col-md-6 text-md-end">
+            <a href="privacy.html" class="footer-link me-3">Privacy</a>
+            <a href="terms.html" class="footer-link me-3">Terms</a>
+            <a href="support.html" class="footer-link">Support</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Bootstrap 5.x JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- AQE Scripts for Dark Mode and Translations -->
+  <script src="resources/scripts/translations.js"></script>
+  <script>
+    // Initialize dark mode
+    function loadDarkModePreference() {
+      const savedDarkMode = localStorage.getItem('darkMode');
+      if (savedDarkMode === 'true') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.documentElement.setAttribute('data-bs-theme', 'dark');
+        document.body.setAttribute('data-theme', 'dark');
+        document.getElementById('darkModeIcon')?.classList.add('d-none');
+        document.getElementById('lightModeIcon')?.classList.remove('d-none');
+      }
+    }
+
+    function toggleDarkMode() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.documentElement.removeAttribute('data-theme');
+        document.documentElement.removeAttribute('data-bs-theme');
+        document.body.removeAttribute('data-theme');
+        document.getElementById('darkModeIcon')?.classList.remove('d-none');
+        document.getElementById('lightModeIcon')?.classList.add('d-none');
+        localStorage.setItem('darkMode', 'false');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.documentElement.setAttribute('data-bs-theme', 'dark');
+        document.body.setAttribute('data-theme', 'dark');
+        document.getElementById('darkModeIcon')?.classList.add('d-none');
+        document.getElementById('lightModeIcon')?.classList.remove('d-none');
+        localStorage.setItem('darkMode', 'true');
+      }
+    }
+
+    function changeLanguage(lang) {
+      // Store in all keys for compatibility
+      localStorage.setItem('aqe_language', lang);
+      localStorage.setItem('preferredLanguage', lang);
+      localStorage.setItem('language', lang);
+      
+      // Update the current language display
+      const languageNames = {
+        'en': 'English',
+        'es': 'Español',
+        'fr': 'Français',
+        'de': 'Deutsch',
+        'zh': '中文',
+        'ar': 'العربية',
+        'sw': 'Kiswahili',
+        'am': 'አማርኛ',
+        'zu': 'isiZulu'
+      };
+      document.getElementById('currentLanguage').textContent = languageNames[lang] || 'English';
+      
+      // Apply language if translation manager is available
+      if (window.translationManager) {
+        window.translationManager.changeLanguage(lang);
+        // Force manual translation update
+        setTimeout(() => {
+          window.translationManager.applyLanguage(lang);
+        }, 50);
+      } else if (window.AQETranslations) {
+        window.AQETranslations.changeLanguage(lang);
+      }
+      
+      // Manual translation for policy pages elements
+      const translations = {
+        en: { 
+          backToHome: "Back to Home", 
+          languageLabel: "Language:", 
+          languageNotice: "This page is currently available in English. Use the language selector above to change the site interface language. Full page translation coming soon for all 9 languages.",
+          siteName: "Accessible Quality Education",
+          privacyPolicy: "Privacy Policy"
+        },
+        es: { 
+          backToHome: "Volver al Inicio", 
+          languageLabel: "Idioma:", 
+          languageNotice: "Esta página está actualmente disponible en inglés. Usa el selector de idioma arriba para cambiar el idioma de la interfaz del sitio. La traducción completa de la página estará disponible pronto en los 9 idiomas.",
+          siteName: "Educación de Calidad Accesible",
+          privacyPolicy: "Política de Privacidad"
+        },
+        fr: { 
+          backToHome: "Retour à l'Accueil", 
+          languageLabel: "Langue:", 
+          languageNotice: "Cette page est actuellement disponible en anglais. Utilisez le sélecteur de langue ci-dessus pour changer la langue de l'interface du site. La traduction complète de la page sera bientôt disponible dans les 9 langues.",
+          siteName: "Éducation de Qualité Accessible",
+          privacyPolicy: "Politique de Confidentialité"
+        },
+        de: { 
+          backToHome: "Zurück zur Startseite", 
+          languageLabel: "Sprache:", 
+          languageNotice: "Diese Seite ist derzeit auf Englisch verfügbar. Verwenden Sie die Sprachauswahl oben, um die Sprache der Site-Oberfläche zu ändern. Die vollständige Seitenübersetzung wird bald in allen 9 Sprachen verfügbar sein.",
+          siteName: "Zugängliche Qualitätsbildung",
+          privacyPolicy: "Datenschutzrichtlinie"
+        },
+        zh: { 
+          backToHome: "返回首页", 
+          languageLabel: "语言：", 
+          languageNotice: "此页面目前仅提供英文版本。使用上面的语言选择器更改网站界面语言。完整的页面翻译将很快提供所有9种语言。",
+          siteName: "无障碍优质教育",
+          privacyPolicy: "隐私政策"
+        },
+        ar: { 
+          backToHome: "العودة إلى الصفحة الرئيسية", 
+          languageLabel: "اللغة:", 
+          languageNotice: "هذه الصفحة متاحة حاليًا باللغة الإنجليزية. استخدم محدد اللغة أعلاه لتغيير لغة واجهة الموقع. سيتوفر ترجمة الصفحة الكاملة قريبًا في جميع اللغات التسع.",
+          siteName: "التعليم الجيد المتاح",
+          privacyPolicy: "سياسة الخصوصية"
+        },
+        sw: { 
+          backToHome: "Rudi Mwanzoni", 
+          languageLabel: "Lugha:", 
+          languageNotice: "Ukurasa huu kwa sasa unapatikana kwa Kiingereza. Tumia kichaguzi cha lugha hapo juu kubadilisha lugha ya kiolesura cha tovuti. Tafsiri kamili ya ukurasa itapatikana hivi karibuni katika lugha zote 9.",
+          siteName: "Elimu ya Kufikika na Ubora",
+          privacyPolicy: "Sera ya Faragha"
+        },
+        am: { 
+          backToHome: "ወደ መነሻ ይመለሱ", 
+          languageLabel: "ቋንቋ:", 
+          languageNotice: "ይህ ገጽ በአሁኑ ጊዜ በእንግሊዝኛ ይገኛል። የጣቢያውን በይነገጽ ቋንቋ ለመቀየር ከላይ ያለውን የቋንቋ መራጭ ይጠቀሙ። ሙሉ የገጽ ትርጉም በቅርቡ በሁሉም 9 ቋንቋዎች ይገኛል።",
+          siteName: "ተደራሽ የሆነ ጥራት ትምህርት",
+          privacyPolicy: "የግላዊነት ፖሊሲ"
+        },
+        zu: { 
+          backToHome: "Buyela Ekhaya", 
+          languageLabel: "Ulimi:", 
+          languageNotice: "Leli khasi manje litholakala ngesiNgisi. Sebenzisa isikhetheli solimi esiphezulu ukuze ushintshe ulimi lwesixhumi sewebhusayithi. Ukuhunyushwa kwekhas eliphelele kuzotholakala maduze ezilimini zonke ezi-9.",
+          siteName: "Imfundo Yekhwalithi Engatholakali",
+          privacyPolicy: "Inqubomgomo Yobumfihlo"
+        }
+      };
+      
+      const langTranslations = translations[lang] || translations.en;
+      
+      // Manually update header elements
+      document.querySelectorAll('[data-translate="header"][data-translate-key="siteName"]').forEach(el => {
+        el.textContent = langTranslations.siteName || "Accessible Quality Education";
+      });
+      
+      document.querySelectorAll('[data-translate="privacyPage"][data-translate-key="privacyPolicy"]').forEach(el => {
+        el.textContent = langTranslations.privacyPolicy || "Privacy Policy";
+      });
+      
+      // Manually update policy page elements
+      document.querySelectorAll('[data-translate="policyPages"][data-translate-key="backToHome"]').forEach(el => {
+        el.textContent = langTranslations.backToHome;
+      });
+      
+      document.querySelectorAll('[data-translate="policyPages"][data-translate-key="languageLabel"]').forEach(el => {
+        el.textContent = langTranslations.languageLabel;
+      });
+      
+      document.querySelectorAll('[data-translate="policyPages"][data-translate-key="languageNotice"]').forEach(el => {
+        el.textContent = langTranslations.languageNotice;
+      });
+      
+      console.log('Language changed to:', lang);
+      console.log('Manual translation applied for policy pages');
+    }
+
+    // Load dark mode preference on page load
+    loadDarkModePreference();
+
+    // Initialize translations when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Privacy Policy Page - DOM loaded');
+      
+      // Wait a bit for translations.js to fully initialize
+      setTimeout(function() {
+        // Load language preference from localStorage
+        const savedLanguage = localStorage.getItem('aqe_language') || 
+                             localStorage.getItem('preferredLanguage') || 
+                             localStorage.getItem('language') || 
+                             'en';
+        
+        console.log('Privacy Policy Page - Language loaded:', savedLanguage);
+        console.log('Privacy Policy Page - Dark mode:', localStorage.getItem('darkMode'));
+        console.log('Privacy Policy Page - Translation Manager available:', !!window.translationManager);
+        console.log('Privacy Policy Page - AQETranslations available:', !!window.AQETranslations);
+        
+        // Apply the saved language
+        changeLanguage(savedLanguage);
+        
+        // Force update all elements with data-translate attributes
+        if (window.translationManager) {
+          console.log('Privacy Policy Page - Forcing translation update...');
+          window.translationManager.applyLanguage(savedLanguage);
+        }
+      }, 200);
+    });
+  </script>
+</body>
+</html>
+
