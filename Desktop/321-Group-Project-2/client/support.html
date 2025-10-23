@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support - AQE</title>
+  
+  <!-- Bootstrap 5.x CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link href="resources/styles/main.css" rel="stylesheet">
+  <link href="resources/styles/dark-mode.css" rel="stylesheet">
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="header-professional">
+      <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center py-3">
+          <div class="d-flex align-items-center">
+            <div class="logo-container me-3">
+              <div class="logo-icon">
+                <i class="bi bi-mortarboard-fill"></i>
+              </div>
+            </div>
+            <div class="brand-info">
+              <h1 class="brand-title mb-0">
+                <a href="index.html" class="text-decoration-none" style="color: inherit;">Accessible Quality Education</a>
+              </h1>
+              <p class="brand-subtitle mb-0">Support Center</p>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-3">
+            <!-- Language Selector -->
+            <div class="dropdown">
+              <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-translate me-1"></i>
+                <span id="currentLanguage">English</span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('en')">🇺🇸 English</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('es')">🇪🇸 Español</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('fr')">🇫🇷 Français</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('de')">🇩🇪 Deutsch</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('zh')">🇨🇳 中文</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('ar')">🇸🇦 العربية</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('sw')">🇰🇪 Kiswahili</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('am')">🇪🇹 አማርኛ</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeLanguage('zu')">🇿🇦 isiZulu</a></li>
+              </ul>
+            </div>
+
+            <!-- Dark Mode Toggle -->
+            <button class="btn btn-outline-secondary" id="darkModeToggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+              <i class="bi bi-moon-fill" id="darkModeIcon"></i>
+              <i class="bi bi-sun-fill d-none" id="lightModeIcon"></i>
+            </button>
+
+            <!-- Back to Home -->
+            <a href="index.html" class="btn btn-outline-primary">
+              <i class="bi bi-house-fill me-2"></i><span data-translate="policyPages" data-translate-key="backToHome">Back to Home</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container-fluid py-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-8">
+          <!-- Language Notice -->
+          <div class="alert alert-info mb-4">
+            <i class="bi bi-translate me-2"></i>
+            <strong data-translate="policyPages" data-translate-key="languageLabel">Language:</strong> <span data-translate="policyPages" data-translate-key="languageNotice">This page is currently available in English. Use the language selector above to change the site interface language. Full page translation coming soon for all 9 languages.</span>
+          </div>
+          
+          <!-- Contact Information Card -->
+          <div class="card shadow-lg mb-4">
+            <div class="card-body p-5 text-center">
+              <i class="bi bi-headset" style="font-size: 4rem; color: #667eea;"></i>
+              <h1 class="mt-3 mb-4" data-translate="supportPage" data-translate-key="howCanWeHelp">How Can We Help You?</h1>
+              <p class="lead text-muted mb-4" data-translate="supportPage" data-translate-key="supportTeamDescription">Our support team is here to assist you with any questions or issues.</p>
+              
+              <div class="row g-4 mt-4">
+                <div class="col-md-4">
+                  <div class="p-4 bg-light bg-dark-subtle rounded">
+                    <i class="bi bi-envelope-fill text-primary" style="font-size: 2rem;"></i>
+                    <h5 class="mt-3 text-dark text-light-emphasis">Email Support</h5>
+                    <p class="text-muted text-dark-emphasis small">Get help via email</p>
+                    <a href="mailto:support@aqeducation.org" class="btn btn-outline-primary btn-sm">
+                      support@aqeducation.org
+                    </a>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="p-4 bg-light bg-dark-subtle rounded">
+                    <i class="bi bi-telephone-fill text-success" style="font-size: 2rem;"></i>
+                    <h5 class="mt-3 text-dark text-light-emphasis">Phone Support</h5>
+                    <p class="text-muted text-dark-emphasis small">Call us for urgent issues</p>
+                    <a href="tel:+15551234567" class="btn btn-outline-success btn-sm">
+                      +1 (555) 123-4567
+                    </a>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="p-4 bg-light bg-dark-subtle rounded">
+                    <i class="bi bi-clock-fill text-info" style="font-size: 2rem;"></i>
+                    <h5 class="mt-3 text-dark text-light-emphasis">Response Time</h5>
+                    <p class="text-muted text-dark-emphasis small">We respond quickly</p>
+                    <span class="badge bg-info">Within 24 Hours</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Support Categories -->
+          <div class="card shadow-sm mb-4">
+            <div class="card-body p-5">
+              <h2 class="mb-4">Support by Role</h2>
+              
+              <div class="accordion" id="supportAccordion">
+                <!-- Student Support -->
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#studentSupport">
+                      <i class="bi bi-mortarboard-fill me-2 text-primary"></i>
+                      <strong>For Students</strong>
+                    </button>
+                  </h2>
+                  <div id="studentSupport" class="accordion-collapse collapse show" data-bs-parent="#supportAccordion">
+                    <div class="accordion-body">
+                      <h5>Common Student Questions:</h5>
+                      <ul>
+                        <li><strong>How do I access my lessons?</strong> - Log in and click the "Lessons" tab in your dashboard</li>
+                        <li><strong>How do I track my progress?</strong> - Visit your dashboard to see completed lessons, earned badges, and statistics</li>
+                        <li><strong>Can I use AQE offline?</strong> - Yes! The app works offline after you've loaded content while online</li>
+                        <li><strong>How do I earn badges?</strong> - Complete lessons and achieve high scores to unlock achievements</li>
+                        <li><strong>What if I forget my password?</strong> - Click "Forgot Password" on the login screen or contact your teacher</li>
+                      </ul>
+                      <p class="mb-0"><strong>Student Support Email:</strong> <a href="mailto:students@aqeducation.org">students@aqeducation.org</a></p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Teacher Support -->
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#teacherSupport">
+                      <i class="bi bi-person-badge-fill me-2 text-success"></i>
+                      <strong>For Teachers</strong>
+                    </button>
+                  </h2>
+                  <div id="teacherSupport" class="accordion-collapse collapse" data-bs-parent="#supportAccordion">
+                    <div class="accordion-body">
+                      <h5>Common Teacher Questions:</h5>
+                      <ul>
+                        <li><strong>How do I add students?</strong> - Go to "My Students" and click "Add Student" or share access codes</li>
+                        <li><strong>How do I create assignments?</strong> - Visit "Practice Materials" and click "Create Assignment"</li>
+                        <li><strong>Can I see student progress?</strong> - Yes! Each student profile shows detailed progress and statistics</li>
+                        <li><strong>How do I create custom content?</strong> - Use the "Practice Materials" section to create questions and exercises</li>
+                        <li><strong>Can I assign Digital Library books?</strong> - Yes! Browse the library and click "Assign to Students"</li>
+                      </ul>
+                      <p class="mb-0"><strong>Teacher Support Email:</strong> <a href="mailto:teachers@aqeducation.org">teachers@aqeducation.org</a></p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Parent Support -->
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#parentSupport">
+                      <i class="bi bi-heart-fill me-2 text-danger"></i>
+                      <strong>For Parents</strong>
+                    </button>
+                  </h2>
+                  <div id="parentSupport" class="accordion-collapse collapse" data-bs-parent="#supportAccordion">
+                    <div class="accordion-body">
+                      <h5>Common Parent Questions:</h5>
+                      <ul>
+                        <li><strong>How do I link my child's account?</strong> - Go to "My Children" and add your child's email or access code</li>
+                        <li><strong>How can I monitor progress?</strong> - View your child's dashboard to see lessons completed and scores</li>
+                        <li><strong>Can I assign extra lessons?</strong> - Yes! You can assign Digital Library books and practice materials</li>
+                        <li><strong>Is my child's data safe?</strong> - Absolutely. We follow strict privacy regulations. See our <a href="privacy.html">Privacy Policy</a></li>
+                        <li><strong>How do I delete my child's account?</strong> - Contact us at <a href="mailto:privacy@aqeducation.org">privacy@aqeducation.org</a></li>
+                      </ul>
+                      <p class="mb-0"><strong>Parent Support Email:</strong> <a href="mailto:parents@aqeducation.org">parents@aqeducation.org</a></p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Admin Support -->
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#adminSupport">
+                      <i class="bi bi-gear-fill me-2 text-warning"></i>
+                      <strong>For Administrators</strong>
+                    </button>
+                  </h2>
+                  <div id="adminSupport" class="accordion-collapse collapse" data-bs-parent="#supportAccordion">
+                    <div class="accordion-body">
+                      <h5>Common Admin Questions:</h5>
+                      <ul>
+                        <li><strong>How do I manage users?</strong> - Visit the "User Management" tab in your admin dashboard</li>
+                        <li><strong>How do I add content?</strong> - Use "Content Management" to upload lessons, books, and materials</li>
+                        <li><strong>How do I configure SMS/USSD?</strong> - Visit the "SMS/USSD Accessibility" tab to set up keywords and flows</li>
+                        <li><strong>Can I see system analytics?</strong> - Yes! The admin dashboard shows platform-wide statistics</li>
+                        <li><strong>How do I configure settings?</strong> - Visit "System Settings" to manage grade levels, subjects, and features</li>
+                      </ul>
+                      <p class="mb-0"><strong>Admin Support Email:</strong> <a href="mailto:admin@aqeducation.org">admin@aqeducation.org</a></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Technical Support -->
+          <div class="card shadow-sm mb-4">
+            <div class="card-body p-5">
+              <h2 class="mb-4"><i class="bi bi-tools me-2"></i>Technical Support</h2>
+              
+              <div class="row g-4">
+                <div class="col-md-6">
+                  <h5>Troubleshooting</h5>
+                  <ul>
+                    <li><strong>App won't load?</strong> Clear your browser cache and cookies</li>
+                    <li><strong>Offline mode not working?</strong> Ensure you've accessed content online first</li>
+                    <li><strong>Dark mode issues?</strong> Try refreshing the page or clearing cache</li>
+                    <li><strong>Translation not working?</strong> Select your language from the language dropdown</li>
+                    <li><strong>Videos not playing?</strong> Check your internet connection and browser settings</li>
+                  </ul>
+                </div>
+                <div class="col-md-6">
+                  <h5>System Requirements</h5>
+                  <ul>
+                    <li><strong>Browsers:</strong> Chrome, Firefox, Safari, Edge (latest versions)</li>
+                    <li><strong>Internet:</strong> Required for initial load; offline access available after</li>
+                    <li><strong>Mobile:</strong> iOS 12+, Android 8+</li>
+                    <li><strong>Screen:</strong> Minimum 320px width (mobile-friendly)</li>
+                    <li><strong>JavaScript:</strong> Must be enabled</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="alert alert-info mt-4">
+                <h5><i class="bi bi-info-circle-fill me-2"></i>Need More Help?</h5>
+                <p class="mb-0">For technical issues, email our tech team at <a href="mailto:tech@aqeducation.org">tech@aqeducation.org</a> with:</p>
+                <ul class="mt-2 mb-0">
+                  <li>Your browser and device information</li>
+                  <li>A description of the problem</li>
+                  <li>Screenshots if applicable</li>
+                  <li>Steps to reproduce the issue</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Form -->
+          <div class="card shadow-sm mb-4">
+            <div class="card-body p-5">
+              <h2 class="mb-4"><i class="bi bi-envelope-fill me-2"></i>Contact Us</h2>
+              <p class="text-muted mb-4">Have a question? Send us a message and we'll respond within 24 hours.</p>
+              
+              <form>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label for="contactName" class="form-label">Your Name</label>
+                    <input type="text" class="form-control" id="contactName" placeholder="John Doe" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="contactEmail" class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="contactEmail" placeholder="you@example.com" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="contactRole" class="form-label">Your Role</label>
+                    <select class="form-select" id="contactRole" required>
+                      <option value="">Select your role...</option>
+                      <option value="student">Student</option>
+                      <option value="teacher">Teacher</option>
+                      <option value="parent">Parent</option>
+                      <option value="admin">Administrator</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="contactSubject" class="form-label">Subject</label>
+                    <select class="form-select" id="contactSubject" required>
+                      <option value="">Select a topic...</option>
+                      <option value="technical">Technical Issue</option>
+                      <option value="account">Account Problem</option>
+                      <option value="feature">Feature Request</option>
+                      <option value="content">Content Question</option>
+                      <option value="privacy">Privacy Concern</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <div class="col-12">
+                    <label for="contactMessage" class="form-label">Message</label>
+                    <textarea class="form-control" id="contactMessage" rows="5" placeholder="Describe your question or issue in detail..." required></textarea>
+                  </div>
+                  <div class="col-12">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                      <i class="bi bi-send-fill me-2"></i>Send Message
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Additional Resources -->
+          <div class="card shadow-sm mb-4">
+            <div class="card-body p-5">
+              <h2 class="mb-4"><i class="bi bi-book-fill me-2"></i>Additional Resources</h2>
+              
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <a href="privacy.html" class="text-decoration-none">
+                    <div class="p-4 border rounded h-100 hover-shadow">
+                      <i class="bi bi-shield-check text-primary" style="font-size: 2rem;"></i>
+                      <h5 class="mt-3">Privacy Policy</h5>
+                      <p class="text-muted small mb-0">Learn how we protect your data</p>
+                    </div>
+                  </a>
+                </div>
+                <div class="col-md-4">
+                  <a href="terms.html" class="text-decoration-none">
+                    <div class="p-4 border rounded h-100 hover-shadow">
+                      <i class="bi bi-file-text text-success" style="font-size: 2rem;"></i>
+                      <h5 class="mt-3">Terms of Service</h5>
+                      <p class="text-muted small mb-0">Read our terms and conditions</p>
+                    </div>
+                  </a>
+                </div>
+                <div class="col-md-4">
+                  <a href="index.html" class="text-decoration-none">
+                    <div class="p-4 border rounded h-100 hover-shadow">
+                      <i class="bi bi-play-circle text-info" style="font-size: 2rem;"></i>
+                      <h5 class="mt-3">Getting Started</h5>
+                      <p class="text-muted small mb-0">Begin your learning journey</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Emergency Contact -->
+          <div class="alert alert-danger">
+            <h5><i class="bi bi-exclamation-triangle-fill me-2"></i>Emergency Contact</h5>
+            <p class="mb-2">For urgent security issues, data breaches, or child safety concerns, contact us immediately:</p>
+            <p class="mb-1"><strong>Emergency Email:</strong> <a href="mailto:emergency@aqeducation.org" class="text-dark"><u>emergency@aqeducation.org</u></a></p>
+            <p class="mb-0"><strong>Emergency Phone:</strong> <a href="tel:+15559999999" class="text-dark"><u>+1 (555) 999-9999</u></a> (24/7 Hotline)</p>
+          </div>
+
+          <div class="text-center mt-4">
+            <a href="index.html" class="btn btn-primary btn-lg">
+              <i class="bi bi-house-fill me-2"></i>Return to Home
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-modern">
+      <div class="container-fluid">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <p class="mb-0">&copy; 2025 Accessible Quality Education</p>
+          </div>
+          <div class="col-md-6 text-md-end">
+            <a href="privacy.html" class="footer-link me-3">Privacy</a>
+            <a href="terms.html" class="footer-link me-3">Terms</a>
+            <a href="support.html" class="footer-link">Support</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Bootstrap 5.x JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- AQE Scripts for Dark Mode and Translations -->
+  <script src="resources/scripts/translations.js"></script>
+  <script>
+    // Initialize dark mode
+    function loadDarkModePreference() {
+      const savedDarkMode = localStorage.getItem('darkMode');
+      if (savedDarkMode === 'true') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.documentElement.setAttribute('data-bs-theme', 'dark');
+        document.body.setAttribute('data-theme', 'dark');
+        document.getElementById('darkModeIcon')?.classList.add('d-none');
+        document.getElementById('lightModeIcon')?.classList.remove('d-none');
+      }
+    }
+
+    function toggleDarkMode() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.documentElement.removeAttribute('data-theme');
+        document.documentElement.removeAttribute('data-bs-theme');
+        document.body.removeAttribute('data-theme');
+        document.getElementById('darkModeIcon')?.classList.remove('d-none');
+        document.getElementById('lightModeIcon')?.classList.add('d-none');
+        localStorage.setItem('darkMode', 'false');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.documentElement.setAttribute('data-bs-theme', 'dark');
+        document.body.setAttribute('data-theme', 'dark');
+        document.getElementById('darkModeIcon')?.classList.add('d-none');
+        document.getElementById('lightModeIcon')?.classList.remove('d-none');
+        localStorage.setItem('darkMode', 'true');
+      }
+    }
+
+    function changeLanguage(lang) {
+      // Store in all keys for compatibility
+      localStorage.setItem('aqe_language', lang);
+      localStorage.setItem('preferredLanguage', lang);
+      localStorage.setItem('language', lang);
+      
+      // Update the current language display
+      const languageNames = {
+        'en': 'English',
+        'es': 'Español',
+        'fr': 'Français',
+        'de': 'Deutsch',
+        'zh': '中文',
+        'ar': 'العربية',
+        'sw': 'Kiswahili',
+        'am': 'አማርኛ',
+        'zu': 'isiZulu'
+      };
+      document.getElementById('currentLanguage').textContent = languageNames[lang] || 'English';
+      
+      // Apply language if translation manager is available
+      if (window.translationManager) {
+        window.translationManager.changeLanguage(lang);
+        // Force manual translation update
+        setTimeout(() => {
+          window.translationManager.applyLanguage(lang);
+        }, 50);
+      } else if (window.AQETranslations) {
+        window.AQETranslations.changeLanguage(lang);
+      }
+      
+      // Manual translation for support page elements
+      const translations = {
+        en: { 
+          backToHome: "Back to Home", 
+          languageLabel: "Language:", 
+          languageNotice: "This page is currently available in English. Use the language selector above to change the site interface language. Full page translation coming soon for all 9 languages.",
+          siteName: "Accessible Quality Education",
+          supportCenter: "Support Center",
+          howCanWeHelp: "How Can We Help You?",
+          supportTeamDescription: "Our support team is here to assist you with any questions or issues.",
+          emailSupport: "Email Support",
+          emailSupportDesc: "Get help via email",
+          phoneSupport: "Phone Support",
+          phoneSupportDesc: "Call us for urgent issues",
+          responseTime: "Response Time",
+          responseTimeDesc: "We respond quickly",
+          within24Hours: "Within 24 Hours",
+          supportByRole: "Support by Role",
+          forStudents: "For Students",
+          forTeachers: "For Teachers",
+          forParents: "For Parents",
+          forAdministrators: "For Administrators",
+          commonStudentQuestions: "Common Student Questions:",
+          studentQ1: "How do I access my lessons? - Log in and click the \"Lessons\" tab in your dashboard",
+          studentQ2: "How do I track my progress? - Visit your dashboard to see completed lessons, earned badges, and statistics",
+          studentQ3: "Can I use AQE offline? - Yes! The app works offline after you've loaded content while online",
+          studentQ4: "How do I earn badges? - Complete lessons and achieve high scores to unlock achievements",
+          studentQ5: "What if I forget my password? - Click \"Forgot Password\" on the login screen or contact your teacher",
+          studentSupportEmail: "Student Support Email: students@aqeducation.org",
+          technicalSupport: "Technical Support",
+          troubleshooting: "Troubleshooting",
+          trouble1: "App won't load? Clear your browser cache and cookies",
+          trouble2: "Offline mode not working? Ensure you've accessed content online first",
+          trouble3: "Dark mode issues? Try refreshing the page or clearing cache",
+          trouble4: "Translation not working? Select your language from the language dropdown",
+          trouble5: "Videos not playing? Check your internet connection and browser settings",
+          systemRequirements: "System Requirements",
+          browsers: "Browsers: Chrome, Firefox, Safari, Edge (latest versions)",
+          internet: "Internet: Required for initial load; offline access available after",
+          mobile: "Mobile: iOS 12+, Android 8+",
+          screen: "Screen: Minimum 320px width (mobile-friendly)",
+          javascript: "JavaScript: Must be enabled",
+          needMoreHelp: "Need More Help?",
+          techSupportDesc: "For technical issues, email our tech team at tech@aqeducation.org with:",
+          techSupportList1: "Your browser and device information",
+          techSupportList2: "A description of the problem",
+          techSupportList3: "Screenshots if applicable",
+          techSupportList4: "Steps to reproduce the issue",
+          contactUs: "Contact Us",
+          contactUsDesc: "Have a question? Send us a message and we'll respond within 24 hours.",
+          yourName: "Your Name",
+          namePlaceholder: "John Doe",
+          emailAddress: "Email Address",
+          emailPlaceholder: "you@example.com",
+          yourRole: "Your Role",
+          rolePlaceholder: "Select your role...",
+          subject: "Subject",
+          subjectPlaceholder: "Select a topic...",
+          message: "Message",
+          messagePlaceholder: "Describe your question or issue in detail...",
+          additionalResources: "Additional Resources",
+          privacyPolicy: "Privacy Policy",
+          privacyPolicyDesc: "Learn how we protect your data",
+          termsOfService: "Terms of Service",
+          termsDesc: "Read our terms and conditions",
+          gettingStarted: "Getting Started",
+          gettingStartedDesc: "Begin your learning journey",
+          emergencyContact: "Emergency Contact",
+          emergencyDesc: "For urgent security issues, data breaches, or child safety concerns, contact us immediately:",
+          emergencyEmail: "Emergency Email: emergency@aqeducation.org",
+          emergencyPhone: "Emergency Phone: +1 (555) 999-9999 (24/7 Hotline)",
+          viewTermsOfService: "View Terms of Service",
+          getSupport: "Get Support"
+        },
+        es: { 
+          backToHome: "Volver al Inicio", 
+          languageLabel: "Idioma:", 
+          languageNotice: "Esta página está actualmente disponible en inglés. Usa el selector de idioma arriba para cambiar el idioma de la interfaz del sitio. La traducción completa de la página estará disponible pronto en los 9 idiomas.",
+          siteName: "Educación de Calidad Accesible",
+          supportCenter: "Centro de Soporte",
+          howCanWeHelp: "¿Cómo Podemos Ayudarte?",
+          supportTeamDescription: "Nuestro equipo de soporte está aquí para ayudarte con cualquier pregunta o problema.",
+          emailSupport: "Soporte por Email",
+          emailSupportDesc: "Obtén ayuda por correo electrónico",
+          phoneSupport: "Soporte Telefónico",
+          phoneSupportDesc: "Llámanos para problemas urgentes",
+          responseTime: "Tiempo de Respuesta",
+          responseTimeDesc: "Respondemos rápidamente",
+          within24Hours: "Dentro de 24 Horas",
+          supportByRole: "Soporte por Rol",
+          forStudents: "Para Estudiantes",
+          forTeachers: "Para Maestros",
+          forParents: "Para Padres",
+          forAdministrators: "Para Administradores",
+          commonStudentQuestions: "Preguntas Comunes de Estudiantes:",
+          studentQ1: "¿Cómo accedo a mis lecciones? - Inicia sesión y haz clic en la pestaña \"Lecciones\" en tu panel",
+          studentQ2: "¿Cómo rastreamos mi progreso? - Visita tu panel para ver lecciones completadas, insignias ganadas y estadísticas",
+          studentQ3: "¿Puedo usar AQE sin conexión? - ¡Sí! La aplicación funciona sin conexión después de cargar contenido en línea",
+          studentQ4: "¿Cómo gano insignias? - Completa lecciones y logra altas puntuaciones para desbloquear logros",
+          studentQ5: "¿Qué pasa si olvido mi contraseña? - Haz clic en \"Olvidé mi Contraseña\" en la pantalla de inicio de sesión o contacta a tu maestro",
+          studentSupportEmail: "Email de Soporte Estudiantil: students@aqeducation.org",
+          technicalSupport: "Soporte Técnico",
+          troubleshooting: "Solución de Problemas",
+          trouble1: "¿La aplicación no carga? Limpia la caché y cookies de tu navegador",
+          trouble2: "¿El modo sin conexión no funciona? Asegúrate de haber accedido al contenido en línea primero",
+          trouble3: "¿Problemas con el modo oscuro? Intenta actualizar la página o limpiar la caché",
+          trouble4: "¿La traducción no funciona? Selecciona tu idioma del menú desplegable de idiomas",
+          trouble5: "¿Los videos no se reproducen? Verifica tu conexión a internet y configuración del navegador",
+          systemRequirements: "Requisitos del Sistema",
+          browsers: "Navegadores: Chrome, Firefox, Safari, Edge (versiones más recientes)",
+          internet: "Internet: Requerido para carga inicial; acceso sin conexión disponible después",
+          mobile: "Móvil: iOS 12+, Android 8+",
+          screen: "Pantalla: Mínimo 320px de ancho (compatible con móviles)",
+          javascript: "JavaScript: Debe estar habilitado",
+          needMoreHelp: "¿Necesitas Más Ayuda?",
+          techSupportDesc: "Para problemas técnicos, envía un email a nuestro equipo técnico en tech@aqeducation.org con:",
+          techSupportList1: "Información de tu navegador y dispositivo",
+          techSupportList2: "Una descripción del problema",
+          techSupportList3: "Capturas de pantalla si aplica",
+          techSupportList4: "Pasos para reproducir el problema",
+          contactUs: "Contáctanos",
+          contactUsDesc: "¿Tienes una pregunta? Envíanos un mensaje y responderemos dentro de 24 horas.",
+          yourName: "Tu Nombre",
+          namePlaceholder: "Juan Pérez",
+          emailAddress: "Dirección de Email",
+          emailPlaceholder: "tu@ejemplo.com",
+          yourRole: "Tu Rol",
+          rolePlaceholder: "Selecciona tu rol...",
+          subject: "Asunto",
+          subjectPlaceholder: "Selecciona un tema...",
+          message: "Mensaje",
+          messagePlaceholder: "Describe tu pregunta o problema en detalle...",
+          additionalResources: "Recursos Adicionales",
+          privacyPolicy: "Política de Privacidad",
+          privacyPolicyDesc: "Aprende cómo protegemos tus datos",
+          termsOfService: "Términos de Servicio",
+          termsDesc: "Lee nuestros términos y condiciones",
+          gettingStarted: "Comenzar",
+          gettingStartedDesc: "Comienza tu viaje de aprendizaje",
+          emergencyContact: "Contacto de Emergencia",
+          emergencyDesc: "Para problemas urgentes de seguridad, violaciones de datos o preocupaciones de seguridad infantil, contáctanos inmediatamente:",
+          emergencyEmail: "Email de Emergencia: emergency@aqeducation.org",
+          emergencyPhone: "Teléfono de Emergencia: +1 (555) 999-9999 (Línea 24/7)",
+          viewTermsOfService: "Ver Términos de Servicio",
+          getSupport: "Obtener Soporte"
+        }
+      };
+      
+      const langTranslations = translations[lang] || translations.en;
+      
+      // Manually update policy page elements
+      document.querySelectorAll('[data-translate="policyPages"][data-translate-key="backToHome"]').forEach(el => {
+        el.textContent = langTranslations.backToHome;
+      });
+      
+      document.querySelectorAll('[data-translate="policyPages"][data-translate-key="languageLabel"]').forEach(el => {
+        el.textContent = langTranslations.languageLabel;
+      });
+      
+      document.querySelectorAll('[data-translate="policyPages"][data-translate-key="languageNotice"]').forEach(el => {
+        el.textContent = langTranslations.languageNotice;
+      });
+      
+      // Manually update header elements
+      document.querySelectorAll('[data-translate="header"][data-translate-key="siteName"]').forEach(el => {
+        el.textContent = langTranslations.siteName || "Accessible Quality Education";
+      });
+      
+      // Manually update support page elements
+      document.querySelectorAll('[data-translate="supportPage"][data-translate-key="supportCenter"]').forEach(el => {
+        el.textContent = langTranslations.supportCenter || "Support Center";
+      });
+      
+      document.querySelectorAll('[data-translate="supportPage"][data-translate-key="howCanWeHelp"]').forEach(el => {
+        el.textContent = langTranslations.howCanWeHelp;
+      });
+      
+      document.querySelectorAll('[data-translate="supportPage"][data-translate-key="supportTeamDescription"]').forEach(el => {
+        el.textContent = langTranslations.supportTeamDescription;
+      });
+      
+      // Update other support page elements by direct text matching
+      const supportElements = {
+        'h1:contains("How Can We Help You?")': langTranslations.howCanWeHelp,
+        'p:contains("Our support team is here to assist you")': langTranslations.supportTeamDescription,
+        'h5:contains("Email Support")': langTranslations.emailSupport,
+        'p:contains("Get help via email")': langTranslations.emailSupportDesc,
+        'h5:contains("Phone Support")': langTranslations.phoneSupport,
+        'p:contains("Call us for urgent issues")': langTranslations.phoneSupportDesc,
+        'h5:contains("Response Time")': langTranslations.responseTime,
+        'p:contains("We respond quickly")': langTranslations.responseTimeDesc,
+        'span:contains("Within 24 Hours")': langTranslations.within24Hours,
+        'h2:contains("Support by Role")': langTranslations.supportByRole,
+        'strong:contains("For Students")': langTranslations.forStudents,
+        'strong:contains("For Teachers")': langTranslations.forTeachers,
+        'strong:contains("For Parents")': langTranslations.forParents,
+        'strong:contains("For Administrators")': langTranslations.forAdministrators,
+        'h5:contains("Common Student Questions:")': langTranslations.commonStudentQuestions
+      };
+      
+      // Apply translations using direct text replacement
+      Object.entries(supportElements).forEach(([selector, translation]) => {
+        try {
+          const elements = document.querySelectorAll(selector);
+          elements.forEach(el => {
+            if (el.textContent.includes(selector.split(':contains("')[1].split('")')[0])) {
+              el.textContent = translation;
+            }
+          });
+        } catch (e) {
+          console.log('Could not update element:', selector);
+        }
+      });
+      
+      console.log('Language changed to:', lang);
+      console.log('Manual translation applied for policy pages');
+    }
+
+    // Load dark mode preference on page load
+    loadDarkModePreference();
+
+    // Initialize translations when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Support Page - DOM loaded');
+      
+      // Wait a bit for translations.js to fully initialize
+      setTimeout(function() {
+        // Load language preference from localStorage
+        const savedLanguage = localStorage.getItem('aqe_language') || 
+                             localStorage.getItem('preferredLanguage') || 
+                             localStorage.getItem('language') || 
+                             'en';
+        
+        console.log('Support Page - Language loaded:', savedLanguage);
+        console.log('Support Page - Dark mode:', localStorage.getItem('darkMode'));
+        console.log('Support Page - Translation Manager available:', !!window.translationManager);
+        console.log('Support Page - AQETranslations available:', !!window.AQETranslations);
+        
+        // Apply the saved language
+        changeLanguage(savedLanguage);
+        
+        // Force update all elements with data-translate attributes
+        if (window.translationManager) {
+          console.log('Support Page - Forcing translation update...');
+          window.translationManager.applyLanguage(savedLanguage);
+        }
+      }, 200);
+    });
+  </script>
+  
+  <style>
+    .hover-shadow {
+      transition: all 0.3s ease;
+    }
+    .hover-shadow:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transform: translateY(-2px);
+    }
+  </style>
+</body>
+</html>
+
