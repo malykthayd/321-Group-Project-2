@@ -202,6 +202,13 @@ class PWAManager {
     if (this.registration && this.registration.waiting) {
       // Tell the waiting service worker to take over
       this.registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+      // Force reload after a short delay
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
+    } else {
+      // If no waiting worker, just reload
+      window.location.reload();
     }
   }
 

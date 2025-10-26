@@ -1,7 +1,7 @@
 // AQE Platform Service Worker
 // Provides offline functionality, caching, and background sync
 
-const CACHE_VERSION = 'aqe-v1';
+const CACHE_VERSION = 'aqe-v2-updated';
 const CACHE_NAME = `aqe-cache-${CACHE_VERSION}`;
 const DATA_CACHE_NAME = `aqe-data-${CACHE_VERSION}`;
 
