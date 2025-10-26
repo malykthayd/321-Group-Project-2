@@ -664,14 +664,33 @@ class MultiRoleAuthManager {
         const userNameElement = document.getElementById('userFullName');
         const userRoleElement = document.getElementById('userRole');
         const userRoleDisplayElement = document.getElementById('userRoleDisplay');
+        
+        // Mobile versions
+        const mobileUserNameElement = document.getElementById('mobileUserFullName');
+        const mobileUserRoleElement = document.getElementById('mobileUserRole');
+        const mobileUserRoleDisplayElement = document.getElementById('mobileUserRoleDisplay');
 
         if (this.currentUser) {
+            // Desktop
             if (userNameElement) userNameElement.textContent = this.currentUser.name;
             if (userRoleElement) userRoleElement.textContent = this.currentUser.role;
             if (userRoleDisplayElement) userRoleDisplayElement.textContent = this.currentUser.role;
+            
+            // Mobile
+            if (mobileUserNameElement) mobileUserNameElement.textContent = this.currentUser.name;
+            if (mobileUserRoleElement) mobileUserRoleElement.textContent = this.currentUser.role;
+            if (mobileUserRoleDisplayElement) mobileUserRoleDisplayElement.textContent = this.currentUser.role;
 
             // Show role-specific content
             this.showRoleContent(this.currentUser.role);
+        } else {
+            // Guest user - clear the fields
+            if (userNameElement) userNameElement.textContent = 'Guest User';
+            if (userRoleElement) userRoleElement.textContent = 'guest';
+            if (userRoleDisplayElement) userRoleDisplayElement.textContent = 'guest';
+            if (mobileUserNameElement) mobileUserNameElement.textContent = 'Guest User';
+            if (mobileUserRoleElement) mobileUserRoleElement.textContent = 'guest';
+            if (mobileUserRoleDisplayElement) mobileUserRoleDisplayElement.textContent = 'guest';
         }
     }
 
@@ -681,13 +700,31 @@ class MultiRoleAuthManager {
         const roleContents = document.querySelectorAll('.role-content');
         roleContents.forEach(content => {
             content.classList.add('d-none');
+            content.style.display = 'none';
         });
 
         // Show specific role content
         const specificRoleContent = document.querySelector(`.role-content.${role}-only`);
         if (specificRoleContent) {
             specificRoleContent.classList.remove('d-none');
+            specificRoleContent.style.display = 'block';
         }
+        
+        // Show the role dashboard container
+        const roleDashboard = document.getElementById('roleDashboard');
+        if (roleDashboard) {
+            roleDashboard.style.display = 'block';
+            roleDashboard.classList.add('show');
+        }
+        
+        // Hide main content sections when logged in
+        const heroSection = document.querySelector('.hero-section');
+        const mainTabContent = document.getElementById('mainTabContent');
+        const mainTabs = document.getElementById('mainNavigationTabs');
+        
+        if (heroSection) heroSection.style.display = 'none';
+        if (mainTabContent) mainTabContent.style.display = 'none';
+        if (mainTabs) mainTabs.style.display = 'none';
     }
 
     // Initialize role-specific manager
@@ -740,8 +777,20 @@ class MultiRoleAuthManager {
 
     // Go to tab (placeholder - should be implemented by main navigation)
     goToTab(tabName) {
-        // This should be implemented by the main navigation system
         console.log(`Navigating to ${tabName}`);
+        
+        // Wait for main.js to be loaded, then trigger the navigation
+        if (window.app && typeof window.app.goToTab === 'function') {
+            window.app.goToTab(tabName);
+        } else {
+            // Fallback: manually trigger tab switching if main.js isn't ready
+            setTimeout(() => {
+                const tabButton = document.querySelector(`#${tabName}-tab, button[data-tab="${tabName}"]`);
+                if (tabButton) {
+                    tabButton.click();
+                }
+            }, 200);
+        }
     }
 
     // Reset forms
