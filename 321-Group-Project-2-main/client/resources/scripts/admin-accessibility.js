@@ -1,7 +1,7 @@
 // Admin Accessibility (SMS/USSD) Management
 class AdminAccessibility {
   constructor() {
-    this.apiBaseUrl = 'http://localhost:5001/api/admin/accessibility';
+    this.apiBaseUrl = window.AQEConfig.getApiUrl('admin/accessibility');
     this.currentView = 'overview';
   }
 
@@ -820,7 +820,7 @@ class AdminAccessibility {
     }
 
     try {
-      const response = await fetch('http://localhost:5001/api/gateway/test/send', {
+      const response = await fetch(window.AQEConfig.getApiUrl('gateway/test/send'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -856,7 +856,7 @@ class AdminAccessibility {
     }
 
     try {
-      const response = await fetch('http://localhost:5001/api/gateway/test/sms', {
+      const response = await fetch('window.AQEConfig.getApiUrl('gateway/test/sms')', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -902,7 +902,7 @@ class AdminAccessibility {
         const step = steps[i];
         console.log(`Testing step ${i + 1}: ${step.description}`);
         
-        const response = await fetch('http://localhost:5001/api/gateway/test/sms', {
+        const response = await fetch('window.AQEConfig.getApiUrl('gateway/test/sms')', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

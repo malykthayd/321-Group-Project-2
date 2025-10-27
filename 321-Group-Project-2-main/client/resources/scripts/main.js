@@ -8,6 +8,7 @@ class AQEPlatform {
     this.isDarkMode = false;
     this.notifications = [];
     this.translations = {};
+    this.apiBaseUrl = window.AQEConfig.getApiBaseUrl();
     
     this.init();
   }
@@ -104,20 +105,10 @@ class AQEPlatform {
 
   // Load user data
   loadUserData() {
-    // First try to load from localStorage directly
-    const storedUser = localStorage.getItem('aqe_user');
-    if (storedUser) {
-      try {
-        this.currentUser = JSON.parse(storedUser);
-        console.log('Session restored from localStorage:', this.currentUser.name);
-      } catch (error) {
-        console.error('Error parsing stored user data:', error);
-        localStorage.removeItem('aqe_user');
-        this.setGuestUser();
-      }
-    } else if (window.authManager && window.authManager.currentUser) {
-      // Fallback to AuthManager
-      this.currentUser = window.authManager.currentUser;
+    // Get user data from unified auth system
+    if (window.auth && window.auth.currentUser) {
+      this.currentUser = window.auth.currentUser;
+      console.log('User data loaded from auth system:', this.currentUser.name);
     } else {
       // Default guest user
       this.setGuestUser();
@@ -266,7 +257,7 @@ class AQEPlatform {
         <li><span class="dropdown-item-text small text-muted">${this.currentUser.role}</span></li>
         <li><hr class="dropdown-divider"></li>
         <li><a class="dropdown-item" href="#" onclick="showLoginModal()">Switch Account</a></li>
-        <li><a class="dropdown-item" href="#" onclick="authManager.logout()">Logout</a></li>
+        <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
       `;
     } else {
       // User is not logged in
@@ -411,7 +402,7 @@ class AQEPlatform {
   // Load student data
   async loadStudentData(studentId) {
     try {
-      const response = await fetch(`http://localhost:5001/api/student/${studentId}/dashboard`);
+      const response = await fetch(window.AQEConfig.getApiUrl(`student/${studentId}/dashboard`));
       const data = await response.json();
       
       if (response.ok) {
@@ -436,7 +427,7 @@ class AQEPlatform {
   // Load student digital library
   async loadStudentDigitalLibrary(studentId) {
     try {
-      const response = await fetch(`http://localhost:5001/api/student/${studentId}/digital-library`);
+      const response = await fetch(window.AQEConfig.getApiUrl(`student/${studentId}/digital-library`));
       const data = await response.json();
       
       if (response.ok) {
@@ -450,7 +441,7 @@ class AQEPlatform {
   // Load student my work
   async loadStudentMyWork(studentId) {
     try {
-      const response = await fetch(`http://localhost:5001/api/student/${studentId}/my-work`);
+      const response = await fetch(window.AQEConfig.getApiUrl(`student/${studentId}/my-work`));
       const data = await response.json();
       
       if (response.ok) {
@@ -526,7 +517,7 @@ class AQEPlatform {
   // Load student practice materials
   async loadStudentPracticeMaterials(studentId) {
     try {
-      const response = await fetch(`http://localhost:5001/api/student/${studentId}/practice-materials`);
+      const response = await fetch(window.AQEConfig.getApiUrl(`student/${studentId}/practice-materials`));
       const data = await response.json();
       
       if (response.ok) {
@@ -594,7 +585,7 @@ class AQEPlatform {
   async loadTeacherData(teacherId) {
     try {
       // Load dashboard metrics
-      const dashboardResponse = await fetch(`http://localhost:5001/api/teacher/${teacherId}/dashboard`);
+      const dashboardResponse = await fetch(window.AQEConfig.getApiUrl(`teacher/${teacherId}/dashboard`));
       const dashboardData = await dashboardResponse.json();
       
       if (dashboardResponse.ok) {
@@ -631,7 +622,7 @@ class AQEPlatform {
   // Load teacher practice materials
   async loadTeacherPracticeMaterials(teacherId) {
     try {
-      const response = await fetch(`http://localhost:5001/api/teacher/${teacherId}/practice-materials`);
+      const response = await fetch(window.AQEConfig.getApiUrl(`teacher/${teacherId}/practice-materials`));
       const data = await response.json();
       
       if (response.ok) {
@@ -690,7 +681,7 @@ class AQEPlatform {
   // Load teacher digital library
   async loadTeacherDigitalLibrary(teacherId) {
     try {
-      const response = await fetch(`http://localhost:5001/api/teacher/${teacherId}/digital-library`);
+      const response = await fetch(window.AQEConfig.getApiUrl(`teacher/${teacherId}/digital-library`));
       const data = await response.json();
       
       if (response.ok) {
@@ -750,7 +741,7 @@ class AQEPlatform {
   // Load parent data
   async loadParentData(parentId) {
     try {
-      const response = await fetch(`http://localhost:5001/api/parent/${parentId}/dashboard`);
+      const response = await fetch(window.AQEConfig.getApiUrl(`parent/${parentId}/dashboard`));
       const data = await response.json();
       
       if (response.ok) {
@@ -765,7 +756,7 @@ class AQEPlatform {
   // Load admin data
   async loadAdminData(adminId) {
     try {
-      const response = await fetch(`http://localhost:5001/api/admin/${adminId}/dashboard`);
+      const response = await fetch(window.AQEConfig.getApiUrl(`admin/${adminId}/dashboard`));
       const data = await response.json();
       
       if (response.ok) {
@@ -857,7 +848,7 @@ class AQEPlatform {
     }
     
     try {
-      const response = await fetch(`http://localhost:5001/api/student/${this.currentUser.studentId}/checkout-lesson`, {
+      const response = await fetch(window.AQEConfig.getApiUrl(`student/${this.currentUser.studentId}/checkout-lesson`), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -989,7 +980,7 @@ class AQEPlatform {
       submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Creating...';
       submitBtn.disabled = true;
 
-      const response = await fetch(`http://localhost:5001/api/teacher/${this.currentUser.teacherId || this.currentUser.id}/practice-materials`, {
+      const response = await fetch(window.AQEConfig.getApiUrl(`teacher/${this.currentUser.teacherId || this.currentUser.id}/practice-materials`), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1527,6 +1518,251 @@ class AQEPlatform {
     }
   }
 
+  // Edit practice material
+  async editPracticeMaterial(materialId) {
+    try {
+      const teacherId = this.currentUser?.teacherId || this.currentUser?.id;
+      if (!teacherId) {
+        this.showNotification('Teacher ID not found', 'error');
+        return;
+      }
+
+      // Fetch the practice material data
+      const response = await fetch(`${this.apiBaseUrl}/teacher/${teacherId}/practice-materials/${materialId}`);
+      const material = await response.json();
+
+      if (!response.ok) {
+        this.showNotification(material.message || 'Failed to load practice material', 'error');
+        return;
+      }
+
+      // Populate the edit form
+      this.populateEditPracticeMaterialForm(material);
+      
+      // Show the edit modal
+      const editModal = new bootstrap.Modal(document.getElementById('editPracticeMaterialModal'));
+      editModal.show();
+
+    } catch (error) {
+      console.error('Error loading practice material for edit:', error);
+      this.showNotification('Error loading practice material', 'error');
+    }
+  }
+
+  // Populate edit practice material form
+  populateEditPracticeMaterialForm(material) {
+    // Set basic information
+    document.getElementById('editMaterialTitle').value = material.title;
+    document.getElementById('editMaterialDescription').value = material.description;
+    document.getElementById('editMaterialSubject').value = material.subject;
+
+    // Store material ID for update
+    document.getElementById('editPracticeMaterialModal').dataset.materialId = material.id;
+
+    // Populate questions
+    const questionsContainer = document.getElementById('editQuestionsContainer');
+    questionsContainer.innerHTML = '';
+
+    material.questions.forEach((question, index) => {
+      const questionHtml = this.createEditQuestionHtml(question, index);
+      questionsContainer.insertAdjacentHTML('beforeend', questionHtml);
+    });
+
+    // Update question count
+    this.updateEditQuestionCount();
+  }
+
+  // Create HTML for editing a question
+  createEditQuestionHtml(question, index) {
+    return `
+      <div class="question-item border rounded p-3 mb-3" data-question-index="${index}">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h6 class="mb-0">Question ${index + 1}</h6>
+          <button type="button" class="btn btn-outline-danger btn-sm" onclick="window.app.removeEditQuestion(${index})">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+        
+        <div class="mb-3">
+          <label class="form-label">Question Text</label>
+          <textarea class="form-control" name="editQuestionText" rows="2" required>${question.questionText}</textarea>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Option A</label>
+            <input type="text" class="form-control" name="editOptionA" value="${question.optionA || ''}" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Option B</label>
+            <input type="text" class="form-control" name="editOptionB" value="${question.optionB || ''}" required>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Option C</label>
+            <input type="text" class="form-control" name="editOptionC" value="${question.optionC || ''}" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Option D</label>
+            <input type="text" class="form-control" name="editOptionD" value="${question.optionD || ''}" required>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Correct Answer</label>
+            <select class="form-select" name="editCorrectAnswer" required>
+              <option value="A" ${question.correctAnswer === 'A' ? 'selected' : ''}>A</option>
+              <option value="B" ${question.correctAnswer === 'B' ? 'selected' : ''}>B</option>
+              <option value="C" ${question.correctAnswer === 'C' ? 'selected' : ''}>C</option>
+              <option value="D" ${question.correctAnswer === 'D' ? 'selected' : ''}>D</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Question Type</label>
+            <select class="form-select" name="editQuestionType" required>
+              <option value="0" ${question.type === 0 ? 'selected' : ''}>Multiple Choice</option>
+              <option value="1" ${question.type === 1 ? 'selected' : ''}>Fill in the Blank</option>
+              <option value="2" ${question.type === 2 ? 'selected' : ''}>True/False</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Explanation</label>
+          <textarea class="form-control" name="editExplanation" rows="2">${question.explanation || ''}</textarea>
+        </div>
+      </div>
+    `;
+  }
+
+  // Remove question from edit form
+  removeEditQuestion(index) {
+    const questionItem = document.querySelector(`[data-question-index="${index}"]`);
+    if (questionItem) {
+      questionItem.remove();
+      this.updateEditQuestionCount();
+    }
+  }
+
+  // Update question count in edit form
+  updateEditQuestionCount() {
+    const questionCount = document.querySelectorAll('#editQuestionsContainer .question-item').length;
+    document.getElementById('editQuestionCount').textContent = questionCount;
+  }
+
+  // Add new question to edit form
+  addEditQuestion() {
+    const questionsContainer = document.getElementById('editQuestionsContainer');
+    const questionCount = document.querySelectorAll('#editQuestionsContainer .question-item').length;
+    
+    const newQuestion = {
+      questionText: '',
+      optionA: '',
+      optionB: '',
+      optionC: '',
+      optionD: '',
+      correctAnswer: 'A',
+      type: 0,
+      explanation: ''
+    };
+
+    const questionHtml = this.createEditQuestionHtml(newQuestion, questionCount);
+    questionsContainer.insertAdjacentHTML('beforeend', questionHtml);
+    this.updateEditQuestionCount();
+  }
+
+  // Update practice material
+  async updatePracticeMaterial() {
+    try {
+      const teacherId = this.currentUser?.teacherId || this.currentUser?.id;
+      const materialId = document.getElementById('editPracticeMaterialModal').dataset.materialId;
+
+      if (!teacherId || !materialId) {
+        this.showNotification('Missing teacher or material ID', 'error');
+        return;
+      }
+
+      // Collect form data
+      const title = document.getElementById('editMaterialTitle').value.trim();
+      const description = document.getElementById('editMaterialDescription').value.trim();
+      const subject = document.getElementById('editMaterialSubject').value.trim();
+
+      if (!title || !description || !subject) {
+        this.showNotification('Please fill in all required fields', 'error');
+        return;
+      }
+
+      // Collect questions
+      const questions = [];
+      const questionItems = document.querySelectorAll('#editQuestionsContainer .question-item');
+      
+      if (questionItems.length === 0) {
+        this.showNotification('Please add at least one question', 'error');
+        return;
+      }
+
+      questionItems.forEach((item, index) => {
+        const questionText = item.querySelector('[name="editQuestionText"]').value.trim();
+        const optionA = item.querySelector('[name="editOptionA"]').value.trim();
+        const optionB = item.querySelector('[name="editOptionB"]').value.trim();
+        const optionC = item.querySelector('[name="editOptionC"]').value.trim();
+        const optionD = item.querySelector('[name="editOptionD"]').value.trim();
+        const correctAnswer = item.querySelector('[name="editCorrectAnswer"]').value;
+        const type = item.querySelector('[name="editQuestionType"]').value;
+        const explanation = item.querySelector('[name="editExplanation"]').value.trim();
+
+        if (!questionText || !optionA || !optionB || !optionC || !optionD) {
+          this.showNotification(`Please fill in all fields for question ${index + 1}`, 'error');
+          return;
+        }
+
+        questions.push({
+          questionText,
+          optionA,
+          optionB,
+          optionC,
+          optionD,
+          correctAnswer,
+          type: parseInt(type),
+          explanation
+        });
+      });
+
+      // Send update request
+      const response = await fetch(`${this.apiBaseUrl}/teacher/${teacherId}/practice-materials/${materialId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          subject,
+          questions
+        })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        this.showNotification('Practice material updated successfully!', 'success');
+        bootstrap.Modal.getInstance(document.getElementById('editPracticeMaterialModal')).hide();
+        
+        // Reload practice materials
+        await this.loadTeacherPracticeMaterials(teacherId);
+      } else {
+        this.showNotification(result.message || 'Failed to update practice material', 'error');
+      }
+
+    } catch (error) {
+      console.error('Error updating practice material:', error);
+      this.showNotification('Error updating practice material', 'error');
+    }
+  }
+
   // Debounce function
   debounce(func, wait) {
     let timeout;
@@ -1538,6 +1774,1077 @@ class AQEPlatform {
       clearTimeout(timeout);
       timeout = setTimeout(later, wait);
     };
+  }
+
+  // Admin Course Management Methods
+  async loadAdminCourseManagement() {
+    try {
+      // Load subjects and grades for filters
+      await this.loadSubjectsAndGrades();
+      
+      // Load generated lessons
+      await this.loadGeneratedLessons();
+      
+      // Load analytics
+      await this.loadAdminAnalytics();
+      
+    } catch (error) {
+      console.error('Error loading admin course management:', error);
+      this.showNotification('Error loading course management data', 'error');
+    }
+  }
+
+  async loadSubjectsAndGrades() {
+    try {
+      const response = await fetch(`${this.apiBaseUrl}/admin/curriculum/subjects`);
+      if (!response.ok) throw new Error('Failed to load subjects');
+      const subjects = await response.json();
+
+      const gradeResponse = await fetch(`${this.apiBaseUrl}/admin/curriculum/grades`);
+      if (!gradeResponse.ok) throw new Error('Failed to load grades');
+      const grades = await gradeResponse.json();
+
+      // Populate subject filter
+      const subjectFilter = document.getElementById('generateSubjectFilter');
+      if (subjectFilter) {
+        subjectFilter.innerHTML = '<option value="">All Subjects</option>';
+        subjects.forEach(subject => {
+          const option = document.createElement('option');
+          option.value = subject.id;
+          option.textContent = subject.name;
+          subjectFilter.appendChild(option);
+        });
+      }
+
+      // Populate grade filter
+      const gradeFilter = document.getElementById('generateGradeFilter');
+      if (gradeFilter) {
+        gradeFilter.innerHTML = '<option value="">All Grades</option>';
+        grades.forEach(grade => {
+          const option = document.createElement('option');
+          option.value = grade.id;
+          option.textContent = grade.displayName;
+          gradeFilter.appendChild(option);
+        });
+      }
+
+    } catch (error) {
+      console.error('Error loading subjects and grades:', error);
+    }
+  }
+
+  async loadGeneratedLessons() {
+    try {
+      const response = await fetch(`${this.apiBaseUrl}/admin/curriculum/lessons`);
+      if (!response.ok) throw new Error('Failed to load lessons');
+      const lessons = await response.json();
+
+      const tbody = document.getElementById('generatedLessonsTableBody');
+      if (!tbody) return;
+
+      if (lessons.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted">No lessons generated yet</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = '';
+      lessons.forEach(lesson => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>
+            <input type="checkbox" class="form-check-input lesson-checkbox" value="${lesson.id}" 
+                   onchange="window.app.updatePublishButton()">
+          </td>
+          <td>${lesson.title}</td>
+          <td>${lesson.subject?.name || 'N/A'}</td>
+          <td>${lesson.grade?.displayName || 'N/A'}</td>
+          <td><span class="badge ${lesson.difficultyTag === 'A' ? 'bg-success' : 'bg-warning'}">${lesson.difficultyTag}</span></td>
+          <td><span class="badge ${lesson.status === 'published' ? 'bg-success' : 'bg-secondary'}">${lesson.status}</span></td>
+          <td>${lesson.questions?.length || 0}</td>
+          <td>${new Date(lesson.createdAt).toLocaleDateString()}</td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary" onclick="window.app.viewLesson(${lesson.id})">
+              <i class="bi bi-eye"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+
+    } catch (error) {
+      console.error('Error loading generated lessons:', error);
+      const tbody = document.getElementById('generatedLessonsTableBody');
+      if (tbody) {
+        tbody.innerHTML = '<tr><td colspan="9" class="text-center text-danger">Error loading lessons</td></tr>';
+      }
+    }
+  }
+
+  async loadAdminAnalytics() {
+    try {
+      const response = await fetch(`${this.apiBaseUrl}/admin/curriculum/analytics`);
+      if (!response.ok) throw new Error('Failed to load analytics');
+      const analytics = await response.json();
+
+      // Update metric cards
+      document.getElementById('adminLessonsGenerated').textContent = analytics.lessonsGenerated || 0;
+      document.getElementById('adminLessonsPublishedParent').textContent = analytics.lessonsPublishedParent || 0;
+      document.getElementById('adminLessonsPublishedTeacher').textContent = analytics.lessonsPublishedTeacher || 0;
+      document.getElementById('adminAssignmentsCreated').textContent = analytics.assignmentsCreated || 0;
+
+    } catch (error) {
+      console.error('Error loading admin analytics:', error);
+    }
+  }
+
+  async generateLessons() {
+    try {
+      const subjectFilter = document.getElementById('generateSubjectFilter');
+      const gradeFilter = document.getElementById('generateGradeFilter');
+      const dryRunCheck = document.getElementById('dryRunCheck');
+
+      const subjectIds = Array.from(subjectFilter.selectedOptions)
+        .map(option => parseInt(option.value))
+        .filter(id => !isNaN(id));
+
+      const gradeIds = Array.from(gradeFilter.selectedOptions)
+        .map(option => parseInt(option.value))
+        .filter(id => !isNaN(id));
+
+      const dryRun = dryRunCheck.checked;
+
+      const requestBody = {
+        subjectIds: subjectIds.length > 0 ? subjectIds : null,
+        gradeIds: gradeIds.length > 0 ? gradeIds : null,
+        dryRun: dryRun
+      };
+
+      this.showNotification('Generating lessons...', 'info');
+
+      const response = await fetch(`${this.apiBaseUrl}/admin/curriculum/generate`, 
+        window.auth.withAuthHeaders({
+          method: 'POST',
+          body: JSON.stringify(requestBody)
+        })
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to generate lessons');
+      }
+
+      const result = await response.json();
+      
+      // Close modal
+      const modal = bootstrap.Modal.getInstance(document.getElementById('generateLessonsModal'));
+      if (modal) modal.hide();
+
+      // Show success message
+      const message = dryRun 
+        ? `Dry run completed: ${result.generatedLessons.length} lessons would be generated`
+        : `Successfully generated ${result.generatedLessons.length} lessons`;
+      
+      this.showNotification(message, 'success');
+
+      // Reload lessons table
+      await this.loadGeneratedLessons();
+      await this.loadAdminAnalytics();
+
+    } catch (error) {
+      console.error('Error generating lessons:', error);
+      this.showNotification(`Error generating lessons: ${error.message}`, 'error');
+    }
+  }
+
+  async publishLessons() {
+    try {
+      const selectedLessons = Array.from(document.querySelectorAll('.lesson-checkbox:checked'))
+        .map(checkbox => parseInt(checkbox.value));
+
+      if (selectedLessons.length === 0) {
+        this.showNotification('Please select at least one lesson to publish', 'warning');
+        return;
+      }
+
+      const targetLibrary = document.getElementById('publishTargetLibrary').value;
+      if (!targetLibrary) {
+        this.showNotification('Please select a target library', 'warning');
+        return;
+      }
+
+      const requestBody = {
+        lessonIds: selectedLessons,
+        targetLibrary: targetLibrary,
+        ownerIds: [], // For now, publish to all users of that role
+        adminId: 1 // Assuming admin ID 1
+      };
+
+      this.showNotification('Publishing lessons...', 'info');
+
+      const response = await fetch(`${this.apiBaseUrl}/admin/curriculum/publish`, 
+        window.auth.withAuthHeaders({
+          method: 'POST',
+          body: JSON.stringify(requestBody)
+        })
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to publish lessons');
+      }
+
+      const result = await response.json();
+      
+      // Close modal
+      const modal = bootstrap.Modal.getInstance(document.getElementById('publishLessonsModal'));
+      if (modal) modal.hide();
+
+      // Show success message
+      this.showNotification(`Successfully published ${result.lessonsPublished} lessons`, 'success');
+
+      // Reload data
+      await this.loadGeneratedLessons();
+      await this.loadAdminAnalytics();
+
+    } catch (error) {
+      console.error('Error publishing lessons:', error);
+      this.showNotification(`Error publishing lessons: ${error.message}`, 'error');
+    }
+  }
+
+  updatePublishButton() {
+    const selectedLessons = document.querySelectorAll('.lesson-checkbox:checked').length;
+    const publishBtn = document.getElementById('publishLessonsBtn');
+    
+    if (publishBtn) {
+      publishBtn.disabled = selectedLessons === 0;
+    }
+
+    // Update selected lessons list in publish modal
+    const selectedLessonsList = document.getElementById('selectedLessonsList');
+    if (selectedLessonsList) {
+      if (selectedLessons === 0) {
+        selectedLessonsList.innerHTML = '<p class="text-muted mb-0">No lessons selected</p>';
+      } else {
+        selectedLessonsList.innerHTML = `<p class="text-primary mb-0">${selectedLessons} lesson(s) selected</p>`;
+      }
+    }
+  }
+
+  async viewLesson(lessonId) {
+    try {
+      const response = await fetch(`${this.apiBaseUrl}/admin/curriculum/lessons/${lessonId}`);
+      if (!response.ok) throw new Error('Failed to load lesson details');
+      
+      const lesson = await response.json();
+      
+      // Create a simple modal to display lesson details
+      const modalHtml = `
+        <div class="modal fade" id="viewLessonModal" tabindex="-1">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">${lesson.title}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <strong>Subject:</strong> ${lesson.subject?.name || 'N/A'}
+                  </div>
+                  <div class="col-md-6">
+                    <strong>Grade:</strong> ${lesson.grade?.displayName || 'N/A'}
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <strong>Difficulty:</strong> <span class="badge ${lesson.difficultyTag === 'A' ? 'bg-success' : 'bg-warning'}">${lesson.difficultyTag}</span>
+                  </div>
+                  <div class="col-md-6">
+                    <strong>Status:</strong> <span class="badge ${lesson.status === 'published' ? 'bg-success' : 'bg-secondary'}">${lesson.status}</span>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <strong>Description:</strong><br>
+                  ${lesson.description || 'No description available'}
+                </div>
+                <div class="mb-3">
+                  <strong>Questions (${lesson.questions?.length || 0}):</strong>
+                  <div class="mt-2">
+                    ${lesson.questions?.map((q, index) => `
+                      <div class="card mb-2">
+                        <div class="card-body">
+                          <h6>Question ${index + 1}</h6>
+                          <p>${q.prompt}</p>
+                          <div class="row">
+                            ${JSON.parse(q.choicesJson).map((choice, i) => `
+                              <div class="col-md-6 mb-1">
+                                <span class="badge ${i === q.answerIndex ? 'bg-success' : 'bg-secondary'}">${String.fromCharCode(65 + i)}. ${choice}</span>
+                              </div>
+                            `).join('')}
+                          </div>
+                        </div>
+                      </div>
+                    `).join('') || '<p class="text-muted">No questions available</p>'}
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Remove existing modal if any
+      const existingModal = document.getElementById('viewLessonModal');
+      if (existingModal) existingModal.remove();
+
+      // Add modal to DOM
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+      // Show modal
+      const modal = new bootstrap.Modal(document.getElementById('viewLessonModal'));
+      modal.show();
+
+    } catch (error) {
+      console.error('Error viewing lesson:', error);
+      this.showNotification('Error loading lesson details', 'error');
+    }
+  }
+
+  filterLessons(status) {
+    const rows = document.querySelectorAll('#generatedLessonsTableBody tr');
+    rows.forEach(row => {
+      if (status === 'all') {
+        row.style.display = '';
+      } else {
+        const statusBadge = row.querySelector('.badge');
+        const isMatch = statusBadge && statusBadge.textContent.toLowerCase() === status.toLowerCase();
+        row.style.display = isMatch ? '' : 'none';
+      }
+    });
+  }
+
+  toggleAllLessons(checkbox) {
+    const lessonCheckboxes = document.querySelectorAll('.lesson-checkbox');
+    lessonCheckboxes.forEach(cb => {
+      cb.checked = checkbox.checked;
+    });
+    this.updatePublishButton();
+  }
+
+  // Teacher/Parent Library Methods
+  async loadTeacherLibrary() {
+    try {
+      const teacherId = this.currentUser?.id;
+      if (!teacherId) {
+        console.error('No teacher ID available');
+        return;
+      }
+
+      const response = await fetch(`${this.apiBaseUrl}/library/teacher/${teacherId}`);
+      if (!response.ok) throw new Error('Failed to load teacher library');
+      const lessons = await response.json();
+
+      this.populateLibraryGrid('teacherLibraryGrid', lessons, 'teacher');
+      this.populateLibraryFilters('teacherSubjectFilter', 'teacherGradeFilter', lessons);
+
+    } catch (error) {
+      console.error('Error loading teacher library:', error);
+      this.showNotification('Error loading library', 'error');
+    }
+  }
+
+  async loadParentLibrary() {
+    try {
+      const parentId = this.currentUser?.id;
+      if (!parentId) {
+        console.error('No parent ID available');
+        return;
+      }
+
+      const response = await fetch(`${this.apiBaseUrl}/library/parent/${parentId}`);
+      if (!response.ok) throw new Error('Failed to load parent library');
+      const lessons = await response.json();
+
+      this.populateLibraryGrid('parentLibraryGrid', lessons, 'parent');
+      this.populateLibraryFilters('parentSubjectFilter', 'parentGradeFilter', lessons);
+
+    } catch (error) {
+      console.error('Error loading parent library:', error);
+      this.showNotification('Error loading library', 'error');
+    }
+  }
+
+  populateLibraryGrid(gridId, lessons, role) {
+    const grid = document.getElementById(gridId);
+    if (!grid) return;
+
+    if (lessons.length === 0) {
+      grid.innerHTML = `
+        <div class="col-12 text-center">
+          <div class="card">
+            <div class="card-body">
+              <i class="bi bi-book text-muted" style="font-size: 3rem;"></i>
+              <h5 class="mt-3 text-muted">No lessons available</h5>
+              <p class="text-muted">Lessons will appear here once they are published by administrators.</p>
+            </div>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = '';
+    lessons.forEach(lesson => {
+      const card = document.createElement('div');
+      card.className = 'col-md-6 col-lg-4';
+      card.innerHTML = `
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h6 class="card-title">${lesson.title}</h6>
+              <span class="badge ${lesson.difficultyTag === 'A' ? 'bg-success' : 'bg-warning'}">${lesson.difficultyTag}</span>
+            </div>
+            <p class="card-text text-muted small">${lesson.description || 'No description available'}</p>
+            <div class="row small text-muted mb-3">
+              <div class="col-6">
+                <strong>Subject:</strong><br>${lesson.subject?.name || 'N/A'}
+              </div>
+              <div class="col-6">
+                <strong>Grade:</strong><br>${lesson.grade?.displayName || 'N/A'}
+              </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-muted">${lesson.questions?.length || 0} questions</small>
+              <button class="btn btn-primary btn-sm" onclick="window.app.showAssignLessonModal(${lesson.id}, '${role}')">
+                <i class="bi bi-person-plus me-1"></i>Assign
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  populateLibraryFilters(subjectFilterId, gradeFilterId, lessons) {
+    // Populate subject filter
+    const subjectFilter = document.getElementById(subjectFilterId);
+    if (subjectFilter) {
+      const subjects = [...new Set(lessons.map(l => l.subject?.name).filter(Boolean))];
+      subjectFilter.innerHTML = '<option value="">All Subjects</option>';
+      subjects.forEach(subject => {
+        const option = document.createElement('option');
+        option.value = subject;
+        option.textContent = subject;
+        subjectFilter.appendChild(option);
+      });
+    }
+
+    // Populate grade filter
+    const gradeFilter = document.getElementById(gradeFilterId);
+    if (gradeFilter) {
+      const grades = [...new Set(lessons.map(l => l.grade?.displayName).filter(Boolean))];
+      gradeFilter.innerHTML = '<option value="">All Grades</option>';
+      grades.forEach(grade => {
+        const option = document.createElement('option');
+        option.value = grade;
+        option.textContent = grade;
+        gradeFilter.appendChild(option);
+      });
+    }
+  }
+
+  filterTeacherLibrary() {
+    this.filterLibrary('teacherLibraryGrid', 'teacherSubjectFilter', 'teacherGradeFilter', 'teacherDifficultyFilter', 'teacherSearchFilter');
+  }
+
+  filterParentLibrary() {
+    this.filterLibrary('parentLibraryGrid', 'parentSubjectFilter', 'parentGradeFilter', 'parentDifficultyFilter', 'parentSearchFilter');
+  }
+
+  filterLibrary(gridId, subjectFilterId, gradeFilterId, difficultyFilterId, searchFilterId) {
+    const grid = document.getElementById(gridId);
+    if (!grid) return;
+
+    const subjectFilter = document.getElementById(subjectFilterId)?.value || '';
+    const gradeFilter = document.getElementById(gradeFilterId)?.value || '';
+    const difficultyFilter = document.getElementById(difficultyFilterId)?.value || '';
+    const searchFilter = document.getElementById(searchFilterId)?.value.toLowerCase() || '';
+
+    const cards = grid.querySelectorAll('.col-md-6, .col-lg-4');
+    cards.forEach(card => {
+      const title = card.querySelector('.card-title')?.textContent.toLowerCase() || '';
+      const description = card.querySelector('.card-text')?.textContent.toLowerCase() || '';
+      const subject = card.querySelector('.row .col-6:first-child')?.textContent.toLowerCase() || '';
+      const grade = card.querySelector('.row .col-6:last-child')?.textContent.toLowerCase() || '';
+      const difficulty = card.querySelector('.badge')?.textContent || '';
+
+      const matchesSubject = !subjectFilter || subject.includes(subjectFilter.toLowerCase());
+      const matchesGrade = !gradeFilter || grade.includes(gradeFilter.toLowerCase());
+      const matchesDifficulty = !difficultyFilter || difficulty === difficultyFilter;
+      const matchesSearch = !searchFilter || title.includes(searchFilter) || description.includes(searchFilter);
+
+      if (matchesSubject && matchesGrade && matchesDifficulty && matchesSearch) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  async showAssignLessonModal(lessonId, role) {
+    try {
+      // Load lesson details
+      const response = await fetch(`${this.apiBaseUrl}/curriculum/lessons/${lessonId}`);
+      if (!response.ok) throw new Error('Failed to load lesson details');
+      const lesson = await response.json();
+
+      // Populate lesson details in modal
+      document.getElementById('assignLessonTitle').textContent = lesson.title;
+      document.getElementById('assignLessonDescription').textContent = lesson.description || 'No description available';
+      document.getElementById('assignLessonSubject').textContent = lesson.subject?.name || 'N/A';
+      document.getElementById('assignLessonGrade').textContent = lesson.grade?.displayName || 'N/A';
+      document.getElementById('assignLessonDifficulty').textContent = lesson.difficultyTag;
+
+      // Set minimum date to today
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('dueDate').min = today;
+
+      // Load assignees based on role
+      await this.loadAssignees(role, lessonId);
+
+      // Store current lesson and role for assignment
+      this.currentAssignmentLesson = lesson;
+      this.currentAssignmentRole = role;
+
+      // Show modal
+      const modal = new bootstrap.Modal(document.getElementById('assignLessonModal'));
+      modal.show();
+
+    } catch (error) {
+      console.error('Error showing assign lesson modal:', error);
+      this.showNotification('Error loading lesson details', 'error');
+    }
+  }
+
+  async loadAssignees(role, lessonId) {
+    try {
+      const assigneeList = document.getElementById('assigneeList');
+      if (!assigneeList) return;
+
+      const userId = this.currentUser?.id;
+      if (!userId) {
+        console.error('No user ID available');
+        return;
+      }
+
+      let response;
+      if (role === 'teacher') {
+        response = await fetch(`${this.apiBaseUrl}/library/teacher/${userId}/students`);
+      } else if (role === 'parent') {
+        response = await fetch(`${this.apiBaseUrl}/library/parent/${userId}/children`);
+      } else {
+        throw new Error('Invalid role for assignment');
+      }
+
+      if (!response.ok) throw new Error('Failed to load assignees');
+      const assignees = await response.json();
+
+      if (assignees.length === 0) {
+        assigneeList.innerHTML = `
+          <div class="text-center text-muted">
+            <i class="bi bi-person-x" style="font-size: 2rem;"></i>
+            <p class="mt-2">No ${role === 'teacher' ? 'students' : 'children'} available for assignment</p>
+          </div>
+        `;
+        return;
+      }
+
+      assigneeList.innerHTML = '';
+      assignees.forEach(assignee => {
+        const checkbox = document.createElement('div');
+        checkbox.className = 'form-check mb-2';
+        checkbox.innerHTML = `
+          <input class="form-check-input assignee-checkbox" type="checkbox" value="${assignee.id}" id="assignee_${assignee.id}">
+          <label class="form-check-label" for="assignee_${assignee.id}">
+            <strong>${assignee.name}</strong>
+            <small class="text-muted d-block">Grade: ${assignee.gradeLevel || 'N/A'}</small>
+          </label>
+        `;
+        assigneeList.appendChild(checkbox);
+      });
+
+    } catch (error) {
+      console.error('Error loading assignees:', error);
+      const assigneeList = document.getElementById('assigneeList');
+      if (assigneeList) {
+        assigneeList.innerHTML = `
+          <div class="text-center text-danger">
+            <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
+            <p class="mt-2">Error loading ${this.currentAssignmentRole === 'teacher' ? 'students' : 'children'}</p>
+          </div>
+        `;
+      }
+    }
+  }
+
+  async assignLesson() {
+    try {
+      const selectedAssignees = Array.from(document.querySelectorAll('.assignee-checkbox:checked'))
+        .map(checkbox => parseInt(checkbox.value));
+
+      if (selectedAssignees.length === 0) {
+        this.showNotification('Please select at least one student/child to assign the lesson to', 'warning');
+        return;
+      }
+
+      const dueDate = document.getElementById('dueDate').value;
+
+      const requestBody = {
+        lessonId: this.currentAssignmentLesson.id,
+        assigneeType: this.currentAssignmentRole === 'teacher' ? 'class' : 'student',
+        assigneeIds: selectedAssignees,
+        assignedByRole: this.currentAssignmentRole === 'teacher' ? 'teacher' : 'parent',
+        assignedById: this.currentUser?.id,
+        dueAt: dueDate ? new Date(dueDate).toISOString() : null
+      };
+
+      this.showNotification('Assigning lesson...', 'info');
+
+      const response = await fetch(`${this.apiBaseUrl}/assignments`, 
+        window.auth.withAuthHeaders({
+          method: 'POST',
+          body: JSON.stringify(requestBody)
+        })
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to assign lesson');
+      }
+
+      const result = await response.json();
+      
+      // Close modal
+      const modal = bootstrap.Modal.getInstance(document.getElementById('assignLessonModal'));
+      if (modal) modal.hide();
+
+      // Show success message
+      this.showNotification(`Successfully assigned lesson to ${selectedAssignees.length} ${this.currentAssignmentRole === 'teacher' ? 'students' : 'children'}`, 'success');
+
+      // Clear stored data
+      this.currentAssignmentLesson = null;
+      this.currentAssignmentRole = null;
+
+    } catch (error) {
+      console.error('Error assigning lesson:', error);
+      this.showNotification(`Error assigning lesson: ${error.message}`, 'error');
+    }
+  }
+
+  // Student Lesson Player Methods
+  async loadStudentAssignments() {
+    try {
+      const studentId = this.currentUser?.id;
+      if (!studentId) {
+        console.error('No student ID available');
+        return;
+      }
+
+      const response = await fetch(`${this.apiBaseUrl}/assignment/student/${studentId}`);
+      if (!response.ok) throw new Error('Failed to load student assignments');
+      const assignments = await response.json();
+
+      this.populateStudentAssignments(assignments);
+      this.populateStudentFilters(assignments);
+
+    } catch (error) {
+      console.error('Error loading student assignments:', error);
+      this.showNotification('Error loading assignments', 'error');
+    }
+  }
+
+  populateStudentAssignments(assignments) {
+    const grid = document.getElementById('studentDigitalLibraryGrid');
+    if (!grid) return;
+
+    if (assignments.length === 0) {
+      grid.innerHTML = `
+        <div class="col-12 text-center">
+          <div class="card">
+            <div class="card-body">
+              <i class="bi bi-book text-muted" style="font-size: 3rem;"></i>
+              <h5 class="mt-3 text-muted">No assignments yet</h5>
+              <p class="text-muted">Your teacher or parent will assign lessons for you to complete.</p>
+            </div>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = '';
+    assignments.forEach(assignment => {
+      const card = document.createElement('div');
+      card.className = 'col-md-6 col-lg-4';
+      
+      const status = this.getAssignmentStatus(assignment);
+      const statusClass = this.getStatusClass(status);
+      
+      card.innerHTML = `
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h6 class="card-title">${assignment.generatedLesson?.title || 'Unknown Lesson'}</h6>
+              <span class="badge ${statusClass}">${status}</span>
+            </div>
+            <p class="card-text text-muted small">${assignment.generatedLesson?.description || 'No description available'}</p>
+            <div class="row small text-muted mb-3">
+              <div class="col-6">
+                <strong>Subject:</strong><br>${assignment.generatedLesson?.subject?.name || 'N/A'}
+              </div>
+              <div class="col-6">
+                <strong>Grade:</strong><br>${assignment.generatedLesson?.grade?.displayName || 'N/A'}
+              </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-muted">
+                ${assignment.dueAt ? `Due: ${new Date(assignment.dueAt).toLocaleDateString()}` : 'No due date'}
+              </small>
+              <button class="btn btn-primary btn-sm" onclick="window.app.startLesson(${assignment.id})" ${status === 'Completed' ? 'disabled' : ''}>
+                <i class="bi bi-play-circle me-1"></i>${status === 'Completed' ? 'Completed' : 'Start'}
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  populateStudentFilters(assignments) {
+    // Populate subject filter
+    const subjectFilter = document.getElementById('studentSubjectFilter');
+    if (subjectFilter) {
+      const subjects = [...new Set(assignments.map(a => a.generatedLesson?.subject?.name).filter(Boolean))];
+      subjectFilter.innerHTML = '<option value="">All Subjects</option>';
+      subjects.forEach(subject => {
+        const option = document.createElement('option');
+        option.value = subject;
+        option.textContent = subject;
+        subjectFilter.appendChild(option);
+      });
+    }
+  }
+
+  getAssignmentStatus(assignment) {
+    if (assignment.attempts && assignment.attempts.length > 0) {
+      const latestAttempt = assignment.attempts[assignment.attempts.length - 1];
+      if (latestAttempt.submittedAt) {
+        return 'Completed';
+      } else {
+        return 'In Progress';
+      }
+    }
+    return 'Not Started';
+  }
+
+  getStatusClass(status) {
+    switch (status) {
+      case 'Completed': return 'bg-success';
+      case 'In Progress': return 'bg-warning';
+      case 'Not Started': return 'bg-secondary';
+      default: return 'bg-secondary';
+    }
+  }
+
+  filterStudentLibrary() {
+    const grid = document.getElementById('studentDigitalLibraryGrid');
+    if (!grid) return;
+
+    const subjectFilter = document.getElementById('studentSubjectFilter')?.value || '';
+    const assignerFilter = document.getElementById('studentAssignerFilter')?.value || '';
+    const statusFilter = document.getElementById('studentStatusFilter')?.value || '';
+    const searchFilter = document.getElementById('studentSearchFilter')?.value.toLowerCase() || '';
+
+    const cards = grid.querySelectorAll('.col-md-6, .col-lg-4');
+    cards.forEach(card => {
+      const title = card.querySelector('.card-title')?.textContent.toLowerCase() || '';
+      const description = card.querySelector('.card-text')?.textContent.toLowerCase() || '';
+      const subject = card.querySelector('.row .col-6:first-child')?.textContent.toLowerCase() || '';
+      const status = card.querySelector('.badge')?.textContent.toLowerCase() || '';
+
+      const matchesSubject = !subjectFilter || subject.includes(subjectFilter.toLowerCase());
+      const matchesStatus = !statusFilter || status.includes(statusFilter.toLowerCase());
+      const matchesSearch = !searchFilter || title.includes(searchFilter) || description.includes(searchFilter);
+
+      if (matchesSubject && matchesStatus && matchesSearch) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  async startLesson(assignmentId) {
+    try {
+      const studentId = this.currentUser?.id;
+      if (!studentId) {
+        console.error('No student ID available');
+        return;
+      }
+
+      // Start attempt
+      const startResponse = await fetch(`${this.apiBaseUrl}/attempt/start`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          assignmentId: assignmentId,
+          studentId: studentId
+        })
+      });
+
+      if (!startResponse.ok) throw new Error('Failed to start lesson attempt');
+      const attemptData = await startResponse.json();
+
+      // Load lesson details
+      const lessonResponse = await fetch(`${this.apiBaseUrl}/library/lesson/${attemptData.lessonId}`);
+      if (!lessonResponse.ok) throw new Error('Failed to load lesson details');
+      const lesson = await lessonResponse.json();
+
+      // Initialize lesson player
+      this.currentLesson = {
+        attemptId: attemptData.attemptId,
+        assignmentId: assignmentId,
+        lessonId: attemptData.lessonId,
+        questions: lesson.questions || [],
+        currentQuestionIndex: 0,
+        answers: new Array(lesson.questionsCount || 0).fill(null),
+        startTime: new Date()
+      };
+
+      // Show lesson player modal
+      const modal = new bootstrap.Modal(document.getElementById('lessonPlayerModal'));
+      modal.show();
+
+      // Load first question
+      this.loadQuestion();
+
+    } catch (error) {
+      console.error('Error starting lesson:', error);
+      this.showNotification('Error loading lesson', 'error');
+    }
+  }
+
+  loadQuestion() {
+    if (!this.currentLesson || !this.currentLesson.questions.length) return;
+
+    const question = this.currentLesson.questions[this.currentLesson.currentQuestionIndex];
+    const questionContent = document.getElementById('lessonQuestionContent');
+    
+    if (!questionContent) return;
+
+    const choices = JSON.parse(question.choicesJson);
+    const currentAnswer = this.currentLesson.answers[this.currentLesson.currentQuestionIndex];
+
+    questionContent.innerHTML = `
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Question ${this.currentLesson.currentQuestionIndex + 1}</h5>
+          <p class="card-text mb-4">${question.prompt}</p>
+          
+          <div class="row g-3">
+            ${choices.map((choice, index) => `
+              <div class="col-md-6">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="questionAnswer" 
+                         id="choice_${index}" value="${index}" 
+                         ${currentAnswer === index ? 'checked' : ''}
+                         onchange="window.app.selectAnswer(${index})">
+                  <label class="form-check-label" for="choice_${index}">
+                    <strong>${String.fromCharCode(65 + index)}.</strong> ${choice}
+                  </label>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Update progress
+    this.updateProgress();
+    this.updateNavigationButtons();
+  }
+
+  selectAnswer(answerIndex) {
+    if (!this.currentLesson) return;
+    this.currentLesson.answers[this.currentLesson.currentQuestionIndex] = answerIndex;
+  }
+
+  updateProgress() {
+    const progress = ((this.currentLesson.currentQuestionIndex + 1) / this.currentLesson.questions.length) * 100;
+    document.getElementById('lessonProgressBar').style.width = `${progress}%`;
+    document.getElementById('lessonProgress').textContent = `Question ${this.currentLesson.currentQuestionIndex + 1} of ${this.currentLesson.questions.length}`;
+  }
+
+  updateNavigationButtons() {
+    const prevBtn = document.getElementById('prevQuestionBtn');
+    const nextBtn = document.getElementById('nextQuestionBtn');
+    const submitBtn = document.getElementById('submitLessonBtn');
+
+    if (!prevBtn || !nextBtn || !submitBtn) return;
+
+    // Previous button
+    prevBtn.disabled = this.currentLesson.currentQuestionIndex === 0;
+
+    // Next/Submit button
+    const isLastQuestion = this.currentLesson.currentQuestionIndex === this.currentLesson.questions.length - 1;
+    nextBtn.classList.toggle('d-none', isLastQuestion);
+    submitBtn.classList.toggle('d-none', !isLastQuestion);
+  }
+
+  previousQuestion() {
+    if (!this.currentLesson || this.currentLesson.currentQuestionIndex === 0) return;
+    this.currentLesson.currentQuestionIndex--;
+    this.loadQuestion();
+  }
+
+  nextQuestion() {
+    if (!this.currentLesson || this.currentLesson.currentQuestionIndex >= this.currentLesson.questions.length - 1) return;
+    this.currentLesson.currentQuestionIndex++;
+    this.loadQuestion();
+  }
+
+  async submitLesson() {
+    try {
+      const studentId = this.currentUser?.id;
+      if (!studentId) {
+        console.error('No student ID available');
+        return;
+      }
+
+      // Check if all questions are answered
+      const unansweredQuestions = this.currentLesson.answers.filter(answer => answer === null);
+      if (unansweredQuestions.length > 0) {
+        this.showNotification('Please answer all questions before submitting', 'warning');
+        return;
+      }
+
+      // Submit attempt
+      const requestBody = {
+        attemptId: this.currentLesson.attemptId,
+        studentId: studentId,
+        answers: this.currentLesson.answers
+      };
+
+      this.showNotification('Submitting lesson...', 'info');
+
+      const response = await fetch(`${this.apiBaseUrl}/attempt/submit`, 
+        window.auth.withAuthHeaders({
+          method: 'POST',
+          body: JSON.stringify(requestBody)
+        })
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to submit lesson');
+      }
+
+      const result = await response.json();
+
+      // Close lesson player
+      const lessonModal = bootstrap.Modal.getInstance(document.getElementById('lessonPlayerModal'));
+      if (lessonModal) lessonModal.hide();
+
+      // Show results
+      this.showLessonResults(result);
+
+      // Reload assignments
+      await this.loadStudentAssignments();
+
+    } catch (error) {
+      console.error('Error submitting lesson:', error);
+      this.showNotification(`Error submitting lesson: ${error.message}`, 'error');
+    }
+  }
+
+  showLessonResults(result) {
+    // Update results modal
+    document.getElementById('correctAnswers').textContent = result.correctCount;
+    document.getElementById('wrongAnswers').textContent = result.wrongCount;
+    document.getElementById('scorePercentage').textContent = `${result.scorePercent}%`;
+
+    // Show results modal
+    const modal = new bootstrap.Modal(document.getElementById('lessonResultsModal'));
+    modal.show();
+  }
+
+  exitLessonPlayer() {
+    if (confirm('Are you sure you want to exit the lesson? Your progress will be saved.')) {
+      const modal = bootstrap.Modal.getInstance(document.getElementById('lessonPlayerModal'));
+      if (modal) modal.hide();
+      this.currentLesson = null;
+    }
+  }
+
+  // Analytics Loading Methods
+  async loadTeacherAnalytics() {
+    try {
+      const response = await fetch(`${this.apiBaseUrl}/teacher/analytics`);
+      if (!response.ok) throw new Error('Failed to load teacher analytics');
+      const analytics = await response.json();
+
+      // Update teacher analytics cards
+      document.getElementById('teacherLessonsInLibrary').textContent = analytics.lessonsInLibrary || 0;
+      document.getElementById('teacherAssignmentsCreated').textContent = analytics.assignmentsCreated || 0;
+      document.getElementById('teacherStudentsAssigned').textContent = analytics.studentsAssigned || 0;
+      document.getElementById('teacherAvgClassScore').textContent = `${analytics.avgClassScore || 0}%`;
+
+    } catch (error) {
+      console.error('Error loading teacher analytics:', error);
+    }
+  }
+
+  async loadParentAnalytics() {
+    try {
+      const response = await fetch(`${this.apiBaseUrl}/parent/analytics`);
+      if (!response.ok) throw new Error('Failed to load parent analytics');
+      const analytics = await response.json();
+
+      // Update parent analytics cards
+      document.getElementById('parentLessonsAvailable').textContent = analytics.lessonsAvailable || 0;
+      document.getElementById('parentAssignmentsCreated').textContent = analytics.assignmentsCreated || 0;
+      document.getElementById('parentChildAttempts').textContent = analytics.childAttempts || 0;
+      document.getElementById('parentAvgScore').textContent = `${analytics.avgScore || 0}%`;
+
+    } catch (error) {
+      console.error('Error loading parent analytics:', error);
+    }
+  }
+
+  async loadStudentAnalytics() {
+    try {
+      const response = await fetch(`${this.apiBaseUrl}/student/analytics`);
+      if (!response.ok) throw new Error('Failed to load student analytics');
+      const analytics = await response.json();
+
+      // Update student analytics cards
+      document.getElementById('studentTotalLessonsAssigned').textContent = analytics.totalLessonsAssigned || 0;
+      document.getElementById('studentLessonsCompleted').textContent = analytics.lessonsCompleted || 0;
+      document.getElementById('studentCurrentStreak').textContent = analytics.currentStreak || 0;
+      document.getElementById('studentAverageScore').textContent = `${analytics.averageScore || 0}%`;
+
+    } catch (error) {
+      console.error('Error loading student analytics:', error);
+    }
   }
 }
 
@@ -1607,27 +2914,37 @@ function showAboutModal() {
 // These functions are now handled by the AuthManager
 // Role selection and login are integrated into the authentication system
 
+// Admin Course Management Global Functions
+function showGenerateLessonsModal() {
+  const modal = new bootstrap.Modal(document.getElementById('generateLessonsModal'));
+  modal.show();
+}
+
+function showPublishLessonsModal() {
+  const modal = new bootstrap.Modal(document.getElementById('publishLessonsModal'));
+  modal.show();
+}
+
 // Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-  // Wait for AuthManager to be initialized first
-  setTimeout(() => {
-    window.app = new AQEPlatform();
-    
-    // Listen for authentication changes
-    window.addEventListener('userLogin', () => {
-      if (window.app) {
-        window.app.loadUserData();
-        window.app.updateUserInterface();
-        window.app.updateRoleBasedVisibility();
-      }
-    });
+  // Auth system is initialized in auth.js, so we can initialize immediately
+  window.app = new AQEPlatform();
+  
+  // Listen for authentication changes
+  window.addEventListener('userLogin', () => {
+    if (window.app) {
+      window.app.loadUserData();
+      window.app.updateUserInterface();
+      window.app.updateRoleBasedVisibility();
+    }
+  });
 
-    // Listen for user logout
-    window.addEventListener('userLogout', () => {
-      if (window.app) {
-        window.app.logout();
-      }
-    });
+  // Listen for user logout
+  window.addEventListener('userLogout', () => {
+    if (window.app) {
+      window.app.logout();
+    }
+  });
     
   // Make helper functions globally available
   window.checkoutLesson = (lessonId) => window.app.checkoutLesson(lessonId);
@@ -1651,7 +2968,6 @@ document.addEventListener('DOMContentLoaded', () => {
       window.app.createPracticeMaterial();
     });
   }
-  }, 100);
 });
 
 // Export for module systems (if needed)

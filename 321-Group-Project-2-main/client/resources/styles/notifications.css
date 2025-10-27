@@ -1,0 +1,527 @@
+/* AQE Platform - Toast Notifications and Loading States */
+/* User Feedback and Loading Indicators */
+
+/* Toast Notification System */
+.aqe-toast-container {
+  position: fixed;
+  top: var(--space-6);
+  right: var(--space-6);
+  z-index: var(--z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 400px;
+  pointer-events: none;
+}
+
+.aqe-toast {
+  background: white;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--neutral-200);
+  padding: var(--space-4) var(--space-6);
+  transform: translateX(100%);
+  transition: all var(--transition-normal);
+  pointer-events: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.aqe-toast.show {
+  transform: translateX(0);
+}
+
+.aqe-toast::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--primary-blue);
+}
+
+.aqe-toast-success::before {
+  background: var(--success);
+}
+
+.aqe-toast-error::before {
+  background: var(--error);
+}
+
+.aqe-toast-warning::before {
+  background: var(--warning);
+}
+
+.aqe-toast-info::before {
+  background: var(--info);
+}
+
+.aqe-toast-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+}
+
+.aqe-toast-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: var(--text-xs);
+  margin-right: var(--space-3);
+}
+
+.aqe-toast-icon-success {
+  background: var(--success);
+}
+
+.aqe-toast-icon-error {
+  background: var(--error);
+}
+
+.aqe-toast-icon-warning {
+  background: var(--warning);
+}
+
+.aqe-toast-icon-info {
+  background: var(--info);
+}
+
+.aqe-toast-title {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--neutral-900);
+  margin: 0;
+  flex: 1;
+}
+
+.aqe-toast-close {
+  background: none;
+  border: none;
+  color: var(--neutral-500);
+  cursor: pointer;
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aqe-toast-close:hover {
+  background-color: var(--neutral-100);
+  color: var(--neutral-700);
+}
+
+.aqe-toast-message {
+  font-size: var(--text-sm);
+  color: var(--neutral-700);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.aqe-toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: var(--primary-blue);
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  transition: width linear;
+}
+
+.aqe-toast-progress-success {
+  background: var(--success);
+}
+
+.aqe-toast-progress-error {
+  background: var(--error);
+}
+
+.aqe-toast-progress-warning {
+  background: var(--warning);
+}
+
+.aqe-toast-progress-info {
+  background: var(--info);
+}
+
+/* Loading States */
+.aqe-loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-normal);
+}
+
+.aqe-loading-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+[data-theme="dark"] .aqe-loading-overlay {
+  background: rgba(23, 23, 23, 0.8);
+}
+
+.aqe-loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--neutral-200);
+  border-top: 4px solid var(--primary-blue);
+  border-radius: 50%;
+  animation: aqe-spin 1s linear infinite;
+}
+
+.aqe-loading-text {
+  margin-top: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--neutral-600);
+  text-align: center;
+}
+
+/* Button Loading States */
+.aqe-btn-loading {
+  position: relative;
+  pointer-events: none;
+}
+
+.aqe-btn-loading .aqe-btn-text {
+  opacity: 0;
+}
+
+.aqe-btn-loading .aqe-btn-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: aqe-spin 1s linear infinite;
+}
+
+/* Card Loading States */
+.aqe-card-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.aqe-card-loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: aqe-shimmer 1.5s infinite;
+}
+
+[data-theme="dark"] .aqe-card-loading::after {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+}
+
+/* Skeleton Loading */
+.aqe-skeleton {
+  background: var(--neutral-200);
+  border-radius: var(--radius-md);
+  animation: aqe-pulse 2s infinite;
+}
+
+[data-theme="dark"] .aqe-skeleton {
+  background: var(--neutral-700);
+}
+
+.aqe-skeleton-text {
+  height: var(--text-base);
+  margin-bottom: var(--space-2);
+}
+
+.aqe-skeleton-text:last-child {
+  margin-bottom: 0;
+}
+
+.aqe-skeleton-text.short {
+  width: 60%;
+}
+
+.aqe-skeleton-text.medium {
+  width: 80%;
+}
+
+.aqe-skeleton-text.long {
+  width: 100%;
+}
+
+.aqe-skeleton-title {
+  height: var(--text-xl);
+  width: 70%;
+  margin-bottom: var(--space-3);
+}
+
+.aqe-skeleton-subtitle {
+  height: var(--text-sm);
+  width: 50%;
+  margin-bottom: var(--space-4);
+}
+
+.aqe-skeleton-button {
+  height: 36px;
+  width: 120px;
+  border-radius: var(--radius-lg);
+}
+
+.aqe-skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+}
+
+.aqe-skeleton-card {
+  padding: var(--space-6);
+  border-radius: var(--radius-2xl);
+  background: white;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--neutral-200);
+}
+
+[data-theme="dark"] .aqe-skeleton-card {
+  background: var(--neutral-800);
+  border-color: var(--neutral-700);
+}
+
+/* Progress Indicators */
+.aqe-progress-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--neutral-50);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--neutral-200);
+}
+
+[data-theme="dark"] .aqe-progress-indicator {
+  background: var(--neutral-800);
+  border-color: var(--neutral-700);
+}
+
+.aqe-progress-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--neutral-200);
+  border-top: 2px solid var(--primary-blue);
+  border-radius: 50%;
+  animation: aqe-spin 1s linear infinite;
+}
+
+.aqe-progress-text {
+  font-size: var(--text-sm);
+  color: var(--neutral-700);
+  font-weight: var(--font-medium);
+}
+
+.aqe-progress-percentage {
+  font-size: var(--text-sm);
+  color: var(--primary-blue);
+  font-weight: var(--font-semibold);
+  margin-left: auto;
+}
+
+/* Step Progress */
+.aqe-step-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: var(--space-6) 0;
+}
+
+.aqe-step {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  position: relative;
+}
+
+.aqe-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: -var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--space-4);
+  height: 2px;
+  background: var(--neutral-300);
+  z-index: 1;
+}
+
+.aqe-step.completed:not(:last-child)::after {
+  background: var(--success);
+}
+
+.aqe-step-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  background: var(--neutral-200);
+  color: var(--neutral-600);
+  position: relative;
+  z-index: 2;
+}
+
+.aqe-step.active .aqe-step-icon {
+  background: var(--primary-blue);
+  color: white;
+}
+
+.aqe-step.completed .aqe-step-icon {
+  background: var(--success);
+  color: white;
+}
+
+.aqe-step-label {
+  font-size: var(--text-sm);
+  color: var(--neutral-600);
+  font-weight: var(--font-medium);
+}
+
+.aqe-step.active .aqe-step-label {
+  color: var(--primary-blue);
+}
+
+.aqe-step.completed .aqe-step-label {
+  color: var(--success);
+}
+
+/* Animations */
+@keyframes aqe-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes aqe-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes aqe-shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+@keyframes aqe-fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes aqe-slide-in-right {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes aqe-slide-in-left {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes aqe-scale-in {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Animation Classes */
+.aqe-animate-fade-in {
+  animation: aqe-fade-in 0.3s ease-out;
+}
+
+.aqe-animate-slide-in-right {
+  animation: aqe-slide-in-right 0.3s ease-out;
+}
+
+.aqe-animate-slide-in-left {
+  animation: aqe-slide-in-left 0.3s ease-out;
+}
+
+.aqe-animate-scale-in {
+  animation: aqe-scale-in 0.3s ease-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .aqe-toast-container {
+    top: var(--space-4);
+    right: var(--space-4);
+    left: var(--space-4);
+    max-width: none;
+  }
+  
+  .aqe-toast {
+    padding: var(--space-3) var(--space-4);
+  }
+  
+  .aqe-step-progress {
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+  
+  .aqe-step:not(:last-child)::after {
+    display: none;
+  }
+  
+  .aqe-step-label {
+    display: none;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .aqe-toast,
+  .aqe-loading-overlay,
+  .aqe-loading-spinner,
+  .aqe-skeleton,
+  .aqe-step-progress {
+    animation: none;
+    transition: none;
+  }
+  
+  .aqe-toast.show {
+    transform: none;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .aqe-toast {
+    border-width: 2px;
+  }
+  
+  .aqe-loading-spinner {
+    border-width: 3px;
+  }
+  
+  .aqe-skeleton {
+    background: var(--neutral-300);
+  }
+}

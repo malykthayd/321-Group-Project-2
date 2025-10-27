@@ -189,63 +189,7 @@ class GettingStartedSystem {
                     </div>
                 </div>
 
-                <!-- Premium Plans -->
-                <div class="row mb-5">
-                    <div class="col-12 text-center mb-4">
-                        <h3>Choose Your Experience</h3>
-                        <p class="text-muted">Enhance your educational journey with powerful tools and features designed for modern learning.</p>
-                    </div>
-                    
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body text-center">
-                                <h4 class="text-primary mb-3">$4.99<small>/mo</small></h4>
-                                <h5>Family Premium</h5>
-                                <ul class="list-unstyled text-start small mt-3 mb-3">
-                                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Advanced learning analytics & progress tracking</li>
-                                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Offline access to all content</li>
-                                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Priority customer support</li>
-                                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Download & print materials</li>
-                                </ul>
-                                <button class="btn btn-primary w-100" onclick="showPremiumModal('premium_parent')">Get Started</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100 border-primary">
-                            <div class="badge bg-primary position-absolute top-0 end-0 m-3">Most Popular</div>
-                            <div class="card-body text-center">
-                                <h4 class="text-success mb-3">$9.99<small>/mo</small></h4>
-                                <h5>Teacher Premium</h5>
-                                <ul class="list-unstyled text-start small mt-3 mb-3">
-                                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Everything in Family Premium</li>
-                                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>AI-powered lesson plan generator</li>
-                                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Student analytics dashboard</li>
-                                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Classroom management tools</li>
-                                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Bulk student account management</li>
-                                </ul>
-                                <button class="btn btn-success w-100" onclick="showPremiumModal('premium_teacher')">Get Started</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body text-center">
-                                <h4 class="mb-3">Free</h4>
-                                <h5>Standard Access</h5>
-                                <ul class="list-unstyled text-start small mt-3 mb-3">
-                                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Access to all core lessons</li>
-                                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Basic progress tracking</li>
-                                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Online content library</li>
-                                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Community support</li>
-                                </ul>
-                                <p class="text-muted small mb-0">Perfect for getting started with quality education</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!-- Premium Plans - Removed: Now handled by centralized AdPlacement system -->
 
                 <!-- Back Button -->
                 <div class="row mb-4">

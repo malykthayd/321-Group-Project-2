@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using api.Models;
 using api.Helpers;
 using api.Models.SMS;
+using api.Models.Curriculum;
 
 namespace api.Data
 {
@@ -48,6 +49,16 @@ namespace api.Data
         public DbSet<PracticeItem> PracticeItems { get; set; }
         public DbSet<MiniGame> MiniGames { get; set; }
         public DbSet<LessonBadge> LessonBadges { get; set; }
+
+        // Curriculum Generation System
+        public DbSet<Subject> Subjects { get; set; }
+        public DbSet<Grade> Grades { get; set; }
+        public DbSet<GeneratedLesson> GeneratedLessons { get; set; }
+        public DbSet<LessonQuestion> LessonQuestions { get; set; }
+        public DbSet<LibraryItem> LibraryItems { get; set; }
+        public DbSet<Assignment> Assignments { get; set; }
+        public DbSet<Attempt> Attempts { get; set; }
+        public DbSet<AnalyticsRollup> AnalyticsRollups { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -328,6 +339,74 @@ namespace api.Data
             {
                 entity.HasKey(e => e.Id);
                 entity.HasIndex(e => new { e.PhoneE164, e.Channel }).IsUnique();
+            });
+
+            // Curriculum Generation System entity configurations
+            modelBuilder.Entity<Subject>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasIndex(e => e.Slug).IsUnique();
+                entity.HasIndex(e => e.Name);
+            });
+
+            modelBuilder.Entity<Grade>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasIndex(e => e.Code).IsUnique();
+                entity.HasIndex(e => e.SortOrder);
+            });
+
+            modelBuilder.Entity<GeneratedLesson>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasIndex(e => new { e.SubjectId, e.GradeId, e.DifficultyTag });
+                entity.HasIndex(e => e.Status);
+                entity.HasIndex(e => e.CreatedByRole);
+
+                entity.HasOne(gl => gl.Subject)
+                    .WithMany(s => s.GeneratedLessons)
+                    .HasForeignKey(gl => gl.SubjectId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(gl => gl.Grade)
+                    .WithMany(g => g.GeneratedLessons)
+                    .HasForeignKey(gl => gl.GradeId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<LessonQuestion>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasIndex(e => new { e.GeneratedLessonId, e.Order });
+            });
+
+            modelBuilder.Entity<LibraryItem>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasIndex(e => new { e.OwnerRole, e.OwnerId });
+                entity.HasIndex(e => e.PublishedAt);
+            });
+
+            modelBuilder.Entity<Assignment>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasIndex(e => new { e.AssigneeType, e.AssigneeId });
+                entity.HasIndex(e => new { e.AssignedByRole, e.AssignedById });
+                entity.HasIndex(e => e.AssignedAt);
+            });
+
+            modelBuilder.Entity<Attempt>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasIndex(e => new { e.AssignmentId, e.StudentId }).IsUnique();
+                entity.HasIndex(e => e.SubmittedAt);
+            });
+
+            modelBuilder.Entity<AnalyticsRollup>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasIndex(e => new { e.Role, e.RoleId, e.TimeWindow });
+                entity.HasIndex(e => e.LastUpdated);
             });
 
             // Seed initial demo data

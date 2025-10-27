@@ -1,7 +1,7 @@
 // Admin Portal & Dashboard System
 class AdminPortal {
     constructor() {
-        this.apiBaseUrl = 'http://localhost:5001/api';
+        this.apiBaseUrl = window.AQEConfig.getApiBaseUrl();
         this.currentTab = 'overview';
     }
 

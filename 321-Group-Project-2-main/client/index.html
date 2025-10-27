@@ -11,19 +11,19 @@
   <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
   
-  <!-- Custom CSS -->
+  <!-- Unified Design System -->
+  <link href="resources/styles/design-tokens.css" rel="stylesheet">
+  <link href="resources/styles/component-library.css" rel="stylesheet">
+  <link href="resources/styles/navigation.css" rel="stylesheet">
+  <link href="resources/styles/landing-page.css" rel="stylesheet">
+  <link href="resources/styles/dashboard.css" rel="stylesheet">
+  <link href="resources/styles/notifications.css" rel="stylesheet">
+  
+  <!-- Legacy Styles (for compatibility) -->
   <link href="resources/styles/main.css" rel="stylesheet">
-  
-  <!-- Premium Styles -->
   <link href="resources/styles/premium.css" rel="stylesheet">
-  
-  <!-- Modern UI Redesign -->
   <link href="resources/styles/modern-ui.css" rel="stylesheet">
-  
-  <!-- Complete Transformation -->
   <link href="resources/styles/transform.css" rel="stylesheet">
-  
-  <!-- Dark Mode CSS -->
   <link href="resources/styles/dark-mode.css" rel="stylesheet">
   <link href="resources/styles/dark-premium.css" rel="stylesheet">
   
@@ -44,75 +44,99 @@
 <body class="bg-light">
   <div id="app">
     <!-- Header -->
-    <header class="header-professional">
-      <div class="container-fluid">
-        <div class="d-flex justify-content-between align-items-center py-3">
-          <!-- Logo and Branding -->
-          <div class="d-flex align-items-center">
-            <div class="logo-container me-3">
-              <div class="logo-icon">
-                <i class="bi bi-mortarboard-fill"></i>
-              </div>
-            </div>
-            <div class="brand-info">
-              <h1 class="brand-title mb-0" data-translate="header" data-translate-key="welcome">
-                Accessible Quality Education
-              </h1>
-              <p class="brand-subtitle mb-0" data-translate="header" data-translate-key="welcomeSubtitle">
-                Empowering learners worldwide
-              </p>
-            </div>
+    <header class="aqe-header">
+      <div class="aqe-header-content">
+        <!-- Logo and Branding -->
+        <a href="#" class="aqe-logo">
+          <div class="aqe-logo-icon">
+            <i class="bi bi-mortarboard-fill"></i>
+          </div>
+          <div class="aqe-brand">
+            <h1 class="aqe-brand-title" data-translate="header" data-translate-key="welcome">
+              Accessible Quality Education
+            </h1>
+            <p class="aqe-brand-subtitle" data-translate="header" data-translate-key="welcomeSubtitle">
+              Empowering learners worldwide
+            </p>
+          </div>
+        </a>
+        
+        <!-- Navigation Menu -->
+        <nav class="aqe-nav-menu" id="mainNavigationTabs">
+          <ul class="aqe-nav-menu">
+            <li class="aqe-nav-item">
+              <a href="#gettingStarted" class="aqe-nav-link" data-translate="nav" data-translate-key="gettingStarted">
+                <i class="bi bi-play-circle me-2"></i>Getting Started
+              </a>
+            </li>
+            <li class="aqe-nav-item">
+              <a href="#chooseExperience" class="aqe-nav-link" data-translate="nav" data-translate-key="chooseExperience">
+                <i class="bi bi-people me-2"></i>Choose Experience
+              </a>
+            </li>
+            <li class="aqe-nav-item">
+              <a href="#institutional" class="aqe-nav-link" data-translate="nav" data-translate-key="institutional">
+                <i class="bi bi-building me-2"></i>Institutional
+              </a>
+            </li>
+          </ul>
+        </nav>
+        
+        <!-- Header Actions -->
+        <div class="aqe-header-actions">
+          <!-- Language Selector -->
+          <div class="language-selector">
+            <select class="aqe-form-select" onchange="changeLanguage(this.value)" id="languageSelect">
+              <option value="en">🇺🇸 English</option>
+              <option value="es">🇪🇸 Español</option>
+              <option value="fr">🇫🇷 Français</option>
+              <option value="de">🇩🇪 Deutsch</option>
+              <option value="zh">🇨🇳 中文</option>
+              <option value="ar">🇸🇦 العربية</option>
+              <option value="sw">🇰🇪 Kiswahili</option>
+              <option value="am">🇪🇹 አማርኛ</option>
+              <option value="zu">🇿🇦 isiZulu</option>
+            </select>
           </div>
           
-          <!-- Header Actions -->
-          <div class="d-flex align-items-center gap-3">
-            <!-- Language Selector -->
-            <div class="language-selector">
-              <select class="form-select form-select-sm" onchange="changeLanguage(this.value)" id="languageSelect">
-                <option value="en">🇺🇸 English</option>
-                <option value="es">🇪🇸 Español</option>
-                <option value="fr">🇫🇷 Français</option>
-                <option value="de">🇩🇪 Deutsch</option>
-                <option value="zh">🇨🇳 中文</option>
-                <option value="ar">🇸🇦 العربية</option>
-                <option value="sw">🇰🇪 Kiswahili</option>
-                <option value="am">🇪🇹 አማርኛ</option>
-                <option value="zu">🇿🇦 isiZulu</option>
-              </select>
-            </div>
-            
-            <!-- Dark Mode Toggle -->
-            <button type="button" class="btn btn-outline-secondary btn-sm theme-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">
-              <i class="bi bi-moon-fill d-none" id="darkModeIcon"></i>
-              <i class="bi bi-sun-fill" id="lightModeIcon"></i>
+          <!-- Dark Mode Toggle -->
+          <button type="button" class="aqe-action-btn theme-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">
+            <i class="bi bi-moon-fill d-none" id="darkModeIcon"></i>
+            <i class="bi bi-sun-fill" id="lightModeIcon"></i>
+          </button>
+          
+          <!-- Support Button -->
+          <button type="button" class="aqe-action-btn support-btn" onclick="showSupportModal()" title="Support Accessibility">
+            <i class="bi bi-heart-fill me-1"></i><span>Support</span>
+          </button>
+          
+          <!-- User Profile -->
+          <div class="aqe-user-profile dropdown">
+            <button class="aqe-user-btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+              <div class="aqe-user-avatar">
+                <i class="bi bi-person-fill"></i>
+              </div>
+              <div class="aqe-user-info">
+                <p class="aqe-user-name" id="userFullName" data-translate="user" data-translate-key="guest">Guest User</p>
+                <p class="aqe-user-role" id="userRole" data-translate="user" data-translate-key="role">guest</p>
+              </div>
             </button>
-            
-            <!-- Support Button -->
-            <button type="button" class="btn btn-sm support-btn" onclick="showSupportModal()" title="Support Accessibility">
-              <i class="bi bi-heart-fill me-1"></i>Support
-            </button>
-            
-            <!-- User Profile -->
-            <div class="dropdown user-profile">
-              <button class="btn btn-primary dropdown-toggle user-btn" type="button" data-bs-toggle="dropdown">
-                <div class="user-avatar">
-                  <i class="bi bi-person-fill"></i>
-                </div>
-                <div class="user-info">
-                  <span class="user-name" id="userFullName" data-translate="user" data-translate-key="guest">Guest User</span>
-                  <span class="user-role" id="userRole" data-translate="user" data-translate-key="role">guest</span>
-                </div>
-              </button>
-              <ul class="dropdown-menu dropdown-menu-end user-menu">
-                <li><span class="dropdown-item-text small text-muted" id="userRoleDisplay" data-translate="user" data-translate-key="role">guest</span></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#" onclick="showProfile()"><i class="bi bi-person me-2"></i>Profile</a></li>
-                <li><a class="dropdown-item" href="#" onclick="showSettings()"><i class="bi bi-gear me-2"></i>Settings</a></li>
-                <li><a class="dropdown-item" href="#" onclick="logout()"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
-              </ul>
-            </div>
+            <ul class="dropdown-menu dropdown-menu-end user-menu">
+              <li><span class="dropdown-item-text small text-muted" id="userRoleDisplay" data-translate="user" data-translate-key="role">guest</span></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#" onclick="showProfile()"><i class="bi bi-person me-2"></i>Profile</a></li>
+              <li><a class="dropdown-item" href="#" onclick="showSettings()"><i class="bi bi-gear me-2"></i>Settings</a></li>
+              <li><a class="dropdown-item" href="#" onclick="logout()"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+            </ul>
           </div>
         </div>
+        
+        <!-- Mobile Navigation Toggle -->
+        <button class="aqe-mobile-nav-toggle" id="mobileNavToggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
     </header>
 
@@ -395,51 +419,40 @@
                       <!-- Filters -->
                       <div class="row g-3 mb-4">
                         <div class="col-md-3">
-                          <label for="subjectFilter" class="form-label">Filter by Subject</label>
-                          <select class="form-select" id="subjectFilter" onchange="filterDigitalLibrary()">
+                          <label for="studentSubjectFilter" class="form-label">Subject</label>
+                          <select class="form-select" id="studentSubjectFilter" onchange="window.app.filterStudentLibrary()">
                             <option value="">All Subjects</option>
-                            <option value="Science">Science</option>
-                            <option value="Technology">Technology</option>
-                            <option value="English">English</option>
-                            <option value="Math">Math</option>
-                            <option value="Geography">Geography</option>
                           </select>
                         </div>
                         <div class="col-md-3">
-                          <label for="assignerFilter" class="form-label">Filter by Assigner</label>
-                          <select class="form-select" id="assignerFilter" onchange="filterDigitalLibrary()">
+                          <label for="studentAssignerFilter" class="form-label">Assigner</label>
+                          <select class="form-select" id="studentAssignerFilter" onchange="window.app.filterStudentLibrary()">
                             <option value="">All Assigners</option>
                             <option value="teacher">Teacher</option>
                             <option value="parent">Parent</option>
                           </select>
                         </div>
                         <div class="col-md-3">
-                          <label for="gradeFilter" class="form-label">Filter by Grade</label>
-                          <select class="form-select" id="gradeFilter" onchange="filterDigitalLibrary()">
-                            <option value="">All Grades</option>
-                            <option value="Kindergarten">Kindergarten</option>
-                            <option value="1st Grade">1st Grade</option>
-                            <option value="2nd Grade">2nd Grade</option>
-                            <option value="3rd Grade">3rd Grade</option>
-                            <option value="4th Grade">4th Grade</option>
-                            <option value="5th Grade">5th Grade</option>
-                            <option value="6th Grade">6th Grade</option>
-                            <option value="7th Grade">7th Grade</option>
-                            <option value="8th Grade">8th Grade</option>
+                          <label for="studentStatusFilter" class="form-label">Status</label>
+                          <select class="form-select" id="studentStatusFilter" onchange="window.app.filterStudentLibrary()">
+                            <option value="">All Status</option>
+                            <option value="pending">Not Started</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="completed">Completed</option>
                           </select>
                         </div>
                         <div class="col-md-3">
-                          <label for="searchLessons" class="form-label">Search Lessons</label>
-                          <input type="text" class="form-control" id="searchLessons" placeholder="Search by title..." onkeyup="filterDigitalLibrary()">
+                          <label for="studentSearchFilter" class="form-label">Search</label>
+                          <input type="text" class="form-control" id="studentSearchFilter" placeholder="Search lessons..." onkeyup="window.app.filterStudentLibrary()">
                         </div>
                       </div>
 
                       <!-- Lessons Grid -->
                       <div class="row g-4" id="studentDigitalLibraryGrid">
-                        <div class="col-12 text-center text-muted py-5">
-                          <i class="bi bi-book" style="font-size: 3rem;"></i>
-                          <h5 class="mt-3">No lessons assigned yet</h5>
-                          <p class="mb-0">Your teacher or parent will assign lessons for you to complete.</p>
+                        <div class="col-12 text-center">
+                          <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading assignments...</span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -663,6 +676,66 @@
                 </div>
               </div>
 
+              <!-- Curriculum Analytics Section -->
+              <div class="row g-4 mb-4">
+                <div class="col-12">
+                  <div class="modern-card">
+                    <div class="card-header-modern">
+                      <h5 class="card-title-modern">Curriculum Analytics</h5>
+                      <p class="card-subtitle-modern">Track lesson assignments and student progress</p>
+                    </div>
+                    <div class="card-body">
+                      <div class="row g-4">
+                        <div class="col-md-3">
+                          <div class="metric-card">
+                            <div class="metric-icon content">
+                              <i class="bi bi-book-fill"></i>
+                            </div>
+                            <div class="metric-content">
+                              <h3 class="metric-number" id="teacherLessonsInLibrary">0</h3>
+                              <p class="metric-label">Lessons in Library</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="metric-card">
+                            <div class="metric-icon users">
+                              <i class="bi bi-person-plus-fill"></i>
+                            </div>
+                            <div class="metric-content">
+                              <h3 class="metric-number" id="teacherAssignmentsCreated">0</h3>
+                              <p class="metric-label">Assignments Created</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="metric-card">
+                            <div class="metric-icon system">
+                              <i class="bi bi-people-fill"></i>
+                            </div>
+                            <div class="metric-content">
+                              <h3 class="metric-number" id="teacherStudentsAssigned">0</h3>
+                              <p class="metric-label">Students Assigned</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="metric-card">
+                            <div class="metric-icon revenue">
+                              <i class="bi bi-graph-up"></i>
+                            </div>
+                            <div class="metric-content">
+                              <h3 class="metric-number" id="teacherAvgClassScore">0%</h3>
+                              <p class="metric-label">Avg Class Score</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <!-- Ask Question Section -->
               <div class="row g-4 mb-4">
                 <div class="col-12">
@@ -797,11 +870,44 @@
                   <div class="modern-card">
                     <div class="card-header-modern">
                       <h5 class="card-title-modern">Digital Library</h5>
-                      <p class="text-muted mb-0">Pre-made lessons created by administrators</p>
+                      <p class="card-subtitle-modern">Published lessons available for assignment to your students</p>
                     </div>
                     <div class="card-body">
-                      <div class="row g-3" id="digitalLibraryGrid">
-                        <!-- Digital library items will be populated here -->
+                      <!-- Filters -->
+                      <div class="row g-3 mb-4">
+                        <div class="col-md-3">
+                          <label for="teacherSubjectFilter" class="form-label">Subject</label>
+                          <select class="form-select" id="teacherSubjectFilter" onchange="window.app.filterTeacherLibrary()">
+                            <option value="">All Subjects</option>
+                          </select>
+                        </div>
+                        <div class="col-md-3">
+                          <label for="teacherGradeFilter" class="form-label">Grade</label>
+                          <select class="form-select" id="teacherGradeFilter" onchange="window.app.filterTeacherLibrary()">
+                            <option value="">All Grades</option>
+                          </select>
+                        </div>
+                        <div class="col-md-3">
+                          <label for="teacherDifficultyFilter" class="form-label">Difficulty</label>
+                          <select class="form-select" id="teacherDifficultyFilter" onchange="window.app.filterTeacherLibrary()">
+                            <option value="">All Levels</option>
+                            <option value="A">Lesson A (Easier)</option>
+                            <option value="B">Lesson B (Moderate)</option>
+                          </select>
+                        </div>
+                        <div class="col-md-3">
+                          <label for="teacherSearchFilter" class="form-label">Search</label>
+                          <input type="text" class="form-control" id="teacherSearchFilter" placeholder="Search lessons..." onkeyup="window.app.filterTeacherLibrary()">
+                        </div>
+                      </div>
+                      
+                      <!-- Lessons Grid -->
+                      <div class="row g-4" id="teacherLibraryGrid">
+                        <div class="col-12 text-center">
+                          <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading lessons...</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1017,35 +1123,113 @@
                   </div>
                 </div>
               </div>
+
+              <!-- Curriculum Analytics Section -->
+              <div class="row g-4 mb-4">
+                <div class="col-12">
+                  <div class="modern-card">
+                    <div class="card-header-modern">
+                      <h5 class="card-title-modern">Curriculum Analytics</h5>
+                      <p class="card-subtitle-modern">Track lesson assignments and children's progress</p>
+                    </div>
+                    <div class="card-body">
+                      <div class="row g-4">
+                        <div class="col-md-3">
+                          <div class="metric-card">
+                            <div class="metric-icon content">
+                              <i class="bi bi-book-fill"></i>
+                            </div>
+                            <div class="metric-content">
+                              <h3 class="metric-number" id="parentLessonsAvailable">0</h3>
+                              <p class="metric-label">Lessons Available</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="metric-card">
+                            <div class="metric-icon users">
+                              <i class="bi bi-person-plus-fill"></i>
+                            </div>
+                            <div class="metric-content">
+                              <h3 class="metric-number" id="parentAssignmentsCreated">0</h3>
+                              <p class="metric-label">Assignments Created</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="metric-card">
+                            <div class="metric-icon system">
+                              <i class="bi bi-people-fill"></i>
+                            </div>
+                            <div class="metric-content">
+                              <h3 class="metric-number" id="parentChildAttempts">0</h3>
+                              <p class="metric-label">Child Attempts</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="metric-card">
+                            <div class="metric-icon revenue">
+                              <i class="bi bi-graph-up"></i>
+                            </div>
+                            <div class="metric-content">
+                              <h3 class="metric-number" id="parentAvgScore">0%</h3>
+                              <p class="metric-label">Avg Score</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             
             <!-- Parent Digital Library Tab -->
             <div class="tab-pane fade" id="parent-digital-library-content" role="tabpanel">
-              <div class="row">
+              <div class="row g-4">
                 <div class="col-12">
                   <div class="modern-card">
                     <div class="card-header-modern">
-                      <h5 class="card-title-modern">Digital Library - Available Lessons</h5>
-                      <p class="card-subtitle-modern">Assign lessons to your children</p>
+                      <h5 class="card-title-modern">Digital Library</h5>
+                      <p class="card-subtitle-modern">Published lessons available for assignment to your children</p>
                     </div>
                     <div class="card-body">
-                      <div class="table-responsive">
-                        <table class="table table-hover">
-                          <thead class="table-dark">
-                            <tr>
-                              <th>Title</th>
-                              <th>Subject</th>
-                              <th>Grade Level</th>
-                              <th>Description</th>
-                              <th>Actions</th>
-                            </tr>
-                          </thead>
-                          <tbody id="parentDigitalLibraryTableBody">
-                            <tr>
-                              <td colspan="5" class="text-center text-muted">Loading lessons...</td>
-                            </tr>
-                          </tbody>
-                        </table>
+                      <!-- Filters -->
+                      <div class="row g-3 mb-4">
+                        <div class="col-md-3">
+                          <label for="parentSubjectFilter" class="form-label">Subject</label>
+                          <select class="form-select" id="parentSubjectFilter" onchange="window.app.filterParentLibrary()">
+                            <option value="">All Subjects</option>
+                          </select>
+                        </div>
+                        <div class="col-md-3">
+                          <label for="parentGradeFilter" class="form-label">Grade</label>
+                          <select class="form-select" id="parentGradeFilter" onchange="window.app.filterParentLibrary()">
+                            <option value="">All Grades</option>
+                          </select>
+                        </div>
+                        <div class="col-md-3">
+                          <label for="parentDifficultyFilter" class="form-label">Difficulty</label>
+                          <select class="form-select" id="parentDifficultyFilter" onchange="window.app.filterParentLibrary()">
+                            <option value="">All Levels</option>
+                            <option value="A">Lesson A (Easier)</option>
+                            <option value="B">Lesson B (Moderate)</option>
+                          </select>
+                        </div>
+                        <div class="col-md-3">
+                          <label for="parentSearchFilter" class="form-label">Search</label>
+                          <input type="text" class="form-control" id="parentSearchFilter" placeholder="Search lessons..." onkeyup="window.app.filterParentLibrary()">
+                        </div>
+                      </div>
+                      
+                      <!-- Lessons Grid -->
+                      <div class="row g-4" id="parentLibraryGrid">
+                        <div class="col-12 text-center">
+                          <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading lessons...</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1122,6 +1306,11 @@
             <li class="nav-item" role="presentation" style="display: inline-block;">
               <button class="nav-link" id="admin-content-management-tab" data-bs-toggle="tab" data-bs-target="#admin-content-management-content" type="button" role="tab">
                 <i class="bi bi-folder me-2"></i>Content Management
+              </button>
+            </li>
+            <li class="nav-item" role="presentation" style="display: inline-block;">
+              <button class="nav-link" id="admin-course-management-tab" data-bs-toggle="tab" data-bs-target="#admin-course-management-content" type="button" role="tab">
+                <i class="bi bi-mortarboard me-2"></i>Course Management
               </button>
             </li>
             <li class="nav-item" role="presentation" style="display: inline-block;">
@@ -1284,6 +1473,161 @@
                             </tr>
                           </tbody>
                         </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Admin Course Management Tab -->
+            <div class="tab-pane fade" id="admin-course-management-content" role="tabpanel">
+              <div class="row g-4 mb-4">
+                <!-- Course Generation Section -->
+                <div class="col-12">
+                  <div class="modern-card">
+                    <div class="card-header-modern">
+                      <h5 class="card-title-modern">Curriculum Generation</h5>
+                      <p class="card-subtitle-modern">Generate lessons automatically for all subjects and grades</p>
+                    </div>
+                    <div class="card-body">
+                      <div class="row mb-4">
+                        <div class="col-md-8">
+                          <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Auto-Generation:</strong> Generate 2 lessons per subject per grade (Lesson A = easier, Lesson B = moderate). Each lesson contains exactly 5 multiple-choice questions.
+                          </div>
+                        </div>
+                        <div class="col-md-4 text-end">
+                          <button class="btn btn-primary btn-lg" onclick="showGenerateLessonsModal()">
+                            <i class="bi bi-magic me-2"></i>Generate Lessons
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <!-- Generation Filters -->
+                      <div class="row mb-4">
+                        <div class="col-md-6">
+                          <label class="form-label">Subjects</label>
+                          <select class="form-select" id="subjectFilter" multiple>
+                            <option value="">All Subjects</option>
+                          </select>
+                        </div>
+                        <div class="col-md-6">
+                          <label class="form-label">Grades</label>
+                          <select class="form-select" id="gradeFilter" multiple>
+                            <option value="">All Grades</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Generated Lessons Section -->
+                <div class="col-12">
+                  <div class="modern-card">
+                    <div class="card-header-modern">
+                      <h5 class="card-title-modern">Generated Lessons</h5>
+                      <p class="card-subtitle-modern">Manage and publish auto-generated lessons</p>
+                    </div>
+                    <div class="card-body">
+                      <div class="row mb-4">
+                        <div class="col-md-6">
+                          <div class="btn-group" role="group">
+                            <button class="btn btn-outline-primary" onclick="filterLessons('all')">All</button>
+                            <button class="btn btn-outline-primary" onclick="filterLessons('draft')">Draft</button>
+                            <button class="btn btn-outline-primary" onclick="filterLessons('published')">Published</button>
+                          </div>
+                        </div>
+                        <div class="col-md-6 text-end">
+                          <button class="btn btn-success" onclick="showPublishLessonsModal()" disabled id="publishLessonsBtn">
+                            <i class="bi bi-cloud-upload me-2"></i>Publish Selected
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <div class="table-responsive">
+                        <table class="table table-hover">
+                          <thead class="table-dark">
+                            <tr>
+                              <th>
+                                <input type="checkbox" id="selectAllLessons" onchange="toggleAllLessons(this)">
+                              </th>
+                              <th>Title</th>
+                              <th>Subject</th>
+                              <th>Grade</th>
+                              <th>Difficulty</th>
+                              <th>Status</th>
+                              <th>Questions</th>
+                              <th>Created</th>
+                              <th>Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody id="generatedLessonsTableBody">
+                            <tr>
+                              <td colspan="9" class="text-center text-muted">Loading lessons...</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Analytics Section -->
+                <div class="col-12">
+                  <div class="modern-card">
+                    <div class="card-header-modern">
+                      <h5 class="card-title-modern">Curriculum Analytics</h5>
+                      <p class="card-subtitle-modern">Track lesson generation and usage statistics</p>
+                    </div>
+                    <div class="card-body">
+                      <div class="row g-4">
+                        <div class="col-md-3">
+                          <div class="metric-card">
+                            <div class="metric-icon content">
+                              <i class="bi bi-mortarboard-fill"></i>
+                            </div>
+                            <div class="metric-content">
+                              <h3 class="metric-number" id="adminLessonsGenerated">0</h3>
+                              <p class="metric-label">Lessons Generated</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="metric-card">
+                            <div class="metric-icon users">
+                              <i class="bi bi-people-fill"></i>
+                            </div>
+                            <div class="metric-content">
+                              <h3 class="metric-number" id="adminLessonsPublishedParent">0</h3>
+                              <p class="metric-label">Published to Parents</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="metric-card">
+                            <div class="metric-icon system">
+                              <i class="bi bi-easel-fill"></i>
+                            </div>
+                            <div class="metric-content">
+                              <h3 class="metric-number" id="adminLessonsPublishedTeacher">0</h3>
+                              <p class="metric-label">Published to Teachers</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="metric-card">
+                            <div class="metric-icon revenue">
+                              <i class="bi bi-graph-up"></i>
+                            </div>
+                            <div class="metric-content">
+                              <h3 class="metric-number" id="adminAssignmentsCreated">0</h3>
+                              <p class="metric-label">Assignments Created</p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1775,102 +2119,7 @@
       </div>
     </main>
 
-    <!-- Premium Plans Section -->
-    <section class="premium-support-section">
-      <div class="container-fluid">
-        <div class="support-header">
-          <h3>Choose Your Experience</h3>
-          <p>Enhance your educational journey with powerful tools and features designed for modern learning.</p>
-        </div>
-
-        <div class="row g-4 mb-5">
-          <div class="col-lg-4">
-            <div class="value-card">
-              <div class="price">$4.99<small>/mo</small></div>
-              <h5 class="fw-bold mb-3">Family Premium</h5>
-              <div class="value-feature">
-                <i class="bi bi-check-circle-fill"></i>
-                <span>Advanced learning analytics & progress tracking</span>
-              </div>
-              <div class="value-feature">
-                <i class="bi bi-check-circle-fill"></i>
-                <span>Offline access to all content</span>
-              </div>
-              <div class="value-feature">
-                <i class="bi bi-check-circle-fill"></i>
-                <span>Priority customer support</span>
-              </div>
-              <div class="value-feature">
-                <i class="bi bi-check-circle-fill"></i>
-                <span>Download & print materials</span>
-              </div>
-              <button class="btn btn-primary-modern w-100 mt-4" onclick="showPremiumModal('premium_parent')">
-                Get Started →
-              </button>
-            </div>
-          </div>
-          <div class="col-lg-4">
-            <div class="value-card" style="border: 2px solid #667eea; position: relative;">
-              <span class="badge bg-primary position-absolute top-0 end-0 m-3">Most Popular</span>
-              <div class="price">$9.99<small>/mo</small></div>
-              <h5 class="fw-bold mb-3">Teacher Premium</h5>
-              <div class="value-feature">
-                <i class="bi bi-check-circle-fill"></i>
-                <span>Everything in Family Premium</span>
-              </div>
-              <div class="value-feature">
-                <i class="bi bi-check-circle-fill"></i>
-                <span>AI-powered lesson plan generator</span>
-              </div>
-              <div class="value-feature">
-                <i class="bi bi-check-circle-fill"></i>
-                <span>Student analytics dashboard</span>
-              </div>
-              <div class="value-feature">
-                <i class="bi bi-check-circle-fill"></i>
-                <span>Classroom management tools</span>
-              </div>
-              <div class="value-feature">
-                <i class="bi bi-check-circle-fill"></i>
-                <span>Bulk student account management</span>
-              </div>
-              <button class="btn btn-primary-modern w-100 mt-4" onclick="showPremiumModal('premium_teacher')">
-                Get Started →
-              </button>
-            </div>
-          </div>
-          <div class="col-lg-4">
-            <div class="value-card">
-              <div class="price">Free</div>
-              <h5 class="fw-bold mb-3">Standard Access</h5>
-              <div class="value-feature">
-                <i class="bi bi-check-circle-fill"></i>
-                <span>Access to all core lessons</span>
-              </div>
-              <div class="value-feature">
-                <i class="bi bi-check-circle-fill"></i>
-                <span>Basic progress tracking</span>
-              </div>
-              <div class="value-feature">
-                <i class="bi bi-check-circle-fill"></i>
-                <span>Online content library</span>
-              </div>
-              <div class="value-feature">
-                <i class="bi bi-check-circle-fill"></i>
-                <span>Community support</span>
-              </div>
-              <p class="text-muted mt-3 mb-0 small">Perfect for getting started with quality education</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="text-center">
-          <button class="btn btn-outline-primary btn-lg btn-modern" onclick="showSupportModal()">
-            <i class="bi bi-heart me-2"></i>Support Our Mission
-          </button>
-        </div>
-      </div>
-    </section>
+    <!-- Premium Plans Section - Removed: Now handled by centralized AdPlacement system -->
 
     <!-- Institutional Licensing Section -->
     <section class="institutional-section">
@@ -2019,12 +2268,25 @@
       <div class="container-fluid">
         <div class="row align-items-center">
           <div class="col-md-6">
-            <p class="mb-0" data-translate="footer" data-translate-key="copyright">&copy; 2025 Accessible Quality Education</p>
+            <p class="mb-0" data-translate="footer" data-translate-key="copyright">&copy; 2025 Accessible Quality Education. All rights reserved.</p>
           </div>
           <div class="col-md-6 text-md-end">
-            <a href="privacy.html" class="footer-link me-3" data-translate="footer" data-translate-key="privacy">Privacy</a>
-            <a href="terms.html" class="footer-link me-3" data-translate="footer" data-translate-key="terms">Terms</a>
-            <a href="support.html" class="footer-link" data-translate="footer" data-translate-key="support">Support</a>
+            <div class="footer-links">
+              <a href="privacy.html" class="footer-link" data-translate="footer" data-translate-key="privacy">
+                <i class="bi bi-shield-lock me-1"></i>Privacy Policy
+              </a>
+              <a href="terms.html" class="footer-link" data-translate="footer" data-translate-key="terms">
+                <i class="bi bi-file-text me-1"></i>Terms of Service
+              </a>
+              <a href="support.html" class="footer-link" data-translate="footer" data-translate-key="support">
+                <i class="bi bi-headset me-1"></i>Support
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-12 text-center">
+            <p class="text-muted mb-0 small">AQE Platform - Empowering accessible education for all</p>
           </div>
         </div>
       </div>
@@ -2381,12 +2643,12 @@
         <div class="modal-body">
           <form id="addStudentForm">
             <div class="mb-3">
-              <label for="studentName" class="form-label">Student Name</label>
-              <input type="text" class="form-control" id="studentName" required>
+              <label for="addStudentName" class="form-label">Student Name</label>
+              <input type="text" class="form-control" id="addStudentName" required>
             </div>
             <div class="mb-3">
-              <label for="studentGradeLevel" class="form-label">Grade Level</label>
-              <select class="form-select" id="studentGradeLevel" required>
+              <label for="addStudentGradeLevel" class="form-label">Grade Level</label>
+              <select class="form-select" id="addStudentGradeLevel" required>
                 <option value="">Select Grade Level</option>
                 <option value="Kindergarten">Kindergarten</option>
                 <option value="1st Grade">1st Grade</option>
@@ -2714,41 +2976,335 @@
               </div>
             </div>
 
-            <!-- Premium Info -->
-            <div class="col-md-6">
-              <div class="card border-primary h-100">
-                <div class="card-body text-center">
-                  <h6 class="fw-bold mb-3">Family Premium</h6>
-                  <h4 class="text-primary mb-3">$4.99/mo</h4>
-                  <ul class="list-unstyled text-start small mb-3">
-                    <li><i class="bi bi-check-circle text-success me-2"></i>Advanced tracking</li>
-                    <li><i class="bi bi-check-circle text-success me-2"></i>Offline downloads</li>
-                    <li><i class="bi bi-check-circle text-success me-2"></i>Priority support</li>
-                  </ul>
-                  <button class="btn btn-primary btn-sm w-100" onclick="showPremiumModal('premium_parent')">
-                    Learn More
-                  </button>
-                </div>
+            <!-- Premium Info - Removed: Now handled by centralized AdPlacement system -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Practice Material Modal -->
+  <div class="modal fade" id="editPracticeMaterialModal" tabindex="-1" aria-labelledby="editPracticeMaterialModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editPracticeMaterialModalLabel">
+            <i class="bi bi-pencil-square me-2"></i>Edit Practice Material
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editPracticeMaterialForm">
+            <!-- Basic Information -->
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <label for="editMaterialTitle" class="form-label">Title <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="editMaterialTitle" required>
+              </div>
+              <div class="col-md-6">
+                <label for="editMaterialSubject" class="form-label">Subject <span class="text-danger">*</span></label>
+                <select class="form-select" id="editMaterialSubject" required>
+                  <option value="">Select Subject</option>
+                  <option value="Science">Science</option>
+                  <option value="Technology">Technology</option>
+                  <option value="English">English</option>
+                  <option value="Math">Math</option>
+                  <option value="Geography">Geography</option>
+                </select>
               </div>
             </div>
 
-            <div class="col-md-6">
-              <div class="card border-success h-100">
-                <div class="card-body text-center">
-                  <h6 class="fw-bold mb-3">Teacher Premium</h6>
-                  <h4 class="text-success mb-3">$9.99/mo</h4>
-                  <ul class="list-unstyled text-start small mb-3">
-                    <li><i class="bi bi-check-circle text-success me-2"></i>AI lesson planning</li>
-                    <li><i class="bi bi-check-circle text-success me-2"></i>Analytics dashboard</li>
-                    <li><i class="bi bi-check-circle text-success me-2"></i>Class management</li>
-                  </ul>
-                  <button class="btn btn-success btn-sm w-100" onclick="showPremiumModal('premium_teacher')">
-                    Learn More
+            <div class="mb-4">
+              <label for="editMaterialDescription" class="form-label">Description <span class="text-danger">*</span></label>
+              <textarea class="form-control" id="editMaterialDescription" rows="3" required></textarea>
+            </div>
+
+            <!-- Questions Section -->
+            <div class="mb-4">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="mb-0">Questions <span class="text-danger">*</span></h6>
+                <div class="d-flex align-items-center gap-3">
+                  <span class="badge bg-primary" id="editQuestionCount">0 questions</span>
+                  <button type="button" class="btn btn-outline-primary btn-sm" onclick="window.app.addEditQuestion()">
+                    <i class="bi bi-plus"></i> Add Question
                   </button>
+                </div>
+              </div>
+              <div id="editQuestionsContainer">
+                <!-- Questions will be populated here -->
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="window.app.updatePracticeMaterial()">
+            <i class="bi bi-check-lg me-2"></i>Update Practice Material
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Generate Lessons Modal -->
+  <div class="modal fade" id="generateLessonsModal" tabindex="-1" aria-labelledby="generateLessonsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="generateLessonsModalLabel">
+            <i class="bi bi-magic me-2"></i>Generate Lessons
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            <strong>Auto-Generation:</strong> This will generate 2 lessons per subject per grade (Lesson A = easier, Lesson B = moderate). Each lesson contains exactly 5 multiple-choice questions.
+          </div>
+          
+          <form id="generateLessonsForm">
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <label class="form-label">Subjects</label>
+                <select class="form-select" id="generateSubjectFilter" multiple>
+                  <option value="">All Subjects</option>
+                </select>
+                <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple subjects</small>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Grades</label>
+                <select class="form-select" id="generateGradeFilter" multiple>
+                  <option value="">All Grades</option>
+                </select>
+                <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple grades</small>
+              </div>
+            </div>
+            
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" id="dryRunCheck">
+              <label class="form-check-label" for="dryRunCheck">
+                Dry Run (Preview only - no changes will be saved)
+              </label>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="window.app.generateLessons()">
+            <i class="bi bi-magic me-2"></i>Generate Lessons
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Publish Lessons Modal -->
+  <div class="modal fade" id="publishLessonsModal" tabindex="-1" aria-labelledby="publishLessonsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="publishLessonsModalLabel">
+            <i class="bi bi-cloud-upload me-2"></i>Publish Lessons
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            <strong>Publishing:</strong> Selected lessons will be published to the chosen library and made available for assignment.
+          </div>
+          
+          <form id="publishLessonsForm">
+            <div class="mb-4">
+              <label class="form-label">Target Library</label>
+              <select class="form-select" id="publishTargetLibrary" required>
+                <option value="">Select Library</option>
+                <option value="parent">Parent Library</option>
+                <option value="teacher">Teacher Library</option>
+              </select>
+            </div>
+            
+            <div class="mb-4">
+              <label class="form-label">Selected Lessons</label>
+              <div id="selectedLessonsList" class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
+                <p class="text-muted mb-0">No lessons selected</p>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-success" onclick="window.app.publishLessons()">
+            <i class="bi bi-cloud-upload me-2"></i>Publish Selected
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assign Lesson Modal -->
+  <div class="modal fade" id="assignLessonModal" tabindex="-1" aria-labelledby="assignLessonModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="assignLessonModalLabel">
+            <i class="bi bi-person-plus me-2"></i>Assign Lesson
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            <strong>Assignment:</strong> Select students/children to assign this lesson to. They will be able to access it in their digital library.
+          </div>
+          
+          <form id="assignLessonForm">
+            <div class="mb-4">
+              <label class="form-label">Lesson Details</label>
+              <div class="card bg-light">
+                <div class="card-body">
+                  <h6 id="assignLessonTitle" class="card-title">Lesson Title</h6>
+                  <p id="assignLessonDescription" class="card-text text-muted">Lesson description</p>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <small class="text-muted"><strong>Subject:</strong> <span id="assignLessonSubject">-</span></small>
+                    </div>
+                    <div class="col-md-4">
+                      <small class="text-muted"><strong>Grade:</strong> <span id="assignLessonGrade">-</span></small>
+                    </div>
+                    <div class="col-md-4">
+                      <small class="text-muted"><strong>Difficulty:</strong> <span id="assignLessonDifficulty">-</span></small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mb-4">
+              <label class="form-label">Assign To</label>
+              <div class="border rounded p-3" style="max-height: 300px; overflow-y: auto;">
+                <div id="assigneeList">
+                  <!-- Students/children will be populated here -->
+                </div>
+              </div>
+            </div>
+            
+            <div class="mb-4">
+              <label for="dueDate" class="form-label">Due Date (Optional)</label>
+              <input type="date" class="form-control" id="dueDate" min="">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="window.app.assignLesson()">
+            <i class="bi bi-person-plus me-2"></i>Assign Lesson
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lesson Player Modal -->
+  <div class="modal fade" id="lessonPlayerModal" tabindex="-1" aria-labelledby="lessonPlayerModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="lessonPlayerModalLabel">
+            <i class="bi bi-play-circle me-2"></i>Lesson Player
+          </h5>
+          <div class="d-flex align-items-center">
+            <span class="badge bg-primary me-2" id="lessonProgress">Question 1 of 5</span>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="window.app.exitLessonPlayer()"></button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <!-- Progress Bar -->
+          <div class="mb-4">
+            <div class="progress" style="height: 8px;">
+              <div class="progress-bar" role="progressbar" id="lessonProgressBar" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <!-- Question Content -->
+          <div id="lessonQuestionContent">
+            <div class="text-center">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading lesson...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="prevQuestionBtn" onclick="window.app.previousQuestion()" disabled>
+            <i class="bi bi-arrow-left me-1"></i>Previous
+          </button>
+          <button type="button" class="btn btn-primary" id="nextQuestionBtn" onclick="window.app.nextQuestion()">
+            Next<i class="bi bi-arrow-right ms-1"></i>
+          </button>
+          <button type="button" class="btn btn-success d-none" id="submitLessonBtn" onclick="window.app.submitLesson()">
+            <i class="bi bi-check-lg me-1"></i>Submit Lesson
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lesson Results Modal -->
+  <div class="modal fade" id="lessonResultsModal" tabindex="-1" aria-labelledby="lessonResultsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="lessonResultsModalLabel">
+            <i class="bi bi-trophy me-2"></i>Lesson Complete!
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="text-center mb-4">
+            <div class="mb-3">
+              <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+            </div>
+            <h4 id="lessonScore">Great job!</h4>
+            <p class="text-muted">You completed the lesson successfully.</p>
+          </div>
+
+          <div class="row g-4 mb-4">
+            <div class="col-md-4">
+              <div class="card text-center">
+                <div class="card-body">
+                  <h3 class="text-primary" id="correctAnswers">0</h3>
+                  <p class="mb-0">Correct</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card text-center">
+                <div class="card-body">
+                  <h3 class="text-danger" id="wrongAnswers">0</h3>
+                  <p class="mb-0">Incorrect</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card text-center">
+                <div class="card-body">
+                  <h3 class="text-success" id="scorePercentage">0%</h3>
+                  <p class="mb-0">Score</p>
                 </div>
               </div>
             </div>
           </div>
+
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            <strong>Well done!</strong> Your progress has been saved and your teacher/parent will be able to see your results.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+            <i class="bi bi-house me-1"></i>Return to Dashboard
+          </button>
         </div>
       </div>
     </div>
@@ -2757,15 +3313,23 @@
   <!-- Bootstrap 5.x JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   
+  <!-- Curriculum Tests (Development Only) -->
+  <script src="resources/scripts/curriculumTests.js"></script>
+  
   <!-- Custom JavaScript -->
   <!-- PWA Scripts (load first) -->
   <script src="resources/scripts/offline-db.js"></script>
   <script src="resources/scripts/pwa.js"></script>
   
   <!-- Application Scripts -->
+  <script src="resources/scripts/config.js"></script>
+  <script src="resources/config/adPolicy.js"></script>
+  <script src="resources/scripts/adPlacement.js"></script>
   <script src="resources/scripts/translations.js"></script>
+  <!-- Unified Authentication System -->
   <script src="resources/scripts/auth.js"></script>
-  <script src="resources/scripts/auth-multi-role.js"></script>
+  <script src="resources/scripts/loginModal.js"></script>
+  <script src="resources/scripts/ui-manager.js"></script>
   <script src="resources/scripts/main.js"></script>
   
   <script src="resources/scripts/admin.js"></script>
@@ -2782,5 +3346,139 @@
   <script src="resources/scripts/admin-portal.js"></script>
   <script src="resources/scripts/lesson-system.js"></script>
   <script src="resources/scripts/getting-started.js"></script>
+  
+  <!-- Ad Policy Tests (development only) -->
+  <script src="resources/scripts/adPolicyTests.js"></script>
+  
+  <!-- Authentication Smoke Tests (development only) -->
+  <script src="resources/scripts/authSmokeTest.js"></script>
+  
+  <script>
+    // Initialize the application with proper authentication handling
+    document.addEventListener('DOMContentLoaded', function() {
+      // Scroll to top on page load
+      window.scrollTo(0, 0);
+      
+      // Show loading state to prevent flickering
+      showLoadingState();
+      
+      // Initialize authentication first, then everything else
+      initializeApplication();
+    });
+
+    async function initializeApplication() {
+      try {
+        // Auth system is already initialized in auth.js
+        // Session hydration happens automatically on construction
+        
+        // Initialize the main application
+        window.app = new AQEPlatform();
+        
+        // Add a small delay to ensure smooth transition
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        // Hide loading state
+        hideLoadingState();
+        
+        // Add test buttons for development
+        addTestButtons();
+        
+      } catch (error) {
+        console.error('Error initializing application:', error);
+        hideLoadingState();
+        // Fallback to guest mode
+        if (window.auth) {
+          window.auth.updateUI();
+        }
+      }
+    }
+
+    function showLoadingState() {
+      // Hide marketing sections during loading to prevent flash
+      const marketingSections = document.querySelectorAll('.hero-section, .gettingStarted, .chooseExperience, .institutional-section, .professionalDevelopment');
+      marketingSections.forEach(section => {
+        section.style.display = 'none';
+      });
+      
+      // Add a loading overlay to prevent flickering
+      const loadingOverlay = document.createElement('div');
+      loadingOverlay.id = 'loadingOverlay';
+      loadingOverlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.9);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      `;
+      loadingOverlay.innerHTML = `
+        <div class="text-center">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <div class="mt-2">Loading AQE Platform...</div>
+        </div>
+      `;
+      document.body.appendChild(loadingOverlay);
+    }
+
+    function hideLoadingState() {
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      if (loadingOverlay) {
+        loadingOverlay.remove();
+      }
+    }
+
+    function addTestButtons() {
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        // Test login button
+        const testLoginButton = document.createElement('button');
+        testLoginButton.innerHTML = '🔧 Test Login (Teacher)';
+        testLoginButton.className = 'btn btn-warning position-fixed';
+        testLoginButton.style.cssText = 'top: 10px; right: 10px; z-index: 9999;';
+        testLoginButton.onclick = function() {
+          // Simulate teacher login for testing
+          const testUser = {
+            id: 1,
+            name: 'Test Teacher',
+            email: 'teacher@test.com',
+            role: 'teacher',
+            teacherId: 1
+          };
+          localStorage.setItem('aqe_user', JSON.stringify(testUser));
+          window.location.reload(); // Reload to trigger session restoration
+        };
+        document.body.appendChild(testLoginButton);
+
+        // Test logout button (only show if user is logged in)
+        const storedUser = localStorage.getItem('aqe_user');
+        if (storedUser) {
+          const testLogoutButton = document.createElement('button');
+          testLogoutButton.innerHTML = '🔧 Test Logout';
+          testLogoutButton.className = 'btn btn-danger position-fixed';
+          testLogoutButton.style.cssText = 'top: 50px; right: 10px; z-index: 9999;';
+          testLogoutButton.onclick = function() {
+            localStorage.removeItem('aqe_user');
+            window.location.reload();
+          };
+          document.body.appendChild(testLogoutButton);
+        }
+      }
+    }
+
+    // Scroll to top on page refresh/reload
+    window.addEventListener('beforeunload', function() {
+      window.scrollTo(0, 0);
+    });
+
+    // Also scroll to top when page is fully loaded
+    window.addEventListener('load', function() {
+      window.scrollTo(0, 0);
+    });
+  </script>
 </body>
 </html>

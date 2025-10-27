@@ -214,32 +214,116 @@ namespace api.Controllers
                 if (student == null)
                     return NotFound(new { message = "Student not found" });
 
-                // Remove all related records first
-                // Remove practice material assignments
-                var practiceAssignments = await _context.StudentPracticeMaterials
-                    .Where(spm => spm.StudentId == studentId)
-                    .ToListAsync();
-                _context.StudentPracticeMaterials.RemoveRange(practiceAssignments);
+                // Use a transaction to ensure all deletions happen atomically
+                using var transaction = await _context.Database.BeginTransactionAsync();
+                
+                try
+                {
+                    // Remove all related records first
+                    // Remove practice material assignments
+                    var practiceAssignments = await _context.StudentPracticeMaterials
+                        .Where(spm => spm.StudentId == studentId)
+                        .ToListAsync();
+                    _context.StudentPracticeMaterials.RemoveRange(practiceAssignments);
 
-                // Remove digital library assignments
-                var digitalAssignments = await _context.DigitalLibraryAssignments
-                    .Where(dla => dla.StudentId == studentId)
-                    .ToListAsync();
-                _context.DigitalLibraryAssignments.RemoveRange(digitalAssignments);
+                    // Remove digital library assignments
+                    var digitalAssignments = await _context.DigitalLibraryAssignments
+                        .Where(dla => dla.StudentId == studentId)
+                        .ToListAsync();
+                    _context.DigitalLibraryAssignments.RemoveRange(digitalAssignments);
 
-                // Remove the student record
-                _context.Students.Remove(student);
+                    // Remove student badges
+                    var studentBadges = await _context.StudentBadges
+                        .Where(sb => sb.StudentId == studentId)
+                        .ToListAsync();
+                    _context.StudentBadges.RemoveRange(studentBadges);
 
-                // Remove the user account
-                _context.Users.Remove(student.User);
+                    // Remove student statistics
+                    var studentStats = await _context.StudentStatistics
+                        .Where(ss => ss.StudentId == studentId)
+                        .ToListAsync();
+                    _context.StudentStatistics.RemoveRange(studentStats);
 
-                await _context.SaveChangesAsync();
+                    // Remove parent-student relationships
+                    var parentStudents = await _context.ParentStudents
+                        .Where(ps => ps.StudentId == studentId)
+                        .ToListAsync();
+                    _context.ParentStudents.RemoveRange(parentStudents);
 
-                return Ok(new { message = "Student deleted successfully" });
+                    // Remove student lessons
+                    var studentLessons = await _context.StudentLessons
+                        .Where(sl => sl.StudentId == studentId)
+                        .ToListAsync();
+                    _context.StudentLessons.RemoveRange(studentLessons);
+
+                    // Remove the student record
+                    _context.Students.Remove(student);
+
+                    // Remove the user account
+                    _context.Users.Remove(student.User);
+
+                    // Save all changes
+                    await _context.SaveChangesAsync();
+                    
+                    // Commit the transaction
+                    await transaction.CommitAsync();
+
+                    return Ok(new { message = "Student deleted successfully" });
+                }
+                catch (Exception ex)
+                {
+                    // Rollback the transaction if something goes wrong
+                    await transaction.RollbackAsync();
+                    throw ex;
+                }
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new { message = "An error occurred while deleting student", error = ex.Message });
+            }
+        }
+
+        // GET: api/Teacher/{teacherId}/practice-materials/{materialId}
+        [HttpGet("{teacherId}/practice-materials/{materialId}")]
+        public async Task<IActionResult> GetPracticeMaterial(int teacherId, int materialId)
+        {
+            try
+            {
+                var practiceMaterial = await _context.PracticeMaterials
+                    .Where(pm => pm.Id == materialId && pm.TeacherId == teacherId && pm.IsActive)
+                    .Include(pm => pm.Questions)
+                    .Select(pm => new
+                    {
+                        id = pm.Id,
+                        title = pm.Title,
+                        description = pm.Description,
+                        subject = pm.Subject,
+                        questions = pm.Questions.OrderBy(q => q.Order).Select(q => new
+                        {
+                            id = q.Id,
+                            questionText = q.QuestionText,
+                            type = q.Type,
+                            optionA = q.OptionA,
+                            optionB = q.OptionB,
+                            optionC = q.OptionC,
+                            optionD = q.OptionD,
+                            correctAnswer = q.CorrectAnswer,
+                            explanation = q.Explanation,
+                            order = q.Order
+                        }).ToList(),
+                        createdAt = pm.CreatedAt,
+                        updatedAt = pm.UpdatedAt
+                    })
+                    .FirstOrDefaultAsync();
+
+                if (practiceMaterial == null)
+                    return NotFound(new { message = "Practice material not found" });
+
+                return Ok(practiceMaterial);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while fetching practice material", error = ex.Message });
             }
         }
 
@@ -324,6 +408,60 @@ namespace api.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, new { message = "An error occurred while creating practice material", error = ex.Message });
+            }
+        }
+
+        // PUT: api/Teacher/{teacherId}/practice-materials/{materialId}
+        [HttpPut("{teacherId}/practice-materials/{materialId}")]
+        public async Task<IActionResult> UpdatePracticeMaterial(int teacherId, int materialId, [FromBody] UpdatePracticeMaterialRequest request)
+        {
+            try
+            {
+                var practiceMaterial = await _context.PracticeMaterials
+                    .Include(pm => pm.Questions)
+                    .FirstOrDefaultAsync(pm => pm.Id == materialId && pm.TeacherId == teacherId);
+
+                if (practiceMaterial == null)
+                    return NotFound(new { message = "Practice material not found" });
+
+                // Update practice material properties
+                practiceMaterial.Title = request.Title;
+                practiceMaterial.Description = request.Description;
+                practiceMaterial.Subject = request.Subject;
+                practiceMaterial.UpdatedAt = DateTime.UtcNow;
+
+                // Remove existing questions
+                _context.Questions.RemoveRange(practiceMaterial.Questions);
+
+                // Add new questions
+                for (int i = 0; i < request.Questions.Count; i++)
+                {
+                    var questionRequest = request.Questions[i];
+                    var question = new Question
+                    {
+                        PracticeMaterialId = practiceMaterial.Id,
+                        QuestionText = questionRequest.QuestionText,
+                        Type = questionRequest.Type,
+                        OptionA = questionRequest.OptionA,
+                        OptionB = questionRequest.OptionB,
+                        OptionC = questionRequest.OptionC,
+                        OptionD = questionRequest.OptionD,
+                        CorrectAnswer = questionRequest.CorrectAnswer,
+                        Explanation = questionRequest.Explanation,
+                        Order = i + 1,
+                        CreatedAt = DateTime.UtcNow
+                    };
+
+                    _context.Questions.Add(question);
+                }
+
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = "Practice material updated successfully" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while updating practice material", error = ex.Message });
             }
         }
 
@@ -487,6 +625,14 @@ namespace api.Controllers
     {
         public string Name { get; set; } = string.Empty;
         public string GradeLevel { get; set; } = string.Empty; // Single grade level like "6th Grade", "7th Grade", etc.
+    }
+
+    public class UpdatePracticeMaterialRequest
+    {
+        public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Subject { get; set; } = string.Empty;
+        public List<CreateQuestionRequest> Questions { get; set; } = new List<CreateQuestionRequest>();
     }
 
     public class CreatePracticeMaterialRequest

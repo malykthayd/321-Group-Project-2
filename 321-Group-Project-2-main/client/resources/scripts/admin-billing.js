@@ -1,7 +1,7 @@
 // Admin Billing & Subscription Management System
 class AdminBillingSystem {
     constructor() {
-        this.apiBaseUrl = 'http://localhost:5001/api';
+        this.apiBaseUrl = window.AQEConfig.getApiBaseUrl();
         this.notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
     }
 

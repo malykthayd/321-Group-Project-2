@@ -1,7 +1,7 @@
 // Connection Code System for Teachers/Parents/Students
 class ConnectionSystem {
     constructor() {
-        this.apiBaseUrl = 'http://localhost:5001/api';
+        this.apiBaseUrl = window.AQEConfig.getApiBaseUrl();
         this.studentConnections = JSON.parse(localStorage.getItem('studentConnections') || '[]');
     }
 

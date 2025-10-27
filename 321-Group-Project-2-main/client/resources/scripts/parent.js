@@ -52,6 +52,11 @@ class ParentManager {
             } else {
                 console.error('Error loading dashboard:', data.message);
             }
+
+            // Load curriculum analytics
+            if (window.app && window.app.loadParentAnalytics) {
+                await window.app.loadParentAnalytics();
+            }
         } catch (error) {
             console.error('Error loading dashboard:', error);
         }
@@ -167,14 +172,11 @@ class ParentManager {
         if (!this.currentParent) return;
 
         try {
-            const response = await fetch(`${this.apiBaseUrl}/parent/${this.currentParent.parentId}/digital-library`);
-            const data = await response.json();
-
-            if (response.ok) {
-                this.digitalLibrary = data;
-                this.updateDigitalLibrary(data);
+            // Use the new curriculum library system
+            if (window.app && window.app.loadParentLibrary) {
+                await window.app.loadParentLibrary();
             } else {
-                console.error('Error loading digital library:', data.message);
+                console.error('AQEPlatform library methods not available');
             }
         } catch (error) {
             console.error('Error loading digital library:', error);

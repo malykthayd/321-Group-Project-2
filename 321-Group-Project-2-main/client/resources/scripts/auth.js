@@ -1,362 +1,332 @@
-// Authentication module for AQE Platform
-// Handles login, logout, and session management
+// Unified Authentication System for AQE Platform
+// Single source of truth for all authentication logic
 
-class AuthManager {
-  constructor() {
-    this.currentUser = null;
-    this.selectedRole = null;
-    this.apiBaseUrl = 'http://localhost:5000/api'; // Update this to match your API URL
-    
-    this.init();
-  }
-
-  init() {
-    this.loadStoredSession();
-    this.setupEventListeners();
-  }
-
-  // Setup event listeners
-  setupEventListeners() {
-    // Login form submission
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-      loginForm.addEventListener('submit', this.handleLogin.bind(this));
+class Auth {
+    constructor() {
+        this.apiBaseUrl = window.AQEConfig?.getApiBaseUrl() || 'http://localhost:5001';
+        this.sessionKey = 'aqe.session.v1';
+        this.currentUser = null;
+        this.token = null;
+        
+        // Initialize on construction
+        this.hydrateSession();
     }
 
-    // Auto-fill credentials when role is selected
-    document.addEventListener('roleSelected', this.handleRoleSelected.bind(this));
-  }
+    // Core authentication methods
+    async login(role, credentials) {
+        try {
+            let endpoint, payload;
+            
+            if (role === 'student' && credentials.accessCode) {
+                // Student access code login
+                endpoint = '/api/auth/login-student-access-code';
+                payload = {
+                    name: credentials.name,
+                    accessCode: credentials.accessCode
+                };
+            } else {
+                // Standard email/password login
+                endpoint = '/api/auth/login';
+                payload = {
+                    email: credentials.email,
+                    password: credentials.password
+                };
+            }
 
-  // Load stored session from localStorage
-  loadStoredSession() {
-    const storedUser = localStorage.getItem('aqe_user');
-    if (storedUser) {
-      try {
-        this.currentUser = JSON.parse(storedUser);
-        this.updateUIAfterLogin();
-        console.log('Session restored for user:', this.currentUser.name);
-      } catch (error) {
-        console.error('Error parsing stored user data:', error);
-        localStorage.removeItem('aqe_user');
-      }
-    }
-  }
+            const response = await fetch(`${this.apiBaseUrl}${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
 
-  // Handle login form submission
-  async handleLogin(event) {
-    event.preventDefault();
-    
-    const email = document.getElementById('loginEmail').value.trim();
-    const password = document.getElementById('loginPassword').value.trim();
-    
-    // Clear previous errors
-    this.clearFormErrors();
-    
-    // Validate form
-    if (!this.validateLoginForm(email, password)) {
-      return;
-    }
+            const data = await response.json();
 
-    // Show loading state
-    this.setLoginLoading(true);
-
-    try {
-      const response = await fetch(`${this.apiBaseUrl}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password })
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Login successful
-        this.currentUser = data.user;
-        this.storeSession();
-        this.updateUIAfterLogin();
-        this.closeLoginModal();
-        this.showNotification('Login successful! Welcome, ' + this.currentUser.name, 'success');
-      } else {
-        // Login failed
-        this.showFormError('loginError', data.message || 'Login failed');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      this.showFormError('loginError', 'Network error. Please check your connection and try again.');
-    } finally {
-      this.setLoginLoading(false);
-    }
-  }
-
-  // Validate login form
-  validateLoginForm(email, password) {
-    let isValid = true;
-
-    // Validate email
-    if (!email) {
-      this.showFieldError('loginEmail', 'Email is required');
-      isValid = false;
-    } else if (!this.isValidEmail(email)) {
-      this.showFieldError('loginEmail', 'Please enter a valid email address');
-      isValid = false;
+            if (response.ok && data.user) {
+                this.currentUser = data.user;
+                this.token = this.generateToken(data.user);
+                this.storeSession();
+                this.updateUI();
+                return { success: true, user: data.user };
+            } else {
+                return { success: false, error: data.message || 'Login failed' };
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            return { success: false, error: 'Network error during login' };
+        }
     }
 
-    // Validate password
-    if (!password) {
-      this.showFieldError('loginPassword', 'Password is required');
-      isValid = false;
-    } else if (password.length < 8) {
-      this.showFieldError('loginPassword', 'Password must be at least 8 characters long');
-      isValid = false;
+    logout() {
+        this.currentUser = null;
+        this.token = null;
+        this.clearSession();
+        this.updateUI();
+        
+        // Dispatch logout event
+        window.dispatchEvent(new CustomEvent('userLogout'));
+        
+        // Route to landing page
+        this.routeToLanding();
     }
 
-    return isValid;
-  }
-
-  // Validate email format
-  isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  }
-
-  // Handle role selection in login modal
-  handleRoleSelected(event) {
-    this.selectedRole = event.detail.role;
-    this.autoFillCredentials();
-  }
-
-  // Auto-fill credentials based on selected role
-  autoFillCredentials() {
-    const credentials = {
-      student: { email: 'student@demo.com', password: 'student123' },
-      teacher: { email: 'teacher@demo.com', password: 'teacher123' },
-      parent: { email: 'parent@demo.com', password: 'parent123' },
-      admin: { email: 'admin@demo.com', password: 'admin123' }
-    };
-
-    if (this.selectedRole && credentials[this.selectedRole]) {
-      const creds = credentials[this.selectedRole];
-      document.getElementById('loginEmail').value = creds.email;
-      document.getElementById('loginPassword').value = creds.password;
-      
-      // Mark fields as valid
-      document.getElementById('loginEmail').classList.add('is-valid');
-      document.getElementById('loginPassword').classList.add('is-valid');
-    }
-  }
-
-  // Store session in localStorage
-  storeSession() {
-    localStorage.setItem('aqe_user', JSON.stringify(this.currentUser));
-  }
-
-  // Update UI after successful login
-  updateUIAfterLogin() {
-    if (!this.currentUser) return;
-
-    // Update user interface
-    if (window.app) {
-      window.app.currentUser = this.currentUser;
-      window.app.updateUserInterface();
-      window.app.updateRoleBasedVisibility();
+    getSession() {
+        return {
+            user: this.currentUser,
+            token: this.token,
+            isAuthenticated: !!this.currentUser
+        };
     }
 
-    // Update step completion
-    this.updateStepCompletion();
-  }
-
-  // Update step completion in getting started
-  updateStepCompletion() {
-    const stepContent = document.querySelector('.step-item .step-content');
-    if (stepContent && this.currentUser) {
-      stepContent.innerHTML = `
-        <h6>Choose Your Role & Login <i class="bi bi-check-circle-fill text-success ms-2"></i></h6>
-        <p class="small text-success mb-2">Logged in as: <strong>${this.currentUser.name}</strong> (${this.currentUser.role})</p>
-        <button class="btn btn-outline-primary btn-sm me-2" onclick="showLoginModal()">
-          <i class="bi bi-pencil me-1"></i>Change Account
-        </button>
-        <button class="btn btn-outline-danger btn-sm" onclick="authManager.logout()">
-          <i class="bi bi-box-arrow-right me-1"></i>Logout
-        </button>
-      `;
-    }
-  }
-
-  // Logout user
-  logout() {
-    this.currentUser = null;
-    this.selectedRole = null;
-    localStorage.removeItem('aqe_user');
-    
-    // Update UI
-    if (window.app) {
-      window.app.currentUser = { role: null };
-      window.app.updateUserInterface();
-      window.app.updateRoleBasedVisibility();
+    requireRole(allowedRoles) {
+        if (!this.currentUser) {
+            this.routeToLogin();
+            return false;
+        }
+        
+        if (!allowedRoles.includes(this.currentUser.role)) {
+            this.routeToUnauthorized();
+            return false;
+        }
+        
+        return true;
     }
 
-    // Reset step
-    const stepContent = document.querySelector('.step-item .step-content');
-    if (stepContent) {
-      stepContent.innerHTML = `
-        <h6>Choose Your Role & Login</h6>
-        <p class="small text-muted mb-2">Select your role and login with demo credentials to access your personalized dashboard</p>
-        <button class="btn btn-primary btn-sm" onclick="showLoginModal()">
-          <i class="bi bi-person-plus me-1"></i>Login
-        </button>
-      `;
+    withAuthHeaders(fetchArgs = {}) {
+        const headers = {
+            'Content-Type': 'application/json',
+            ...fetchArgs.headers
+        };
+
+        if (this.token) {
+            headers['Authorization'] = `Bearer ${this.token}`;
+        }
+
+        return {
+            ...fetchArgs,
+            headers
+        };
     }
 
-    this.showNotification('You have been logged out successfully', 'info');
-  }
+    // Session management
+    hydrateSession() {
+        try {
+            const sessionData = localStorage.getItem(this.sessionKey);
+            if (sessionData) {
+                const session = JSON.parse(sessionData);
+                const sessionAge = Date.now() - session.timestamp;
+                const maxAge = 24 * 60 * 60 * 1000; // 24 hours
 
-  // Show login modal
-  showLoginModal() {
-    const modal = new bootstrap.Modal(document.getElementById('loginModal'));
-    modal.show();
-  }
-
-  // Close login modal
-  closeLoginModal() {
-    const modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
-    if (modal) {
-      modal.hide();
+                if (sessionAge < maxAge && session.user && session.user.id && session.user.role) {
+                    this.currentUser = session.user;
+                    this.token = session.token;
+                    
+                    // Immediately update UI to prevent landing page flash
+                    this.updateUI();
+                    return true;
+                } else {
+                    this.clearSession();
+                }
+            }
+        } catch (error) {
+            console.error('Error hydrating session:', error);
+            this.clearSession();
+        }
+        return false;
     }
-  }
 
-  // Show demo accounts modal
-  async showDemoAccounts() {
-    try {
-      const response = await fetch(`${this.apiBaseUrl}/auth/demo-accounts`);
-      const accounts = await response.json();
-
-      const tableBody = document.getElementById('demoAccountsTable');
-      if (tableBody) {
-        tableBody.innerHTML = accounts.map(account => `
-          <tr>
-            <td><span class="badge bg-primary">${account.role}</span></td>
-            <td>${account.name}</td>
-            <td><code>${account.email}</code></td>
-            <td><code>${this.getPasswordForRole(account.role)}</code></td>
-            <td>${this.getAdditionalInfo(account)}</td>
-          </tr>
-        `).join('');
-      }
-
-      const modal = new bootstrap.Modal(document.getElementById('demoAccountsModal'));
-      modal.show();
-    } catch (error) {
-      console.error('Error loading demo accounts:', error);
-      this.showNotification('Error loading demo accounts', 'danger');
+    storeSession() {
+        if (this.currentUser && this.token) {
+            const sessionData = {
+                user: this.currentUser,
+                token: this.token,
+                timestamp: Date.now()
+            };
+            localStorage.setItem(this.sessionKey, JSON.stringify(sessionData));
+        }
     }
-  }
 
-  // Get password for role (for demo purposes)
-  getPasswordForRole(role) {
-    const passwords = {
-      student: 'student123',
-      teacher: 'teacher123',
-      parent: 'parent123',
-      admin: 'admin123'
-    };
-    return passwords[role] || 'password123';
-  }
-
-  // Get additional info for account
-  getAdditionalInfo(account) {
-    if (account.gradeLevel) {
-      return `Grade: ${account.gradeLevel}`;
-    } else if (account.subjectTaught && account.gradeLevelTaught) {
-      return `${account.subjectTaught} (${account.gradeLevelTaught})`;
-    } else if (account.childrenEmails) {
-      const children = JSON.parse(account.childrenEmails);
-      return `Children: ${children.join(', ')}`;
+    clearSession() {
+        localStorage.removeItem(this.sessionKey);
     }
-    return 'Full system access';
-  }
 
-  // Form error handling
-  clearFormErrors() {
-    document.querySelectorAll('.is-invalid').forEach(el => {
-      el.classList.remove('is-invalid');
-    });
-    document.querySelectorAll('.invalid-feedback').forEach(el => {
-      el.textContent = '';
-    });
-  }
-
-  showFieldError(fieldId, message) {
-    const field = document.getElementById(fieldId);
-    const errorDiv = document.getElementById(fieldId.replace('login', '') + 'Error');
-    
-    if (field) field.classList.add('is-invalid');
-    if (errorDiv) errorDiv.textContent = message;
-  }
-
-  showFormError(errorId, message) {
-    const errorDiv = document.getElementById(errorId);
-    if (errorDiv) {
-      errorDiv.textContent = message;
-      errorDiv.style.display = 'block';
+    // UI and routing
+    updateUI() {
+        if (this.currentUser) {
+            this.showRoleDashboard();
+            this.hideLandingContent();
+        } else {
+            this.hideRoleDashboard();
+            this.showLandingContent();
+        }
     }
-  }
 
-  // Set loading state for login button
-  setLoginLoading(loading) {
-    const loginBtn = document.getElementById('loginBtn');
-    if (loginBtn) {
-      if (loading) {
-        loginBtn.disabled = true;
-        loginBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Logging in...';
-      } else {
-        loginBtn.disabled = false;
-        loginBtn.innerHTML = '<i class="bi bi-box-arrow-in-right me-2"></i>Login';
-      }
-    }
-  }
+    showRoleDashboard() {
+        const roleDashboard = document.getElementById('roleDashboard');
+        if (roleDashboard) {
+            roleDashboard.style.display = 'block';
+            roleDashboard.classList.add('show');
+        }
 
-  // Show notification
-  showNotification(message, type = 'info') {
-    if (window.app) {
-      window.app.showNotification(message, type);
+        // Show specific role content
+        const roleContent = document.getElementById(`${this.currentUser.role}Dashboard`);
+        if (roleContent) {
+            roleContent.style.display = 'block';
+            roleContent.classList.add('show');
+        }
+
+        // Show role navigation
+        const roleNav = document.getElementById(`${this.currentUser.role}Tabs`);
+        if (roleNav) {
+            roleNav.style.display = 'flex';
+            roleNav.classList.add('show');
+        }
     }
-  }
+
+    hideRoleDashboard() {
+        const roleDashboard = document.getElementById('roleDashboard');
+        if (roleDashboard) {
+            roleDashboard.style.display = 'none';
+            roleDashboard.classList.remove('show');
+        }
+
+        // Hide all role content
+        ['student', 'teacher', 'parent', 'admin'].forEach(role => {
+            const roleContent = document.getElementById(`${role}Dashboard`);
+            if (roleContent) {
+                roleContent.style.display = 'none';
+                roleContent.classList.remove('show');
+            }
+            
+            const roleNav = document.getElementById(`${role}Tabs`);
+            if (roleNav) {
+                roleNav.style.display = 'none';
+                roleNav.classList.remove('show');
+            }
+        });
+    }
+
+    hideLandingContent() {
+        const mainTabContent = document.getElementById('mainTabContent');
+        if (mainTabContent) {
+            mainTabContent.style.display = 'none';
+        }
+
+        const mainNavigationTabs = document.getElementById('mainNavigationTabs');
+        if (mainNavigationTabs) {
+            mainNavigationTabs.style.display = 'none';
+        }
+
+        // Hide marketing sections
+        const heroSection = document.querySelector('.hero-section');
+        if (heroSection) {
+            heroSection.style.display = 'none';
+        }
+    }
+
+    showLandingContent() {
+        const mainTabContent = document.getElementById('mainTabContent');
+        if (mainTabContent) {
+            mainTabContent.style.display = 'block';
+        }
+
+        const mainNavigationTabs = document.getElementById('mainNavigationTabs');
+        if (mainNavigationTabs) {
+            mainNavigationTabs.style.display = 'block';
+        }
+
+        // Show marketing sections
+        const heroSection = document.querySelector('.hero-section');
+        if (heroSection) {
+            heroSection.style.display = 'block';
+        }
+    }
+
+    routeToLogin() {
+        // Show login modal or redirect to login page
+        this.showLoginModal();
+    }
+
+    routeToLanding() {
+        // Scroll to top and show landing content
+        window.scrollTo(0, 0);
+        this.updateUI();
+    }
+
+    routeToUnauthorized() {
+        console.warn('Unauthorized access attempt');
+        this.logout();
+    }
+
+    showLoginModal() {
+        // Trigger login modal display
+        const loginModal = document.getElementById('loginModal');
+        if (loginModal) {
+            const modal = new bootstrap.Modal(loginModal);
+            modal.show();
+        }
+    }
+
+    // Utility methods
+    generateToken(user) {
+        // Simple token generation (in production, this should be JWT from server)
+        return btoa(JSON.stringify({
+            id: user.id,
+            role: user.role,
+            timestamp: Date.now()
+        }));
+    }
+
+    // Auth gate for protecting routes
+    authGate(allowedRoles = []) {
+        if (!this.currentUser) {
+            this.routeToLogin();
+            return false;
+        }
+        
+        if (allowedRoles.length > 0 && !allowedRoles.includes(this.currentUser.role)) {
+            this.routeToUnauthorized();
+            return false;
+        }
+        
+        return true;
+    }
+
+    // Demo account helpers
+    async loginDemo(role) {
+        const demoCredentials = {
+            admin: { email: 'admin@demo.com', password: 'admin123' },
+            teacher: { email: 'teacher@demo.com', password: 'teacher123' },
+            parent: { email: 'parent@demo.com', password: 'parent123' },
+            student: { name: 'Demo Student', accessCode: '123456' }
+        };
+
+        const credentials = demoCredentials[role];
+        if (!credentials) {
+            return { success: false, error: 'Invalid demo role' };
+        }
+
+        return await this.login(role, credentials);
+    }
 }
 
 // Global functions for HTML onclick handlers
 function showLoginModal() {
-  if (window.authManager) {
-    window.authManager.showLoginModal();
-  }
+    if (window.auth) {
+        window.auth.showLoginModal();
+    }
 }
 
 function showDemoAccounts() {
-  if (window.authManager) {
-    window.authManager.showDemoAccounts();
-  }
+    // This will be handled by the login modal
+    showLoginModal();
 }
 
-function selectLoginRole(role) {
-  // Remove selected class from all role cards
-  document.querySelectorAll('.role-option-card-small').forEach(card => {
-    card.classList.remove('selected');
-  });
+// Initialize global auth instance
+window.auth = new Auth();
 
-  // Add selected class to clicked role card
-  const selectedCard = document.getElementById(`role-${role}`);
-  if (selectedCard) {
-    selectedCard.classList.add('selected');
-  }
-
-  // Dispatch event for role selection
-  document.dispatchEvent(new CustomEvent('roleSelected', { 
-    detail: { role: role } 
-  }));
+// Export for module systems
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = Auth;
 }
-
-// Initialize auth manager when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-  window.authManager = new AuthManager();
-});

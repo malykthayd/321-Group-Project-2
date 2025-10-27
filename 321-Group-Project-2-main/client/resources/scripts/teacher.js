@@ -3,7 +3,7 @@
 
 class TeacherManager {
   constructor() {
-    this.apiBaseUrl = 'http://localhost:5000/api';
+    this.apiBaseUrl = window.AQEConfig.getApiBaseUrl();
     this.currentTeacher = null;
     this.students = [];
     this.practiceMaterials = [];
@@ -59,22 +59,25 @@ class TeacherManager {
   }
 
   async loadTeacherData() {
-    if (!window.authManager || !window.authManager.currentUser) {
+    // Use the new multi-role auth system
+    if (!window.multiRoleAuth || !window.multiRoleAuth.currentUser) {
+      console.log('No current user found in multiRoleAuth');
       return;
     }
 
-    this.currentTeacher = window.authManager.currentUser;
+    this.currentTeacher = window.multiRoleAuth.currentUser;
     console.log('Teacher data loaded:', this.currentTeacher);
     
     // Load dashboard data
     await this.loadDashboard();
     
-    // Check if students tab is currently active and load students if needed
-    const activeTab = document.querySelector('.nav-link.active[data-bs-target="#students-content"]');
-    if (activeTab) {
-      console.log('Students tab is active, loading students now that teacher data is available');
+    // Always load students when teacher data is available
+    console.log('Teacher data loaded, loading students...');
+    
+    // Add a small delay to ensure the DOM is ready
+    setTimeout(() => {
       this.loadStudents();
-    }
+    }, 100);
   }
 
   async loadDashboard() {
@@ -84,7 +87,9 @@ class TeacherManager {
     const teacherId = this.currentTeacher.email === 'teacher@demo.com' ? 1 : this.currentTeacher.id;
 
     try {
-      const response = await fetch(`${this.apiBaseUrl}/teacher/${teacherId}/dashboard`);
+      // Add cache-busting timestamp to prevent stale data
+      const timestamp = new Date().getTime();
+      const response = await fetch(`${this.apiBaseUrl}/teacher/${teacherId}/dashboard?t=${timestamp}`);
       const data = await response.json();
 
       if (response.ok) {
@@ -92,6 +97,11 @@ class TeacherManager {
         this.updateRecentActivity(data.recentActivity);
         // Store the correct teacher ID for other API calls
         this.currentTeacher.teacherId = teacherId;
+      }
+
+      // Load curriculum analytics
+      if (window.app && window.app.loadTeacherAnalytics) {
+        await window.app.loadTeacherAnalytics();
       }
     } catch (error) {
       console.error('Error loading dashboard:', error);
@@ -142,7 +152,9 @@ class TeacherManager {
 
     try {
       console.log('Loading students for teacher ID:', this.getTeacherId());
-      const response = await fetch(`${this.apiBaseUrl}/teacher/${this.getTeacherId()}/students`);
+      // Add cache-busting timestamp to prevent stale data
+      const timestamp = new Date().getTime();
+      const response = await fetch(`${this.apiBaseUrl}/teacher/${this.getTeacherId()}/students?t=${timestamp}`);
       const students = await response.json();
 
       console.log('Students API response:', response.status, students);
@@ -169,6 +181,8 @@ class TeacherManager {
       console.error('studentsTableBody element not found!');
       return;
     }
+    
+    console.log('About to update table with students:', students);
 
     if (!students || !Array.isArray(students) || students.length === 0) {
       console.log('No students found, showing empty message. Students:', students);
@@ -200,6 +214,22 @@ class TeacherManager {
         </td>
       </tr>
     `).join('');
+    
+    console.log('Table updated successfully. New innerHTML length:', tbody.innerHTML.length);
+    console.log('Table rows count:', tbody.querySelectorAll('tr').length);
+    
+    // Force the students tab to be visible if it's not already
+    const studentsTab = document.querySelector('[data-bs-target="#students-content"]');
+    const studentsContent = document.getElementById('students-content');
+    
+    if (studentsTab && studentsContent) {
+      console.log('Students tab found, ensuring it\'s visible');
+      // If the tab is not active, make it active
+      if (!studentsTab.classList.contains('active')) {
+        console.log('Students tab not active, activating it');
+        studentsTab.click();
+      }
+    }
   }
 
   async loadPracticeMaterials() {
@@ -271,12 +301,11 @@ class TeacherManager {
     if (!this.currentTeacher) return;
 
     try {
-      const response = await fetch(`${this.apiBaseUrl}/teacher/${this.getTeacherId()}/digital-library`);
-      const library = await response.json();
-
-      if (response.ok) {
-        this.digitalLibrary = library;
-        this.updateDigitalLibraryGrid(library);
+      // Use the new curriculum library system
+      if (window.app && window.app.loadTeacherLibrary) {
+        await window.app.loadTeacherLibrary();
+      } else {
+        console.error('AQEPlatform library methods not available');
       }
     } catch (error) {
       console.error('Error loading digital library:', error);
@@ -421,8 +450,23 @@ function showAddStudentModal() {
 }
 
 function addStudent() {
-  const name = document.getElementById('studentName').value.trim();
-  const gradeLevel = document.getElementById('studentGradeLevel').value;
+  const nameElement = document.getElementById('addStudentName');
+  const gradeElement = document.getElementById('addStudentGradeLevel');
+  
+  if (!nameElement) {
+    console.error('addStudentName element not found');
+    alert('Form error: Student name field not found');
+    return;
+  }
+  
+  if (!gradeElement) {
+    console.error('addStudentGradeLevel element not found');
+    alert('Form error: Grade level field not found');
+    return;
+  }
+  
+  const name = nameElement.value.trim();
+  const gradeLevel = gradeElement.value;
   
   if (!name) {
     alert('Please enter a student name');
@@ -435,9 +479,51 @@ function addStudent() {
   }
 
   if (!window.teacherManager || !window.teacherManager.currentTeacher) {
-    console.error('Teacher manager or current teacher not available:', window.teacherManager);
-    alert('Teacher not logged in or teacher manager not initialized');
-    return;
+    console.error('Teacher manager or current teacher not available:', {
+      teacherManager: window.teacherManager,
+      currentTeacher: window.teacherManager?.currentTeacher,
+      currentUser: window.multiRoleAuth?.currentUser
+    });
+    
+    // Try to initialize teacher manager if it doesn't exist
+    if (!window.teacherManager && window.TeacherManager) {
+      console.log('Attempting to initialize teacher manager...');
+      window.teacherManager = new TeacherManager();
+      
+      // Set current teacher from auth system
+      if (window.multiRoleAuth?.currentUser) {
+        window.teacherManager.currentTeacher = window.multiRoleAuth.currentUser;
+        console.log('Teacher manager initialized with user:', window.multiRoleAuth.currentUser);
+      }
+    }
+    
+    // If still no teacher manager, try to restore session
+    if (!window.teacherManager || !window.teacherManager.currentTeacher) {
+      console.log('Attempting to restore session...');
+      
+      // Try to restore session from localStorage
+      const storedSession = localStorage.getItem('aqe_user');
+      if (storedSession) {
+        try {
+          const userData = JSON.parse(storedSession);
+          if (userData.role === 'teacher') {
+            if (!window.teacherManager) {
+              window.teacherManager = new TeacherManager();
+            }
+            window.teacherManager.currentTeacher = userData;
+            console.log('Session restored, teacher manager initialized with:', userData);
+          }
+        } catch (error) {
+          console.error('Failed to restore session:', error);
+        }
+      }
+    }
+    
+    // Check again after all initialization attempts
+    if (!window.teacherManager || !window.teacherManager.currentTeacher) {
+      alert('Teacher not logged in or teacher manager not initialized. Please try logging in again.');
+      return;
+    }
   }
 
   console.log('Adding student:', name, 'Grade:', gradeLevel, 'for teacher:', window.teacherManager.currentTeacher);
@@ -454,8 +540,8 @@ function addStudent() {
     if (data.id) {
       alert(`Student added successfully! Access code: ${data.accessCode}`);
       bootstrap.Modal.getInstance(document.getElementById('addStudentModal')).hide();
-      document.getElementById('studentName').value = '';
-      document.getElementById('studentGradeLevel').value = '';
+      document.getElementById('addStudentName').value = '';
+      document.getElementById('addStudentGradeLevel').value = '';
       window.teacherManager.loadStudents();
       window.teacherManager.loadDashboard();
     } else {
@@ -509,8 +595,21 @@ function deleteStudent(studentId) {
     if (response.ok) {
       return response.json().then(data => {
         alert('Student deleted successfully');
+        
+        // Force refresh all teacher data
+        console.log('Refreshing teacher data after student deletion...');
         window.teacherManager.loadStudents();
         window.teacherManager.loadDashboard();
+        
+        // Also refresh the main platform data if available
+        if (window.aqePlatform) {
+          window.aqePlatform.loadTeacherData();
+        }
+        
+        // Force a small delay to ensure API calls complete
+        setTimeout(() => {
+          console.log('Student deletion completed, data refreshed');
+        }, 500);
       });
     } else {
       return response.json().then(data => {
@@ -711,29 +810,11 @@ function previewLibraryLesson(lessonId) {
   }
 }
 
-// Initialize teacher manager when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-  // Wait for auth manager to be ready
-  setTimeout(() => {
-    if (window.authManager && window.authManager.currentUser && window.authManager.currentUser.role === 'teacher') {
-      window.teacherManager = new TeacherManager();
-    }
-  }, 100);
-});
-
-// Also check for stored session on page load
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    const storedUser = localStorage.getItem('aqe_user');
-    if (storedUser) {
-      try {
-        const user = JSON.parse(storedUser);
-        if (user.role === 'teacher' && !window.teacherManager) {
-          window.teacherManager = new TeacherManager();
-        }
-      } catch (error) {
-        console.error('Error parsing stored user data:', error);
-      }
-    }
-  }, 200);
+// Initialize teacher manager when DOM is loaded (only if not already initialized)
+document.addEventListener('DOMContentLoaded', function() {
+  // Only initialize if not already initialized by auth-multi-role.js
+  if (window.TeacherManager && !window.teacherManager) {
+    console.log('Teacher manager not initialized by auth system, initializing manually');
+    window.teacherManager = new TeacherManager();
+  }
 });

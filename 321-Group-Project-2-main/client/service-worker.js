@@ -13,7 +13,6 @@ const PRECACHE_ASSETS = [
   '/resources/styles/dark-mode.css',
   '/resources/scripts/main.js',
   '/resources/scripts/auth.js',
-  '/resources/scripts/auth-multi-role.js',
   '/resources/scripts/translations.js',
   '/resources/scripts/lessons.js',
   '/resources/scripts/library.js',

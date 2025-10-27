@@ -497,40 +497,6 @@ class GuestDashboard {
                     <div class="content-card text-center">
                         <h4 class="mb-3">Unlock Full Access</h4>
                         <p class="text-muted mb-4">Sign up to access hundreds of lessons, track your progress, and earn badges!</p>
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <div class="alert alert-info">
-                                    <h6>Free Account</h6>
-                                    <ul class="text-start small">
-                                        <li>✓ All core lessons</li>
-                                        <li>✓ Basic progress tracking</li>
-                                        <li>✓ Online content library</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="alert alert-warning">
-                                    <h6>Family Premium $4.99/mo</h6>
-                                    <ul class="text-start small">
-                                        <li>✓ Everything in Free</li>
-                                        <li>✓ Advanced analytics</li>
-                                        <li>✓ Offline access</li>
-                                        <li>✓ Download & print</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="alert alert-success">
-                                    <h6>Teacher Premium $9.99/mo</h6>
-                                    <ul class="text-start small">
-                                        <li>✓ Everything in Family</li>
-                                        <li>✓ AI lesson plans</li>
-                                        <li>✓ Student analytics</li>
-                                        <li>✓ Classroom tools</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
                         <button class="btn btn-primary btn-lg mt-3" onclick="openAuthModal()">
                             Get Started Free →
                         </button>
@@ -746,12 +712,8 @@ function showGuestDashboard() {
 }
 
 function openAuthModal() {
-    if (window.authManager) {
-        window.authManager.showLoginModal();
-    } else {
-        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('loginModal'));
-        modal.show();
-    }
+    // Use the global showLoginModal function
+    showLoginModal();
 }
 
 // Initialize when DOM is ready

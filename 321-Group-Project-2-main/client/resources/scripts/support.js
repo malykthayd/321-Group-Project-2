@@ -2,7 +2,7 @@
 
 class SupportManager {
     constructor() {
-        this.apiBaseUrl = 'http://localhost:5001/api';
+        this.apiBaseUrl = window.AQEConfig.getApiBaseUrl();
         this.donationAmount = 0;
     }
 

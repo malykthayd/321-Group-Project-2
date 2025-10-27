@@ -1,7 +1,7 @@
 // Simulated Stripe Payment Processing
 class PaymentManager {
     constructor() {
-        this.apiBaseUrl = 'http://localhost:5001/api';
+        this.apiBaseUrl = window.AQEConfig.getApiBaseUrl();
     }
 
     // Show payment modal

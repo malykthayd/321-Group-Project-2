@@ -1,7 +1,7 @@
 // Admin Manager for handling admin-specific functionality
 class AdminManager {
-    constructor() {
-        this.apiBaseUrl = 'http://localhost:5001/api';
+  constructor() {
+    this.apiBaseUrl = window.AQEConfig.getApiBaseUrl();
         this.currentAdmin = null;
         this.digitalLibrary = [];
         this.users = [];
@@ -53,6 +53,15 @@ class AdminManager {
                             console.error('AdminAccessibility still not found after retry');
                         }
                     }, 100);
+                }
+            } else if (tabTarget === '#admin-course-management-content') {
+                // Initialize course management
+                console.log('Admin tab clicked: Course Management');
+                if (window.app && window.app.loadAdminCourseManagement) {
+                    console.log('Loading admin course management...');
+                    window.app.loadAdminCourseManagement();
+                } else {
+                    console.error('AQEPlatform course management not found');
                 }
             }
         });

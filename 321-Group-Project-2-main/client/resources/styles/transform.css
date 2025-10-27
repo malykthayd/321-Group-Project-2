@@ -362,23 +362,64 @@ section {
 
 /* Footer */
 .footer-modern {
-    background: #f8fafc;
-    padding: 4rem 0 2rem;
+    background: #2d3748;
+    color: white;
+    padding: 2rem 0;
     margin-top: 4rem;
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 [data-theme="dark"] .footer-modern {
-    background: var(--dark-bg);
+    background: #1a202c;
     border-top-color: rgba(255, 255, 255, 0.1);
 }
 
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.footer-link {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+    display: inline-block;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.footer-link:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
 .footer-modern .text-muted {
-    color: #64748b;
+    color: rgba(255, 255, 255, 0.6);
 }
 
 [data-theme="dark"] .footer-modern .text-muted {
-    color: var(--dark-text-muted);
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Mobile responsive footer */
+@media (max-width: 768px) {
+    .footer-links {
+        justify-content: center;
+        margin-top: 1rem;
+    }
+    
+    .footer-modern .text-md-end {
+        text-align: center !important;
+    }
 }
 
 /* Guest Dashboard */

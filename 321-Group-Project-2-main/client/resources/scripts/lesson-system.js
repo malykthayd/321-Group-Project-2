@@ -1,7 +1,7 @@
 // Complete AQE Lesson System - Frontend Integration
 class AQELessonSystem {
     constructor() {
-        this.apiBaseUrl = 'http://localhost:5001/api';
+        this.apiBaseUrl = window.AQEConfig.getApiBaseUrl();
         this.lessons = this.loadLessons();
     }
 

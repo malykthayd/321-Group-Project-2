@@ -55,6 +55,11 @@ class StudentManager {
             } else {
                 console.error('Error loading dashboard:', data.message);
             }
+
+            // Load curriculum analytics
+            if (window.app && window.app.loadStudentAnalytics) {
+                await window.app.loadStudentAnalytics();
+            }
         } catch (error) {
             console.error('Error loading dashboard:', error);
         }
@@ -162,14 +167,11 @@ class StudentManager {
         if (!this.currentStudent) return;
 
         try {
-            const response = await fetch(`${this.apiBaseUrl}/student/${this.currentStudent.studentId}/digital-library`);
-            const data = await response.json();
-
-            if (response.ok) {
-                this.lessons = data;
-                this.updateDigitalLibrary(data);
+            // Use the new curriculum assignment system
+            if (window.app && window.app.loadStudentAssignments) {
+                await window.app.loadStudentAssignments();
             } else {
-                console.error('Error loading digital library:', data.message);
+                console.error('AQEPlatform assignment methods not available');
             }
         } catch (error) {
             console.error('Error loading digital library:', error);
