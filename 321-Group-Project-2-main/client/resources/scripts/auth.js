@@ -10,6 +10,10 @@ class Auth {
         
         // Initialize on construction
         this.hydrateSession();
+        
+        // Always start with landing page visible
+        this.showLandingContent();
+        this.hideRoleDashboard();
     }
 
     // Core authentication methods
@@ -122,8 +126,8 @@ class Auth {
                     this.currentUser = session.user;
                     this.token = session.token;
                     
-                    // Immediately update UI to prevent landing page flash
-                    this.updateUI();
+                    // Don't immediately update UI - let user choose to login
+                    // This ensures the landing page is always shown first
                     return true;
                 } else {
                     this.clearSession();
@@ -162,12 +166,41 @@ class Auth {
         }
     }
 
+    // Method to login with existing session (called when user clicks login)
+    loginWithExistingSession() {
+        if (this.currentUser && this.token) {
+            this.updateUI();
+            return true;
+        }
+        return false;
+    }
+
     showRoleDashboard() {
         const roleDashboard = document.getElementById('roleDashboard');
         if (roleDashboard) {
             roleDashboard.style.display = 'block';
             roleDashboard.classList.add('show');
         }
+
+        // Hide ALL other role dashboards first
+        const allRoleDashboards = ['studentDashboard', 'teacherDashboard', 'parentDashboard', 'adminDashboard'];
+        allRoleDashboards.forEach(roleId => {
+            const element = document.getElementById(roleId);
+            if (element) {
+                element.style.display = 'none';
+                element.classList.remove('show');
+            }
+        });
+
+        // Hide ALL other role navigation tabs first
+        const allRoleTabs = ['studentTabs', 'teacherTabs', 'parentTabs', 'adminTabs'];
+        allRoleTabs.forEach(tabId => {
+            const element = document.getElementById(tabId);
+            if (element) {
+                element.style.display = 'none';
+                element.classList.remove('show');
+            }
+        });
 
         // Show specific role content
         const roleContent = document.getElementById(`${this.currentUser.role}Dashboard`);
@@ -180,6 +213,8 @@ class Auth {
         const roleNav = document.getElementById(`${this.currentUser.role}Tabs`);
         if (roleNav) {
             roleNav.style.display = 'flex';
+            roleNav.style.flexDirection = 'row';
+            roleNav.style.flexWrap = 'wrap';
             roleNav.classList.add('show');
         }
     }
@@ -299,7 +334,7 @@ class Auth {
             admin: { email: 'admin@demo.com', password: 'admin123' },
             teacher: { email: 'teacher@demo.com', password: 'teacher123' },
             parent: { email: 'parent@demo.com', password: 'parent123' },
-            student: { name: 'Demo Student', accessCode: '123456' }
+            student: { email: 'student@demo.com', password: 'student123' }
         };
 
         const credentials = demoCredentials[role];

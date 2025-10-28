@@ -7,13 +7,21 @@ class AdminAccessibility {
 
   async init() {
     console.log('AdminAccessibility: Initializing...');
+    console.log('AdminAccessibility: API Base URL:', this.apiBaseUrl);
+    
     try {
+      // Show loading state
+      const contentArea = document.getElementById('accessibilityContent');
+      if (contentArea) {
+        contentArea.innerHTML = '<div class="text-center p-5"><div class="spinner-border text-primary"></div><p class="mt-2">Loading SMS/USSD data...</p></div>';
+      }
+      
       await this.loadOverview();
       this.setupEventListeners();
       console.log('AdminAccessibility: Initialized successfully');
     } catch (error) {
       console.error('AdminAccessibility: Initialization failed:', error);
-      this.showError('Failed to initialize SMS/USSD module');
+      this.showError('Failed to initialize SMS/USSD module: ' + error.message);
     }
   }
 
@@ -89,10 +97,17 @@ class AdminAccessibility {
   async loadOverview() {
     try {
       console.log('AdminAccessibility: Loading overview...');
+      console.log('AdminAccessibility: Fetching from URL:', `${this.apiBaseUrl}/overview`);
+      
       const response = await fetch(`${this.apiBaseUrl}/overview`);
+      console.log('AdminAccessibility: Response status:', response.status);
+      
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        const errorText = await response.text();
+        console.error('AdminAccessibility: API Error:', errorText);
+        throw new Error(`HTTP ${response.status}: ${response.statusText} - ${errorText}`);
       }
+      
       const data = await response.json();
       console.log('AdminAccessibility: Overview data received:', data);
 
@@ -856,7 +871,7 @@ class AdminAccessibility {
     }
 
     try {
-      const response = await fetch('window.AQEConfig.getApiUrl('gateway/test/sms')', {
+      const response = await fetch(window.AQEConfig.getApiUrl('gateway/test/sms'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -902,7 +917,7 @@ class AdminAccessibility {
         const step = steps[i];
         console.log(`Testing step ${i + 1}: ${step.description}`);
         
-        const response = await fetch('window.AQEConfig.getApiUrl('gateway/test/sms')', {
+        const response = await fetch(window.AQEConfig.getApiUrl('gateway/test/sms'), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

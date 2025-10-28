@@ -9,88 +9,25 @@ class AdPlacement {
 
     // Main method to render ads based on current route
     renderAds() {
-        const routeType = this.adPolicy.getCurrentRouteType();
-        
-        // Clear any existing ads first
-        this.clearAds();
-        
-        switch (routeType) {
-            case 'home':
-                this.renderHomeAds();
-                break;
-            case 'dashboard':
-                this.renderDashboardCTA();
-                break;
-            case 'other':
-                // No ads on other routes
-                break;
-        }
+        // Completely disabled: No ads should be rendered anywhere
+        console.log('Ad placement system completely disabled - no ads will be rendered');
+        return;
     }
 
     // Render ads for home page
     renderHomeAds() {
-        const validation = this.adPolicy.validateAdPlacement('premium', 'above-fold');
-        if (!validation.valid) {
-            console.warn('Ad placement validation failed:', validation.reason);
-            return;
-        }
-
-        // Check if we already rendered this ad
-        if (this.renderedAds.has('home-premium')) {
-            return;
-        }
-
-        // Find the hero section to place ad after it
-        const heroSection = document.querySelector('.hero-section');
-        if (!heroSection) {
-            console.warn('Hero section not found for ad placement');
-            return;
-        }
-
-        // Create premium plans ad
-        const adContainer = this.createAdContainer('home-premium');
-        adContainer.innerHTML = this.getPremiumPlansHTML();
-        
-        // Insert after hero section
-        heroSection.insertAdjacentElement('afterend', adContainer);
-        
-        // Track rendered ad
-        this.renderedAds.set('home-premium', adContainer);
-        
-        console.log('Home page ads rendered');
+        // Disabled: No longer showing pricing content on home page
+        // This prevents the "Choose Your Experience" section from appearing at the top
+        console.log('Home page ads rendering disabled - pricing content removed from home page');
+        return;
     }
 
     // Render Professional Development CTA for dashboard
     renderDashboardCTA() {
-        const validation = this.adPolicy.validateAdPlacement('professionalDev', 'cta-button');
-        if (!validation.valid) {
-            console.warn('Dashboard CTA validation failed:', validation.reason);
-            return;
-        }
-
-        // Check if we already rendered this CTA
-        if (this.renderedAds.has('dashboard-pd-cta')) {
-            return;
-        }
-
-        // Find the dashboard content area
-        const dashboardContent = document.querySelector('#roleDashboard .tab-content');
-        if (!dashboardContent) {
-            console.warn('Dashboard content not found for CTA placement');
-            return;
-        }
-
-        // Create CTA container
-        const ctaContainer = this.createAdContainer('dashboard-pd-cta');
-        ctaContainer.innerHTML = this.getProfessionalDevCTAHTML();
-        
-        // Insert at the top of dashboard content
-        dashboardContent.insertAdjacentElement('afterbegin', ctaContainer);
-        
-        // Track rendered CTA
-        this.renderedAds.set('dashboard-pd-cta', ctaContainer);
-        
-        console.log('Dashboard Professional Development CTA rendered');
+        // Disabled: No longer showing pricing content on dashboard
+        // This prevents the "Choose Your Experience" section from appearing at the top
+        console.log('Dashboard CTA rendering disabled - pricing content removed from dashboard');
+        return;
     }
 
     // Create ad container with proper accessibility attributes

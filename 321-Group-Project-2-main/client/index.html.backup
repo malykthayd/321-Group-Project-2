@@ -467,7 +467,7 @@
               <i class="bi bi-collection me-2"></i><span data-translate="nav" data-translate-key="library">Library</span>
             </button>
             <button class="btn btn-outline-primary w-100 text-start mobile-nav-btn admin-tab d-none" onclick="goToTab('admin'); toggleMobileMenu();" id="adminMobileTab">
-              <i class="bi bi-clipboard-check me-2"></i><span data-translate="nav" data-translate-key="adminPanel">Practice Materials</span>
+              <i class="bi bi-gear me-2"></i><span data-translate="nav" data-translate-key="adminPanel">Admin Panel</span>
             </button>
           </div>
           
@@ -2168,6 +2168,92 @@
     </section>
 
     <!-- Choose Experience Section -->
+    <section class="choose-experience-section py-5" id="chooseExperience">
+      <div class="container-fluid">
+        <div class="row mb-5">
+          <div class="col-12 text-center">
+            <h2 class="section-title-modern">Choose Your Teaching Experience</h2>
+            <p class="section-subtitle-modern">Select the plan that best fits your teaching needs and unlock powerful tools for student success</p>
+          </div>
+        </div>
+        <div class="row g-4 justify-content-center">
+          <div class="col-lg-4 col-md-6">
+            <div class="experience-card">
+              <div class="experience-header">
+                <div class="experience-icon bg-primary text-white">
+                  <i class="bi bi-mortarboard-fill"></i>
+                </div>
+                <h4>Basic Teacher</h4>
+                <div class="experience-price">$9<span>/month</span></div>
+              </div>
+              <div class="experience-body">
+                <p class="text-muted mb-3">Perfect for individual teachers getting started</p>
+                <ul class="experience-features">
+                  <li><i class="bi bi-check-circle-fill text-success"></i> Create up to 10 lessons</li>
+                  <li><i class="bi bi-check-circle-fill text-success"></i> Manage 50 students</li>
+                  <li><i class="bi bi-check-circle-fill text-success"></i> Basic analytics</li>
+                  <li><i class="bi bi-check-circle-fill text-success"></i> Email support</li>
+                </ul>
+                <button class="btn btn-outline-primary w-100 mt-3" onclick="showLoginModal()">
+                  Get Started
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <div class="experience-card featured">
+              <div class="featured-badge">Most Popular</div>
+              <div class="experience-header">
+                <div class="experience-icon bg-success text-white">
+                  <i class="bi bi-star-fill"></i>
+                </div>
+                <h4>Pro Teacher</h4>
+                <div class="experience-price">$19<span>/month</span></div>
+              </div>
+              <div class="experience-body">
+                <p class="text-muted mb-3">Advanced features for dedicated educators</p>
+                <ul class="experience-features">
+                  <li><i class="bi bi-check-circle-fill text-success"></i> Unlimited lessons</li>
+                  <li><i class="bi bi-check-circle-fill text-success"></i> Manage 200 students</li>
+                  <li><i class="bi bi-check-circle-fill text-success"></i> Advanced analytics</li>
+                  <li><i class="bi bi-check-circle-fill text-success"></i> Assignment tracking</li>
+                  <li><i class="bi bi-check-circle-fill text-success"></i> Priority support</li>
+                </ul>
+                <button class="btn btn-success w-100 mt-3" onclick="showLoginModal()">
+                  Upgrade Now
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <div class="experience-card">
+              <div class="experience-header">
+                <div class="experience-icon bg-warning text-white">
+                  <i class="bi bi-award-fill"></i>
+                </div>
+                <h4>Master Teacher</h4>
+                <div class="experience-price">$39<span>/month</span></div>
+              </div>
+              <div class="experience-body">
+                <p class="text-muted mb-3">Complete solution for professional educators</p>
+                <ul class="experience-features">
+                  <li><i class="bi bi-check-circle-fill text-success"></i> Everything in Pro</li>
+                  <li><i class="bi bi-check-circle-fill text-success"></i> Unlimited students</li>
+                  <li><i class="bi bi-check-circle-fill text-success"></i> Custom assessments</li>
+                  <li><i class="bi bi-check-circle-fill text-success"></i> Parent communication tools</li>
+                  <li><i class="bi bi-check-circle-fill text-success"></i> Professional development credits</li>
+                  <li><i class="bi bi-check-circle-fill text-success"></i> 24/7 phone support</li>
+                </ul>
+                <button class="btn btn-warning w-100 mt-3" onclick="showLoginModal()">
+                  Go Premium
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Main Content -->
     <main class="container-fluid py-4">
 
@@ -2431,7 +2517,7 @@
       </div>
     </main>
 
-    <!-- Choose Your Teaching Experience Section -->
+    <!-- Choose Experience Section -->
     <section class="choose-experience-section py-5" id="chooseExperience">
       <div class="container-fluid">
         <div class="row mb-5">
@@ -2448,7 +2534,7 @@
                   <i class="bi bi-mortarboard-fill"></i>
                 </div>
                 <h4>Basic Teacher</h4>
-                <div class="experience-price">Free<span></span></div>
+                <div class="experience-price">$9<span>/month</span></div>
               </div>
               <div class="experience-body">
                 <p class="text-muted mb-3">Perfect for individual teachers getting started</p>
@@ -2472,7 +2558,7 @@
                   <i class="bi bi-star-fill"></i>
                 </div>
                 <h4>Pro Teacher</h4>
-                <div class="experience-price">$4.99<span>/month</span></div>
+                <div class="experience-price">$19<span>/month</span></div>
               </div>
               <div class="experience-body">
                 <p class="text-muted mb-3">Advanced features for dedicated educators</p>
@@ -2496,7 +2582,7 @@
                   <i class="bi bi-award-fill"></i>
                 </div>
                 <h4>Master Teacher</h4>
-                <div class="experience-price">$24.99<span>/month</span></div>
+                <div class="experience-price">$39<span>/month</span></div>
               </div>
               <div class="experience-body">
                 <p class="text-muted mb-3">Complete solution for professional educators</p>
@@ -2517,6 +2603,8 @@
         </div>
       </div>
     </section>
+
+    <!-- Premium Plans Section - Removed: Now handled by centralized AdPlacement system -->
 
     <!-- Institutional Licensing Section -->
     <section class="institutional-section">
@@ -2804,20 +2892,6 @@
                   <div class="form-text" id="passwordHelpText">Please select a role first</div>
                 </div>
                 
-                <!-- Name Field (for class students) -->
-                <div class="mb-3" id="loginNameGroup" style="display: none;">
-                  <label for="loginName" class="form-label">Name</label>
-                  <input type="text" class="form-control" id="loginName" placeholder="Enter your name" disabled required>
-                  <div class="invalid-feedback" id="nameError"></div>
-                </div>
-                
-                <!-- Access Code Field (for class students) -->
-                <div class="mb-3" id="loginAccessCodeGroup" style="display: none;">
-                  <label for="loginAccessCode" class="form-label">Access Code</label>
-                  <input type="text" class="form-control" id="loginAccessCode" placeholder="Enter your access code" disabled required>
-                  <div class="invalid-feedback" id="accessCodeError"></div>
-                </div>
-                
                 <div class="mb-3">
                   <button type="submit" class="btn btn-primary w-100" id="loginBtn" disabled>
                     <i class="bi bi-box-arrow-in-right me-2"></i><span data-translate="authModal" data-translate-key="loginButton">Login</span>
@@ -2927,23 +3001,8 @@
                         <input type="password" class="form-control" id="teacherPassword" placeholder="Select a role first" disabled minlength="8" required>
                       </div>
                       <div class="mb-3">
-                        <label for="teacherSubjectTaught" class="form-label">Subject Taught</label>
-                        <select class="form-select" id="teacherSubjectTaught" disabled required>
-                          <option value="">Select a role first</option>
-                          <option value="Mathematics">Mathematics</option>
-                          <option value="Science">Science</option>
-                          <option value="English Language Arts">English Language Arts</option>
-                          <option value="Social Studies">Social Studies</option>
-                          <option value="Art">Art</option>
-                          <option value="Music">Music</option>
-                          <option value="Physical Education">Physical Education</option>
-                          <option value="Computer Science">Computer Science</option>
-                          <option value="Foreign Language">Foreign Language</option>
-                        </select>
-                      </div>
-                      <div class="mb-3">
-                        <label for="teacherGradeLevelTaught" class="form-label">Grade Level Taught</label>
-                        <select class="form-select" id="teacherGradeLevelTaught" disabled required>
+                        <label for="teacherGradeLevel" class="form-label">Grade Level Taught</label>
+                        <select class="form-select" id="teacherGradeLevel" disabled required>
                           <option value="">Select a role first</option>
                           <option value="Kindergarten">Kindergarten</option>
                           <option value="1st Grade">1st Grade</option>
@@ -3928,128 +3987,27 @@
           window.auth.updateUI = function() {
             // Only show role dashboard if user explicitly logged in (not from session)
             if (this.currentUser && this._explicitLogin) {
-              // Hide ALL landing page content completely
-              this.hideAllLandingContent();
               this.showRoleDashboard();
-              
+              this.hideLandingContent();
               // Show user profile and hide login button
               const loginBtn = document.querySelector('.login-btn');
               const userProfile = document.getElementById('userProfile');
               if (loginBtn) loginBtn.style.display = 'none';
               if (userProfile) {
                 userProfile.style.display = 'block';
-                const userFullName = document.getElementById('userFullName');
-                const userRole = document.getElementById('userRole');
-                if (userFullName) userFullName.textContent = this.currentUser.name || this.currentUser.email;
-                if (userRole) userRole.textContent = this.currentUser.role;
+                document.getElementById('userFullName').textContent = this.currentUser.name || this.currentUser.email;
+                document.getElementById('userRole').textContent = this.currentUser.role;
+                document.getElementById('userRoleDisplay').textContent = this.currentUser.role;
               }
             } else {
               this.hideRoleDashboard();
-              this.showAllLandingContent();
+              this.showLandingContent();
               // Show login button and hide user profile
               const loginBtn = document.querySelector('.login-btn');
               const userProfile = document.getElementById('userProfile');
               if (loginBtn) loginBtn.style.display = 'block';
               if (userProfile) userProfile.style.display = 'none';
             }
-          };
-
-          // Add method to hide ALL landing page content
-          window.auth.hideAllLandingContent = function() {
-            // Hide main tab content (landing page)
-            const mainTabContent = document.getElementById('mainTabContent');
-            if (mainTabContent) {
-              mainTabContent.style.display = 'none';
-            }
-
-            // Hide hero section
-            const heroSection = document.querySelector('.hero-section');
-            if (heroSection) {
-              heroSection.style.display = 'none';
-            }
-
-            // Hide all pricing sections at bottom - use more specific selectors
-            const chooseExperience = document.getElementById('chooseExperience');
-            if (chooseExperience) {
-              chooseExperience.style.display = 'none';
-            }
-
-            // Hide institutional section
-            const institutionalSection = document.querySelector('.institutional-section');
-            if (institutionalSection) {
-              institutionalSection.style.display = 'none';
-            }
-
-            // Hide professional development section
-            const professionalDevSection = document.querySelector('.professional-dev-section');
-            if (professionalDevSection) {
-              professionalDevSection.style.display = 'none';
-            }
-
-            // Also try to hide by ID if they exist
-            const institutional = document.getElementById('institutional');
-            if (institutional) {
-              institutional.style.display = 'none';
-            }
-
-            const professionalDev = document.getElementById('professionalDev');
-            if (professionalDev) {
-              professionalDev.style.display = 'none';
-            }
-
-            // Hide any ad containers that might have been created
-            const adContainers = document.querySelectorAll('.ad-container');
-            adContainers.forEach(container => {
-              container.style.display = 'none';
-            });
-
-            console.log('All landing page content hidden');
-          };
-
-          // Add method to show ALL landing page content
-          window.auth.showAllLandingContent = function() {
-            // Show main tab content (landing page)
-            const mainTabContent = document.getElementById('mainTabContent');
-            if (mainTabContent) {
-              mainTabContent.style.display = 'block';
-            }
-
-            // Show hero section
-            const heroSection = document.querySelector('.hero-section');
-            if (heroSection) {
-              heroSection.style.display = 'block';
-            }
-
-            // Show all pricing sections at bottom - use more specific selectors
-            const chooseExperience = document.getElementById('chooseExperience');
-            if (chooseExperience) {
-              chooseExperience.style.display = 'block';
-            }
-
-            // Show institutional section
-            const institutionalSection = document.querySelector('.institutional-section');
-            if (institutionalSection) {
-              institutionalSection.style.display = 'block';
-            }
-
-            // Show professional development section
-            const professionalDevSection = document.querySelector('.professional-dev-section');
-            if (professionalDevSection) {
-              professionalDevSection.style.display = 'block';
-            }
-
-            // Also try to show by ID if they exist
-            const institutional = document.getElementById('institutional');
-            if (institutional) {
-              institutional.style.display = 'block';
-            }
-
-            const professionalDev = document.getElementById('professionalDev');
-            if (professionalDev) {
-              professionalDev.style.display = 'block';
-            }
-
-            console.log('All landing page content shown');
           };
           
           // Override login method to set explicit login flag

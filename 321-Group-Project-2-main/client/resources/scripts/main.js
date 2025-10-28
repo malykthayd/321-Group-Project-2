@@ -49,7 +49,7 @@ class AQEPlatform {
             dashboard: 'Dashboard',
             lessons: 'Lessons',
             library: 'Library',
-            admin: 'Admin Panel'
+            admin: 'Practice Materials'
           }
         },
         es: {

@@ -21,7 +21,7 @@ const translations = {
       dashboard: "Dashboard",
       lessons: "Lessons",
       library: "Library",
-      adminPanel: "Admin Panel"
+      adminPanel: "Practice Materials"
     },
     
     // Hero Section

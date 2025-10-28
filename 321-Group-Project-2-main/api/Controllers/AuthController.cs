@@ -47,31 +47,29 @@ namespace api.Controllers
                     return Unauthorized(new { message = "Invalid email or password" });
                 }
 
+                var userResponse = new
                 {
-                    var userResponse = new
-                    {
-                        id = user.Id,
-                        name = user.Name,
-                        email = user.Email,
-                        role = user.Role,
-                        lastLogin = user.LastLogin,
-                        gradeLevel = user.Student?.GradeLevel,
-                        subjectTaught = user.Teacher?.SubjectTaught,
-                        gradeLevelTaught = user.Teacher?.GradeLevelTaught,
-                        childrenEmails = user.Parent?.ChildrenEmails,
-                        permissions = user.Admin?.Permissions,
-                        teacherId = user.Teacher?.Id,
-                        studentId = user.Student?.Id,
-                        parentId = user.Parent?.Id,
-                        adminId = user.Admin?.Id
-                    };
+                    id = user.Id,
+                    name = user.Name,
+                    email = user.Email,
+                    role = user.Role,
+                    lastLogin = user.LastLogin,
+                    gradeLevel = user.Student?.GradeLevel,
+                    subjectTaught = user.Teacher?.SubjectTaught,
+                    gradeLevelTaught = user.Teacher?.GradeLevelTaught,
+                    childrenEmails = user.Parent?.ChildrenEmails,
+                    permissions = user.Admin?.Permissions,
+                    teacherId = user.Teacher?.Id,
+                    studentId = user.Student?.Id,
+                    parentId = user.Parent?.Id,
+                    adminId = user.Admin?.Id
+                };
 
-                    // Update last login
-                    user.LastLogin = DateTime.UtcNow;
-                    await _context.SaveChangesAsync();
+                // Update last login
+                user.LastLogin = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
 
-                    return Ok(new { message = "Login successful", user = userResponse });
-                }
+                return Ok(new { message = "Login successful", user = userResponse });
             }
             catch (Exception ex)
             {

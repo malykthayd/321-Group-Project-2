@@ -9354,11 +9354,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/malykhayden/Downloads/321-Group-Project-2/321-Group-Project-2-main/api/api.csproj",
+      "projectUniqueName": "/Users/malykhayden/321-Group-Project-2-1/321-Group-Project-2-main/api/api.csproj",
       "projectName": "api",
-      "projectPath": "/Users/malykhayden/Downloads/321-Group-Project-2/321-Group-Project-2-main/api/api.csproj",
+      "projectPath": "/Users/malykhayden/321-Group-Project-2-1/321-Group-Project-2-main/api/api.csproj",
       "packagesPath": "/Users/malykhayden/.nuget/packages/",
-      "outputPath": "/Users/malykhayden/Downloads/321-Group-Project-2/321-Group-Project-2-main/api/obj/",
+      "outputPath": "/Users/malykhayden/321-Group-Project-2-1/321-Group-Project-2-main/api/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/malykhayden/.nuget/NuGet/NuGet.Config"

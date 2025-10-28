@@ -86,12 +86,14 @@ The AQE Platform includes a comprehensive curriculum auto-generation system that
 
 ### Demo Accounts
 
-| Role | Email | Password |
-|------|-------|----------|
-| Student | student@demo.com | student123 |
-| Teacher | teacher@demo.com | teacher123 |
-| Parent | parent@demo.com | parent123 |
-| Admin | admin@demo.com | admin123 |
+| Role | Login Type | Email/Name | Password/Access Code |
+|------|------------|------------|---------------------|
+| Independent Student | Email & Password | student@demo.com | student123 |
+| Class Student | Name & Access Code | Demo Student | 123456 |
+| Class Student | Name & Access Code | Jane Smith | 789012 |
+| Teacher | Email & Password | teacher@demo.com | teacher123 |
+| Parent | Email & Password | parent@demo.com | parent123 |
+| Admin | Email & Password | admin@demo.com | admin123 |
 
 ## Testing the Curriculum System
 
