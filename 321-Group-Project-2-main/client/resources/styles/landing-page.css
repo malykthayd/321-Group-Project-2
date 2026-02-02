@@ -1,0 +1,616 @@
+/* AQE Platform - Landing Page Redesign */
+/* Enhanced Visual Design and Responsiveness */
+
+/* Hero Section */
+.aqe-hero {
+  background: linear-gradient(135deg, var(--primary-blue-50) 0%, var(--neutral-50) 100%);
+  padding: var(--space-20) 0 var(--space-16);
+  position: relative;
+  overflow: hidden;
+}
+
+.aqe-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23e5e7eb" opacity="0.3"/><circle cx="75" cy="75" r="1" fill="%23e5e7eb" opacity="0.3"/><circle cx="50" cy="10" r="0.5" fill="%23e5e7eb" opacity="0.2"/><circle cx="10" cy="60" r="0.5" fill="%23e5e7eb" opacity="0.2"/><circle cx="90" cy="40" r="0.5" fill="%23e5e7eb" opacity="0.2"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.aqe-hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+  text-align: center;
+}
+
+.aqe-hero-title {
+  font-size: var(--text-5xl);
+  font-weight: var(--font-extrabold);
+  color: var(--neutral-900);
+  margin: 0 0 var(--space-6) 0;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.aqe-hero-subtitle {
+  font-size: var(--text-xl);
+  color: var(--neutral-600);
+  margin: 0 0 var(--space-8) 0;
+  line-height: 1.5;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.aqe-hero-actions {
+  display: flex;
+  gap: var(--space-4);
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: var(--space-12);
+}
+
+.aqe-hero-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-8);
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  border-radius: var(--radius-xl);
+  text-decoration: none;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.aqe-hero-btn-primary {
+  background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light));
+  color: white;
+  box-shadow: var(--shadow-lg);
+}
+
+.aqe-hero-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.aqe-hero-btn-secondary {
+  background: white;
+  color: var(--neutral-700);
+  border: 2px solid var(--neutral-300);
+  box-shadow: var(--shadow-md);
+}
+
+.aqe-hero-btn-secondary:hover {
+  background: var(--neutral-50);
+  border-color: var(--neutral-400);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Hero Features Grid */
+.aqe-hero-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-6);
+  margin-top: var(--space-16);
+}
+
+.aqe-hero-feature {
+  background: white;
+  padding: var(--space-6);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--neutral-200);
+  transition: all var(--transition-normal);
+  text-align: left;
+}
+
+.aqe-hero-feature:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+.aqe-hero-feature-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light));
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-4);
+}
+
+.aqe-hero-feature-title {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--neutral-900);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.aqe-hero-feature-description {
+  font-size: var(--text-sm);
+  color: var(--neutral-600);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Role Selection Section */
+.aqe-role-selection {
+  padding: var(--space-20) 0;
+  background: white;
+}
+
+.aqe-role-selection-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+  text-align: center;
+}
+
+.aqe-section-title {
+  font-size: var(--text-4xl);
+  font-weight: var(--font-bold);
+  color: var(--neutral-900);
+  margin: 0 0 var(--space-4) 0;
+  line-height: 1.2;
+}
+
+.aqe-section-subtitle {
+  font-size: var(--text-lg);
+  color: var(--neutral-600);
+  margin: 0 0 var(--space-12) 0;
+  line-height: 1.5;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.aqe-role-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-6);
+  margin-bottom: var(--space-12);
+}
+
+.aqe-role-card {
+  background: white;
+  border-radius: var(--radius-2xl);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--neutral-200);
+  transition: all var(--transition-normal);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.aqe-role-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+.aqe-role-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-blue), var(--primary-blue-light));
+}
+
+.aqe-role-card-teacher::before {
+  background: linear-gradient(90deg, var(--teacher-blue), var(--teacher-blue-light));
+}
+
+.aqe-role-card-student::before {
+  background: linear-gradient(90deg, var(--student-green), var(--student-green-light));
+}
+
+.aqe-role-card-parent::before {
+  background: linear-gradient(90deg, var(--parent-orange), var(--parent-orange-light));
+}
+
+.aqe-role-card-admin::before {
+  background: linear-gradient(90deg, var(--admin-purple), var(--admin-purple-light));
+}
+
+.aqe-role-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-2xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: var(--text-2xl);
+  margin: 0 auto var(--space-4);
+  box-shadow: var(--shadow-lg);
+}
+
+.aqe-role-icon-teacher {
+  background: linear-gradient(135deg, var(--teacher-blue), var(--teacher-blue-light));
+}
+
+.aqe-role-icon-student {
+  background: linear-gradient(135deg, var(--student-green), var(--student-green-light));
+}
+
+.aqe-role-icon-parent {
+  background: linear-gradient(135deg, var(--parent-orange), var(--parent-orange-light));
+}
+
+.aqe-role-icon-admin {
+  background: linear-gradient(135deg, var(--admin-purple), var(--admin-purple-light));
+}
+
+.aqe-role-title {
+  font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
+  color: var(--neutral-900);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.aqe-role-description {
+  font-size: var(--text-sm);
+  color: var(--neutral-600);
+  margin: 0 0 var(--space-4) 0;
+  line-height: 1.5;
+}
+
+.aqe-role-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--space-6) 0;
+}
+
+.aqe-role-feature {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--neutral-600);
+  margin-bottom: var(--space-2);
+}
+
+.aqe-role-feature::before {
+  content: '✓';
+  color: var(--success);
+  font-weight: var(--font-bold);
+  font-size: var(--text-xs);
+}
+
+.aqe-role-btn {
+  width: 100%;
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--neutral-300);
+  background: white;
+  color: var(--neutral-700);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.aqe-role-btn:hover {
+  background: var(--neutral-50);
+  border-color: var(--neutral-400);
+  transform: translateY(-1px);
+}
+
+.aqe-role-btn-teacher:hover {
+  background: rgba(37, 99, 235, 0.05);
+  border-color: var(--teacher-blue);
+  color: var(--teacher-blue);
+}
+
+.aqe-role-btn-student:hover {
+  background: rgba(5, 150, 105, 0.05);
+  border-color: var(--student-green);
+  color: var(--student-green);
+}
+
+.aqe-role-btn-parent:hover {
+  background: rgba(234, 88, 12, 0.05);
+  border-color: var(--parent-orange);
+  color: var(--parent-orange);
+}
+
+.aqe-role-btn-admin:hover {
+  background: rgba(124, 58, 237, 0.05);
+  border-color: var(--admin-purple);
+  color: var(--admin-purple);
+}
+
+/* Features Section */
+.aqe-features {
+  padding: var(--space-20) 0;
+  background: var(--neutral-50);
+}
+
+.aqe-features-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+.aqe-features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: var(--space-8);
+}
+
+.aqe-feature {
+  background: white;
+  padding: var(--space-8);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--neutral-200);
+  transition: all var(--transition-normal);
+}
+
+.aqe-feature:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.aqe-feature-icon {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light));
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-4);
+}
+
+.aqe-feature-title {
+  font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
+  color: var(--neutral-900);
+  margin: 0 0 var(--space-3) 0;
+}
+
+.aqe-feature-description {
+  font-size: var(--text-base);
+  color: var(--neutral-600);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* CTA Section */
+.aqe-cta {
+  padding: var(--space-20) 0;
+  background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light));
+  color: white;
+  text-align: center;
+}
+
+.aqe-cta-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+.aqe-cta-title {
+  font-size: var(--text-4xl);
+  font-weight: var(--font-bold);
+  margin: 0 0 var(--space-4) 0;
+  line-height: 1.2;
+}
+
+.aqe-cta-subtitle {
+  font-size: var(--text-lg);
+  margin: 0 0 var(--space-8) 0;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+.aqe-cta-actions {
+  display: flex;
+  gap: var(--space-4);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.aqe-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-8);
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  border-radius: var(--radius-xl);
+  text-decoration: none;
+  transition: all var(--transition-normal);
+}
+
+.aqe-cta-btn-primary {
+  background: white;
+  color: var(--primary-blue);
+  box-shadow: var(--shadow-lg);
+}
+
+.aqe-cta-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.aqe-cta-btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.aqe-cta-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Footer */
+.aqe-footer {
+  background: var(--neutral-900);
+  color: var(--neutral-300);
+  padding: var(--space-16) 0 var(--space-8);
+}
+
+.aqe-footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+.aqe-footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-8);
+  margin-bottom: var(--space-12);
+}
+
+.aqe-footer-section-title {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: white;
+  margin: 0 0 var(--space-4) 0;
+}
+
+.aqe-footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.aqe-footer-link {
+  margin-bottom: var(--space-2);
+}
+
+.aqe-footer-link a {
+  color: var(--neutral-400);
+  text-decoration: none;
+  font-size: var(--text-sm);
+  transition: color var(--transition-fast);
+}
+
+.aqe-footer-link a:hover {
+  color: white;
+}
+
+.aqe-footer-bottom {
+  border-top: 1px solid var(--neutral-700);
+  padding-top: var(--space-8);
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--neutral-500);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .aqe-hero {
+    padding: var(--space-16) 0 var(--space-12);
+  }
+  
+  .aqe-hero-title {
+    font-size: var(--text-4xl);
+  }
+  
+  .aqe-hero-subtitle {
+    font-size: var(--text-lg);
+  }
+  
+  .aqe-hero-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .aqe-hero-btn {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .aqe-hero-features {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  
+  .aqe-role-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  
+  .aqe-features-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+  
+  .aqe-cta-title {
+    font-size: var(--text-3xl);
+  }
+  
+  .aqe-cta-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .aqe-cta-btn {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .aqe-hero-content,
+  .aqe-role-selection-content,
+  .aqe-features-content,
+  .aqe-cta-content,
+  .aqe-footer-content {
+    padding: 0 var(--space-4);
+  }
+  
+  .aqe-hero-title {
+    font-size: var(--text-3xl);
+  }
+  
+  .aqe-section-title {
+    font-size: var(--text-3xl);
+  }
+  
+  .aqe-cta-title {
+    font-size: var(--text-2xl);
+  }
+}
+
+/* Dark Mode Support */
+[data-theme="dark"] .aqe-hero {
+  background: linear-gradient(135deg, var(--neutral-800) 0%, var(--neutral-900) 100%);
+}
+
+[data-theme="dark"] .aqe-hero-feature,
+[data-theme="dark"] .aqe-role-card,
+[data-theme="dark"] .aqe-feature {
+  background: var(--neutral-800);
+  border-color: var(--neutral-700);
+}
+
+[data-theme="dark"] .aqe-features {
+  background: var(--neutral-900);
+}
+
+[data-theme="dark"] .aqe-footer {
+  background: var(--neutral-950);
+}

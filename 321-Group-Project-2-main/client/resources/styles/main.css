@@ -1,0 +1,1603 @@
+/* Custom styles for AQE Platform */
+
+/* Professional Header */
+.header-professional {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+}
+
+.logo-container {
+  position: relative;
+}
+
+.logo-icon {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.brand-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2d3748;
+  letter-spacing: -0.025em;
+}
+
+.brand-subtitle {
+  font-size: 0.875rem;
+  color: #667eea;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+}
+
+/* Search Container */
+.search-container {
+  position: relative;
+  width: 300px;
+}
+
+.search-input {
+  border: 2px solid #e2e8f0;
+  border-radius: 25px;
+  padding: 8px 45px 8px 20px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  background: #ffffff;
+}
+
+.search-input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+  outline: none;
+}
+
+.search-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  pointer-events: none;
+}
+
+.search-results-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  margin-top: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1050;
+}
+
+/* Language Selector */
+.language-selector .form-select {
+  border: 2px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.language-selector .form-select:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+}
+
+/* Theme Toggle */
+.theme-toggle {
+  border: 2px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 8px 12px;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  border-color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+}
+
+/* User Profile */
+.user-profile .user-btn {
+  border: none;
+  border-radius: 25px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.user-profile .user-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1rem;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.user-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: white;
+  line-height: 1.2;
+}
+
+.user-role {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1;
+  text-transform: capitalize;
+}
+
+.user-menu {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  padding: 8px 0;
+  margin-top: 8px;
+}
+
+.user-menu .dropdown-item {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.user-menu .dropdown-item:hover {
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+}
+
+/* Mobile Menu */
+.mobile-menu {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+}
+
+.mobile-search-container .search-container {
+  width: 100%;
+}
+
+.mobile-nav-btn {
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.mobile-nav-btn:hover {
+  border-color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+  transform: translateX(4px);
+}
+
+.mobile-nav-btn i {
+  width: 20px;
+  text-align: center;
+}
+
+/* Dynamic Status Indicator */
+.dynamic-badge {
+  position: relative;
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+  display: inline-block;
+  animation: blink 1.5s ease-in-out infinite;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  51%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(102, 126, 234, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(102, 126, 234, 0.4);
+  }
+}
+
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 80px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  opacity: 0.3;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  opacity: 0.9;
+  line-height: 1.6;
+}
+
+.hero-badge {
+  display: inline-block;
+}
+
+.hero-features {
+  position: relative;
+  z-index: 2;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.feature-icon {
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  font-size: 1.5rem;
+}
+
+.feature-card h6 {
+  color: white;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.feature-card p {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Dashboard Metrics */
+.dashboard-metrics {
+  background: #f8f9fa;
+  margin-top: -50px;
+  position: relative;
+  z-index: 3;
+}
+
+/* Role-based sections */
+.role-dashboard {
+  display: none;
+}
+
+.role-dashboard.show {
+  display: block !important;
+}
+
+.role-content {
+  display: none;
+}
+
+.role-content.show {
+  display: block !important;
+}
+
+/* Ensure role dashboards are visible when shown */
+#roleDashboard {
+  display: none;
+}
+
+#roleDashboard.show {
+  display: block !important;
+}
+
+#studentDashboard,
+#teacherDashboard,
+#parentDashboard,
+#adminDashboard {
+  display: none;
+}
+
+#studentDashboard.show,
+#teacherDashboard.show,
+#parentDashboard.show,
+#adminDashboard.show {
+  display: block !important;
+}
+
+/* Dark mode fixes for role-based dashboards */
+[data-bs-theme="dark"] .metric-card {
+  background: var(--bs-dark);
+  color: var(--bs-light);
+  border: 1px solid var(--bs-border-color);
+}
+
+[data-bs-theme="dark"] .metric-card .metric-label,
+[data-bs-theme="dark"] .metric-card .metric-progress,
+[data-bs-theme="dark"] .metric-card .metric-number {
+  color: var(--bs-light) !important;
+}
+
+[data-bs-theme="dark"] .metric-card .metric-progress {
+  color: var(--bs-light-emphasis) !important;
+}
+
+/* Dark mode for role dashboard sections */
+[data-bs-theme="dark"] .role-dashboard {
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+
+[data-bs-theme="dark"] .role-dashboard .metric-card {
+  background: var(--bs-dark);
+  color: var(--bs-light);
+}
+
+[data-bs-theme="dark"] .role-dashboard .card {
+  background: var(--bs-dark);
+  color: var(--bs-light);
+  border-color: var(--bs-border-color);
+}
+
+[data-bs-theme="dark"] .role-dashboard .card-body {
+  color: var(--bs-light);
+}
+
+[data-bs-theme="dark"] .role-dashboard .card-title,
+[data-bs-theme="dark"] .role-dashboard .card-text {
+  color: var(--bs-light) !important;
+}
+
+/* Dark mode for navigation tabs */
+[data-bs-theme="dark"] .nav-pills .nav-link {
+  color: var(--bs-light);
+}
+
+[data-bs-theme="dark"] .nav-pills .nav-link.active {
+  background-color: var(--bs-primary);
+  color: white;
+}
+
+[data-bs-theme="dark"] .nav-pills .nav-link:hover {
+  color: var(--bs-primary);
+}
+
+/* Dark mode for specific dashboard elements */
+[data-bs-theme="dark"] .role-dashboard .text-muted {
+  color: var(--bs-light-emphasis) !important;
+}
+
+[data-bs-theme="dark"] .role-dashboard .badge {
+  color: white !important;
+}
+
+[data-bs-theme="dark"] .role-dashboard .btn {
+  color: white;
+}
+
+[data-bs-theme="dark"] .role-dashboard .btn-outline-primary {
+  color: var(--bs-primary);
+  border-color: var(--bs-primary);
+}
+
+[data-bs-theme="dark"] .role-dashboard .btn-outline-primary:hover {
+  background-color: var(--bs-primary);
+  color: white;
+}
+
+/* Fix for teacher dashboard specific elements */
+[data-bs-theme="dark"] .role-dashboard .small,
+[data-bs-theme="dark"] .role-dashboard .form-text {
+  color: var(--bs-light-emphasis) !important;
+}
+
+/* Fix for admin panel text */
+[data-bs-theme="dark"] .role-dashboard .list-group-item {
+  background-color: var(--bs-dark);
+  color: var(--bs-light);
+  border-color: var(--bs-border-color);
+}
+
+[data-bs-theme="dark"] .role-dashboard .list-group-item:hover {
+  background-color: var(--bs-dark-subtle);
+}
+
+/* Additional dark mode fixes for specific text elements */
+[data-bs-theme="dark"] .role-dashboard .metric-number {
+  color: var(--bs-light) !important;
+}
+
+[data-bs-theme="dark"] .role-dashboard .metric-label {
+  color: var(--bs-light-emphasis) !important;
+}
+
+[data-bs-theme="dark"] .role-dashboard .metric-progress {
+  color: var(--bs-light-emphasis) !important;
+}
+
+/* Fix for card headers and titles in dark mode */
+[data-bs-theme="dark"] .role-dashboard .card-header,
+[data-bs-theme="dark"] .role-dashboard .card-header-modern {
+  background-color: var(--bs-dark-subtle);
+  color: var(--bs-light);
+  border-bottom-color: var(--bs-border-color);
+}
+
+[data-bs-theme="dark"] .role-dashboard .card-title-modern {
+  color: var(--bs-light) !important;
+}
+
+/* Fix for table elements in dark mode */
+[data-bs-theme="dark"] .role-dashboard .table {
+  color: var(--bs-light);
+}
+
+[data-bs-theme="dark"] .role-dashboard .table th,
+[data-bs-theme="dark"] .role-dashboard .table td {
+  border-color: var(--bs-border-color);
+}
+
+[data-bs-theme="dark"] .role-dashboard .table-striped > tbody > tr:nth-of-type(odd) > td {
+  background-color: var(--bs-dark-subtle);
+}
+
+/* Fix for form elements in dark mode */
+[data-bs-theme="dark"] .role-dashboard .form-control {
+  background-color: var(--bs-dark);
+  color: var(--bs-light);
+  border-color: var(--bs-border-color);
+}
+
+[data-bs-theme="dark"] .role-dashboard .form-control:focus {
+  background-color: var(--bs-dark);
+  color: var(--bs-light);
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+/* Specific fixes for teacher practice materials creation form */
+[data-bs-theme="dark"] #create-materials-content .form-label {
+  color: var(--bs-light) !important;
+}
+
+[data-bs-theme="dark"] #create-materials-content .form-control {
+  background-color: var(--bs-dark);
+  color: var(--bs-light);
+  border-color: var(--bs-border-color);
+}
+
+[data-bs-theme="dark"] #create-materials-content .form-control:focus {
+  background-color: var(--bs-dark);
+  color: var(--bs-light);
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+[data-bs-theme="dark"] #create-materials-content .form-select {
+  background-color: var(--bs-dark);
+  color: var(--bs-light);
+  border-color: var(--bs-border-color);
+}
+
+[data-bs-theme="dark"] #create-materials-content .form-select:focus {
+  background-color: var(--bs-dark);
+  color: var(--bs-light);
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+[data-bs-theme="dark"] #create-materials-content textarea.form-control {
+  background-color: var(--bs-dark);
+  color: var(--bs-light);
+  border-color: var(--bs-border-color);
+}
+
+[data-bs-theme="dark"] #create-materials-content textarea.form-control:focus {
+  background-color: var(--bs-dark);
+  color: var(--bs-light);
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+[data-bs-theme="dark"] #create-materials-content h6 {
+  color: var(--bs-light) !important;
+}
+
+[data-bs-theme="dark"] #create-materials-content .text-muted {
+  color: var(--bs-light-emphasis) !important;
+}
+
+/* Fix for card-header-modern text in dark mode - make text dark instead of changing background */
+[data-bs-theme="dark"] .role-dashboard .card-header-modern {
+  color: #333 !important;
+}
+
+[data-bs-theme="dark"] .role-dashboard .card-title-modern {
+  color: #333 !important;
+}
+
+[data-bs-theme="dark"] .role-dashboard .card-subtitle-modern {
+  color: #666 !important;
+}
+
+/* Add dark background behind form labels in practice materials section */
+[data-bs-theme="dark"] #create-materials-content .form-label {
+  background-color: var(--bs-dark);
+  color: var(--bs-light) !important;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  margin-bottom: 0.5rem;
+  display: inline-block;
+  font-weight: 500;
+}
+
+[data-bs-theme="dark"] #create-materials-content h6 {
+  background-color: var(--bs-dark);
+  color: var(--bs-light) !important;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+  display: inline-block;
+  font-weight: 500;
+}
+
+/* Hide all role-specific content by default */
+#studentDashboard,
+#teacherDashboard,
+#parentDashboard,
+#adminDashboard,
+#studentTabs,
+#teacherTabs,
+#parentTabs,
+#adminTabs {
+  display: none !important;
+}
+
+/* Show role-specific content only when explicitly shown */
+#studentDashboard.show,
+#teacherDashboard.show,
+#parentDashboard.show,
+#adminDashboard.show,
+#studentTabs.show,
+#teacherTabs.show,
+#parentTabs.show,
+#adminTabs.show {
+  display: block !important;
+}
+
+.metric-card {
+  background: var(--card-bg, white);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: none;
+  height: 100%;
+  color: var(--text-color, #333);
+}
+
+.metric-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.metric-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.metric-icon.lessons {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+}
+
+.metric-icon.books {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  color: white;
+}
+
+.metric-icon.badges {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  color: white;
+}
+
+.metric-icon.streak {
+  background: linear-gradient(135deg, #43e97b, #38f9d7);
+  color: white;
+}
+
+.metric-icon.assignments {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+}
+
+.metric-icon.grades {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  color: white;
+}
+
+.metric-icon.engagement {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  color: white;
+}
+
+.metric-icon.children {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+}
+
+.metric-icon.progress {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  color: white;
+}
+
+.metric-icon.time {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  color: white;
+}
+
+.metric-icon.alerts {
+  background: linear-gradient(135deg, #43e97b, #38f9d7);
+  color: white;
+}
+
+.metric-icon.users {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+}
+
+.metric-icon.content {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  color: white;
+}
+
+.metric-icon.system {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  color: white;
+}
+
+.metric-icon.revenue {
+  background: linear-gradient(135deg, #43e97b, #38f9d7);
+  color: white;
+}
+
+.metric-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #2d3748;
+}
+
+.metric-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 0.25rem;
+}
+
+.metric-progress {
+  color: #718096;
+  font-weight: 500;
+}
+
+/* Modern Navigation */
+.nav-tabs-modern {
+  margin-top: 2rem;
+}
+
+.nav-tabs-modern .nav {
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-tabs-modern .nav-item {
+  display: inline-block;
+  margin: 0 5px;
+}
+
+.nav-pills .nav-link {
+  border-radius: 50px;
+  padding: 12px 24px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  margin: 0 5px;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.nav-pills .nav-link:hover {
+  background: rgba(102, 126, 234, 0.1);
+  border-color: rgba(102, 126, 234, 0.3);
+  transform: translateY(-2px);
+}
+
+.nav-pills .nav-link.active {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-color: transparent;
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* Modern Cards */
+.modern-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: none;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.modern-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.card-header-modern {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 1.5rem 2rem;
+  border: none;
+}
+
+.card-title-modern {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Getting Started Steps */
+.getting-started-list {
+  padding: 1rem 0;
+}
+
+.step-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+}
+
+.step-item:hover {
+  background: #f8f9fa;
+  transform: translateX(5px);
+}
+
+.step-item:last-child {
+  margin-bottom: 0;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.step-content h6 {
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 0.25rem;
+}
+
+/* Features List */
+.features-list {
+  padding: 1rem 0;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+  background: #f8f9fa;
+  transform: translateX(5px);
+}
+
+.feature-item:last-child {
+  margin-bottom: 0;
+}
+
+.feature-icon-small {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.feature-content h6 {
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 0.25rem;
+}
+
+/* AQE Introduction */
+.aqe-intro {
+  text-align: center;
+  padding: 3rem 0;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 20px;
+  margin: 2rem 0;
+}
+
+.aqe-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 1rem;
+}
+
+.aqe-description {
+  font-size: 1.1rem;
+  color: #4a5568;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Role Cards */
+.role-card {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  height: 100%;
+  border: 3px solid transparent;
+}
+
+.role-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.role-card.students {
+  border-color: #667eea;
+}
+
+.role-card.teachers {
+  border-color: #f093fb;
+}
+
+.role-card.parents {
+  border-color: #4facfe;
+}
+
+.role-card.admins {
+  border-color: #43e97b;
+}
+
+.role-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin: 0 auto 1.5rem;
+}
+
+.role-card.students .role-icon {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+}
+
+.role-card.teachers .role-icon {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  color: white;
+}
+
+.role-card.parents .role-icon {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  color: white;
+}
+
+.role-card.admins .role-icon {
+  background: linear-gradient(135deg, #43e97b, #38f9d7);
+  color: white;
+}
+
+.role-card h6 {
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 1rem;
+}
+
+/* Role Selection Modal */
+.role-option-card {
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 15px;
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.role-option-card:hover {
+  border-color: #667eea;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+}
+
+.role-option-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin: 0 auto 1rem;
+}
+
+.role-option-icon.students {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+}
+
+.role-option-icon.teachers {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  color: white;
+}
+
+.role-option-icon.parents {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  color: white;
+}
+
+.role-option-icon.admins {
+  background: linear-gradient(135deg, #43e97b, #38f9d7);
+  color: white;
+}
+
+.role-option-card h6 {
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
+
+/* Login Modal Role Selection */
+.role-selection {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* Small role option cards for login modal */
+.role-option-card-small {
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.role-option-card-small:hover {
+  border-color: #667eea;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
+}
+
+.role-option-card-small.selected {
+  border-color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.2);
+}
+
+.role-option-icon-small {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  margin: 0 auto 0.75rem;
+}
+
+.role-option-icon-small.students {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+}
+
+.role-option-icon-small.teachers {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  color: white;
+}
+
+.role-option-icon-small.parents {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  color: white;
+}
+
+.role-option-icon-small.admins {
+  background: linear-gradient(135deg, #43e97b, #38f9d7);
+  color: white;
+}
+
+.role-option-card-small h6 {
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.role-option-card-small p {
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+
+/* Demo Credentials Section */
+.demo-credentials {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-top: 1rem;
+  border: 1px solid #e9ecef;
+}
+
+.demo-credentials h6 {
+  color: #495057;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.demo-account-item {
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.demo-account-item:last-child {
+  margin-bottom: 0;
+}
+
+.demo-account-item strong {
+  color: #495057;
+  display: inline-block;
+  width: 60px;
+}
+
+.demo-account-item code {
+  background: #e9ecef;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: #495057;
+}
+
+/* Login Form Styles */
+#loginForm .form-control:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+#loginForm .is-invalid {
+  border-color: #dc3545;
+}
+
+#loginForm .is-valid {
+  border-color: #198754;
+}
+
+/* Demo Accounts Table */
+.table th {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(102, 126, 234, 0.05);
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(102, 126, 234, 0.1);
+}
+
+/* Footer */
+.footer-modern {
+  background: #2d3748;
+  color: white;
+  padding: 2rem 0;
+  margin-top: 4rem;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.footer-link {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  display: inline-block;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.footer-link:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Mobile responsive footer */
+@media (max-width: 768px) {
+  .footer-links {
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  
+  .footer-modern .text-md-end {
+    text-align: center !important;
+  }
+}
+
+/* Enhanced button styles */
+.btn {
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+  border: none;
+  box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #0b5ed7 0%, #0a58ca 100%);
+  box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 1px solid #dee2e6;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Enhanced card styles */
+.card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #0d6efd, #6f42c1, #0dcaf0);
+  border-radius: 0.375rem 0.375rem 0 0;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Badge styles */
+.badge {
+  transition: all 0.3s ease;
+}
+
+.badge-primary {
+  background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+}
+
+.badge-secondary {
+  background: linear-gradient(135deg, #198754 0%, #157347 100%);
+}
+
+.badge-gray {
+  background: linear-gradient(135deg, #6c757d 0%, #5c636a 100%);
+}
+
+/* Loading states */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Dark mode styles */
+[data-bs-theme="dark"] {
+  --bs-body-bg: #1a1a1a;
+  --bs-body-color: #ffffff;
+  --bs-card-bg: #2d2d2d;
+  --bs-border-color: #404040;
+}
+
+[data-bs-theme="dark"] .card {
+  background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+  border-color: #404040;
+}
+
+[data-bs-theme="dark"] .btn-secondary {
+  background: linear-gradient(135deg, #404040 0%, #2d2d2d 100%);
+  border-color: #404040;
+  color: #ffffff;
+}
+
+[data-bs-theme="dark"] .btn-secondary:hover {
+  background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+}
+
+/* Mobile menu styles */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1040;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 80px;
+}
+
+.mobile-menu .card {
+  width: 90%;
+  max-width: 400px;
+}
+
+/* Notification panel styles */
+.notification-panel {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Search results styles */
+.search-results {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.search-result-item {
+  padding: 0.75rem;
+  border-bottom: 1px solid #dee2e6;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.search-result-item:hover {
+  background-color: #f8f9fa;
+}
+
+.search-result-item:last-child {
+  border-bottom: none;
+}
+
+/* Lesson card styles */
+.lesson-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.lesson-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.lesson-progress {
+  height: 4px;
+  background-color: #e9ecef;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.lesson-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #0d6efd, #0dcaf0);
+  transition: width 0.3s ease;
+}
+
+/* Library item styles */
+.library-item {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.library-item:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container-fluid {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Animation classes */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Utility classes */
+.text-gradient {
+  background: linear-gradient(135deg, #0d6efd, #0dcaf0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.border-gradient {
+  border: 2px solid;
+  border-image: linear-gradient(135deg, #0d6efd, #0dcaf0) 1;
+}
+
+/* Focus styles for accessibility */
+.btn:focus,
+.form-control:focus,
+.form-select:focus {
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .metric-card {
+    margin-bottom: 1rem;
+  }
+  
+  .nav-pills .nav-link {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    margin: 2px;
+  }
+  
+  .aqe-title {
+    font-size: 2rem;
+  }
+  
+  .role-card {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-section {
+    padding: 60px 0;
+  }
+  
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .feature-card {
+    padding: 1.5rem 1rem;
+  }
+  
+  .metric-card {
+    padding: 1.5rem;
+  }
+  
+  .step-item,
+  .feature-item {
+    padding: 0.75rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  .btn,
+  .dropdown,
+  .nav-tabs {
+    display: none !important;
+  }
+  
+  .card {
+    box-shadow: none;
+    border: 1px solid #dee2e6;
+  }
+}

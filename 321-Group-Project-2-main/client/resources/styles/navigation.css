@@ -1,0 +1,554 @@
+/* AQE Platform - Unified Navigation System */
+/* Consistent Navigation Across All Role Pages */
+
+/* Header Redesign */
+.aqe-header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--neutral-200);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  transition: all var(--transition-normal);
+}
+
+[data-theme="dark"] .aqe-header {
+  background: rgba(23, 23, 23, 0.95);
+  border-color: var(--neutral-700);
+}
+
+.aqe-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-6);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Logo and Branding */
+.aqe-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.aqe-logo:hover {
+  transform: scale(1.02);
+}
+
+.aqe-logo-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light));
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: var(--text-xl);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-fast);
+}
+
+.aqe-logo:hover .aqe-logo-icon {
+  box-shadow: var(--shadow-lg);
+  transform: rotate(5deg);
+}
+
+.aqe-brand {
+  display: flex;
+  flex-direction: column;
+}
+
+.aqe-brand-title {
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  color: var(--neutral-900);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.aqe-brand-subtitle {
+  font-size: var(--text-sm);
+  color: var(--primary-blue);
+  font-weight: var(--font-medium);
+  margin: 0;
+  line-height: 1;
+}
+
+/* Navigation Menu */
+.aqe-nav-menu {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.aqe-nav-item {
+  position: relative;
+}
+
+.aqe-nav-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--neutral-700);
+  text-decoration: none;
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.aqe-nav-link:hover {
+  background-color: var(--neutral-100);
+  color: var(--neutral-900);
+}
+
+.aqe-nav-link.active {
+  background-color: var(--primary-blue-50);
+  color: var(--primary-blue);
+}
+
+.aqe-nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 2px;
+  background-color: var(--primary-blue);
+  border-radius: var(--radius-full);
+}
+
+/* Role-Specific Navigation Colors */
+.aqe-nav-link.teacher.active {
+  background-color: rgba(37, 99, 235, 0.1);
+  color: var(--teacher-blue);
+}
+
+.aqe-nav-link.teacher.active::after {
+  background-color: var(--teacher-blue);
+}
+
+.aqe-nav-link.student.active {
+  background-color: rgba(5, 150, 105, 0.1);
+  color: var(--student-green);
+}
+
+.aqe-nav-link.student.active::after {
+  background-color: var(--student-green);
+}
+
+.aqe-nav-link.parent.active {
+  background-color: rgba(234, 88, 12, 0.1);
+  color: var(--parent-orange);
+}
+
+.aqe-nav-link.parent.active::after {
+  background-color: var(--parent-orange);
+}
+
+.aqe-nav-link.admin.active {
+  background-color: rgba(124, 58, 237, 0.1);
+  color: var(--admin-purple);
+}
+
+.aqe-nav-link.admin.active::after {
+  background-color: var(--admin-purple);
+}
+
+/* Header Actions */
+.aqe-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.aqe-action-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--neutral-700);
+  background: none;
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.aqe-action-btn:hover {
+  background-color: var(--neutral-100);
+  border-color: var(--neutral-400);
+  color: var(--neutral-900);
+}
+
+.aqe-action-btn-primary {
+  background-color: var(--primary-blue);
+  color: white;
+  border-color: var(--primary-blue);
+}
+
+.aqe-action-btn-primary:hover {
+  background-color: var(--primary-blue-dark);
+  border-color: var(--primary-blue-dark);
+}
+
+/* User Profile Dropdown */
+.aqe-user-profile {
+  position: relative;
+}
+
+.aqe-user-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: none;
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.aqe-user-btn:hover {
+  background-color: var(--neutral-100);
+  border-color: var(--neutral-400);
+}
+
+.aqe-user-avatar {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light));
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+}
+
+.aqe-user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.aqe-user-name {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--neutral-900);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.aqe-user-role {
+  font-size: var(--text-xs);
+  color: var(--neutral-600);
+  margin: 0;
+  line-height: 1;
+  text-transform: capitalize;
+}
+
+/* Sidebar Navigation */
+.aqe-sidebar {
+  width: 280px;
+  background: white;
+  border-right: 1px solid var(--neutral-200);
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: var(--z-fixed);
+  transform: translateX(-100%);
+  transition: transform var(--transition-normal);
+  overflow-y: auto;
+}
+
+.aqe-sidebar.show {
+  transform: translateX(0);
+}
+
+[data-theme="dark"] .aqe-sidebar {
+  background: var(--neutral-800);
+  border-color: var(--neutral-700);
+}
+
+.aqe-sidebar-header {
+  padding: var(--space-6);
+  border-bottom: 1px solid var(--neutral-200);
+}
+
+[data-theme="dark"] .aqe-sidebar-header {
+  border-color: var(--neutral-700);
+}
+
+.aqe-sidebar-nav {
+  padding: var(--space-4);
+}
+
+.aqe-sidebar-nav-item {
+  margin-bottom: var(--space-1);
+}
+
+.aqe-sidebar-nav-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--neutral-700);
+  text-decoration: none;
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.aqe-sidebar-nav-link:hover {
+  background-color: var(--neutral-100);
+  color: var(--neutral-900);
+}
+
+.aqe-sidebar-nav-link.active {
+  background-color: var(--primary-blue-50);
+  color: var(--primary-blue);
+}
+
+.aqe-sidebar-nav-link.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background-color: var(--primary-blue);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+/* Mobile Navigation */
+.aqe-mobile-nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  padding: var(--space-2);
+  cursor: pointer;
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-fast);
+}
+
+.aqe-mobile-nav-toggle:hover {
+  background-color: var(--neutral-100);
+}
+
+.aqe-mobile-nav-toggle span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background-color: var(--neutral-700);
+  margin: 4px 0;
+  transition: all var(--transition-fast);
+}
+
+.aqe-mobile-nav-toggle.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.aqe-mobile-nav-toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.aqe-mobile-nav-toggle.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .aqe-nav-menu {
+    display: none;
+  }
+  
+  .aqe-mobile-nav-toggle {
+    display: block;
+  }
+  
+  .aqe-sidebar {
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
+@media (max-width: 768px) {
+  .aqe-header-content {
+    padding: var(--space-3) var(--space-4);
+  }
+  
+  .aqe-brand-title {
+    font-size: var(--text-lg);
+  }
+  
+  .aqe-brand-subtitle {
+    font-size: var(--text-xs);
+  }
+  
+  .aqe-logo-icon {
+    width: 40px;
+    height: 40px;
+    font-size: var(--text-lg);
+  }
+  
+  .aqe-header-actions {
+    gap: var(--space-2);
+  }
+  
+  .aqe-action-btn {
+    padding: var(--space-2);
+  }
+  
+  .aqe-action-btn span {
+    display: none;
+  }
+  
+  .aqe-user-info {
+    display: none;
+  }
+  
+  .aqe-user-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: var(--text-xs);
+  }
+}
+
+@media (max-width: 480px) {
+  .aqe-header-content {
+    padding: var(--space-2) var(--space-3);
+  }
+  
+  .aqe-brand {
+    display: none;
+  }
+  
+  .aqe-logo-icon {
+    width: 36px;
+    height: 36px;
+    font-size: var(--text-base);
+  }
+}
+
+/* Overlay for Mobile Sidebar */
+.aqe-sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: var(--z-modal-backdrop);
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-normal);
+}
+
+.aqe-sidebar-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Breadcrumb Navigation */
+.aqe-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-6);
+  background: var(--neutral-50);
+  border-bottom: 1px solid var(--neutral-200);
+  font-size: var(--text-sm);
+}
+
+[data-theme="dark"] .aqe-breadcrumb {
+  background: var(--neutral-800);
+  border-color: var(--neutral-700);
+}
+
+.aqe-breadcrumb-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--neutral-600);
+}
+
+.aqe-breadcrumb-item:last-child {
+  color: var(--neutral-900);
+  font-weight: var(--font-medium);
+}
+
+.aqe-breadcrumb-separator {
+  color: var(--neutral-400);
+}
+
+/* Page Title Section */
+.aqe-page-header {
+  padding: var(--space-8) var(--space-6) var(--space-6);
+  background: white;
+  border-bottom: 1px solid var(--neutral-200);
+}
+
+[data-theme="dark"] .aqe-page-header {
+  background: var(--neutral-800);
+  border-color: var(--neutral-700);
+}
+
+.aqe-page-title {
+  font-size: var(--text-4xl);
+  font-weight: var(--font-bold);
+  color: var(--neutral-900);
+  margin: 0 0 var(--space-2) 0;
+  line-height: 1.2;
+}
+
+.aqe-page-subtitle {
+  font-size: var(--text-lg);
+  color: var(--neutral-600);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.aqe-page-actions {
+  margin-top: var(--space-6);
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .aqe-page-header {
+    padding: var(--space-6) var(--space-4) var(--space-4);
+  }
+  
+  .aqe-page-title {
+    font-size: var(--text-3xl);
+  }
+  
+  .aqe-page-subtitle {
+    font-size: var(--text-base);
+  }
+  
+  .aqe-page-actions {
+    margin-top: var(--space-4);
+  }
+}
