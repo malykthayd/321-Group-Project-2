@@ -3,8 +3,8 @@ using api.Data;
 using api.Services;
 using DotNetEnv;
 
-// Load environment variables from .env file
-Env.Load();
+// Load environment variables from .env file if it exists
+try { Env.Load(); } catch { /* .env file not required */ }
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,21 +14,38 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Add Entity Framework with MySQL
+// Add Entity Framework with SQLite
 builder.Services.AddDbContext<AQEDbContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), 
-    new MySqlServerVersion(new Version(8, 0, 0))));
+    options.UseSqlite(builder.Configuration.GetConnectionString("SQLiteConnection")));
 
 // Register SMS Gateway Provider based on configuration
-var gatewayProvider = builder.Configuration["Gateway:Provider"] ?? "mock";
-if (gatewayProvider.ToLower() == "twilio")
-{
-    builder.Services.AddScoped<IGatewayProvider, TwilioGatewayProvider>();
-}
-else
-{
-    builder.Services.AddScoped<IGatewayProvider, MockGatewayProvider>();
-}
+        var gatewayProvider = builder.Configuration["Gateway:Provider"] ?? "mock";
+        
+        builder.Services.AddHttpClient();
+        
+        if (gatewayProvider.ToLower() == "twilio")
+        {
+            builder.Services.AddScoped<IGatewayProvider, TwilioGatewayProvider>();
+        }
+        else if (gatewayProvider.ToLower() == "africastalking")
+        {
+            builder.Services.AddScoped<IGatewayProvider, AfricasTalkingProvider>();
+        }
+        else
+        {
+            builder.Services.AddScoped<IGatewayProvider, MockGatewayProvider>();
+        }
+
+        // AI Provider
+        var aiProvider = builder.Configuration["AI:Provider"] ?? "mock";
+        if (aiProvider.ToLower() == "openai")
+        {
+            builder.Services.AddHttpClient<IAIProvider, OpenAIProvider>();
+        }
+        else
+        {
+            builder.Services.AddScoped<IAIProvider, MockAIProvider>();
+        }
 
 // Add CORS
 builder.Services.AddCors(options =>

@@ -39,6 +39,16 @@ namespace api.Data
         public DbSet<ContentTargeting> ContentTargetings { get; set; }
         public DbSet<OptIn> OptIns { get; set; }
 
+        // Subscription and Donation
+        public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<Donation> Donations { get; set; }
+
+        // Lesson System (Complete)
+        public DbSet<LessonSection> LessonSections { get; set; }
+        public DbSet<PracticeItem> PracticeItems { get; set; }
+        public DbSet<MiniGame> MiniGames { get; set; }
+        public DbSet<LessonBadge> LessonBadges { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

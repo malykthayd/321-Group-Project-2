@@ -1,0 +1,232 @@
+/* Dark Mode Premium Styles */
+
+[data-theme="dark"] .support-card {
+  background: rgba(45, 55, 72, 0.95) !important;
+  color: var(--dark-text-primary) !important;
+}
+
+[data-theme="dark"] .support-card h3,
+[data-theme="dark"] .support-card p {
+  color: var(--dark-text-primary) !important;
+}
+
+[data-theme="dark"] .premium-feature-card {
+  background: var(--dark-bg-secondary) !important;
+  border-color: var(--dark-border) !important;
+  color: var(--dark-text-primary) !important;
+}
+
+[data-theme="dark"] .premium-feature-card h5,
+[data-theme="dark"] .premium-feature-card .price-display {
+  color: var(--dark-text-primary) !important;
+}
+
+[data-theme="dark"] .licensing-tier-card {
+  background: var(--dark-bg-secondary) !important;
+  border-color: var(--dark-border) !important;
+}
+
+[data-theme="dark"] .licensing-tier-card .card-body {
+  color: var(--dark-text-primary) !important;
+}
+
+[data-theme="dark"] .licensing-tier-card h5 {
+  color: var(--dark-text-primary) !important;
+}
+
+[data-theme="dark"] .price-display {
+  color: var(--dark-text-primary) !important;
+  background: var(--dark-accent) !important;
+  -webkit-text-fill-color: var(--dark-text-primary) !important;
+}
+
+[data-theme="dark"] .feature-check {
+  color: var(--dark-success) !important;
+}
+
+[data-theme="dark"] .feature-list li {
+  color: var(--dark-text-secondary) !important;
+}
+
+[data-theme="dark"] .certification-card {
+  background: var(--dark-bg-secondary) !important;
+  border-color: var(--dark-border) !important;
+}
+
+[data-theme="dark"] .certification-card .card-body {
+  color: var(--dark-text-primary) !important;
+}
+
+[data-theme="dark"] .certification-price {
+  color: var(--dark-text-primary) !important;
+}
+
+[data-theme="dark"] .btn-premium-outline {
+  border-color: var(--dark-border) !important;
+  color: var(--dark-text-primary) !important;
+}
+
+[data-theme="dark"] .btn-premium-outline:hover {
+  background: rgba(102, 126, 234, 0.2) !important;
+  color: var(--dark-text-primary) !important;
+}
+
+[data-theme="dark"] .dev-callout {
+  background: rgba(246, 173, 85, 0.1) !important;
+  border-color: var(--dark-warning) !important;
+}
+
+[data-theme="dark"] .dev-callout h5 {
+  color: var(--dark-warning) !important;
+}
+
+[data-theme="dark"] .dev-callout p {
+  color: var(--dark-text-secondary) !important;
+}
+
+[data-theme="dark"] .section-title {
+  color: var(--dark-text-primary) !important;
+  background: transparent !important;
+  -webkit-text-fill-color: var(--dark-text-primary) !important;
+}
+
+[data-theme="dark"] .section-subtitle {
+  color: var(--dark-text-muted) !important;
+}
+
+[data-theme="dark"] .gradient-text {
+  color: var(--dark-accent) !important;
+  background: transparent !important;
+  -webkit-text-fill-color: var(--dark-accent) !important;
+}
+
+[data-theme="dark"] .support-card p.text-muted {
+  color: var(--dark-text-secondary) !important;
+}
+
+[data-theme="dark"] .licensing-tier-card .text-muted {
+  color: var(--dark-text-muted) !important;
+}
+
+[data-theme="dark"] .licensing-tier-card h3,
+[data-theme="dark"] .licensing-tier-card h6 {
+  color: var(--dark-text-primary) !important;
+}
+
+[data-theme="dark"] .dev-callout {
+  background: rgba(246, 173, 85, 0.15) !important;
+  border-left: 4px solid var(--dark-warning) !important;
+}
+
+[data-theme="dark"] .dev-callout h5 {
+  color: var(--dark-warning) !important;
+}
+
+[data-theme="dark"] .dev-callout p.text-muted {
+  color: var(--dark-text-muted) !important;
+}
+
+/* Dark mode for modern UI sections */
+[data-theme="dark"] .premium-support-section {
+  background: var(--dark-bg-secondary) !important;
+  border-color: var(--dark-border) !important;
+}
+
+[data-theme="dark"] .premium-support-section h3,
+[data-theme="dark"] .premium-support-section .support-header h3 {
+  color: var(--dark-text-primary) !important;
+}
+
+[data-theme="dark"] .premium-support-section .support-header p,
+[data-theme="dark"] .premium-support-section p {
+  color: var(--dark-text-secondary) !important;
+}
+
+[data-theme="dark"] .value-card {
+  background: var(--dark-bg-secondary) !important;
+  border-color: var(--dark-border) !important;
+}
+
+[data-theme="dark"] .value-card h5,
+[data-theme="dark"] .value-card .price {
+  color: var(--dark-text-primary) !important;
+}
+
+[data-theme="dark"] .value-feature {
+  color: var(--dark-text-secondary) !important;
+}
+
+[data-theme="dark"] .value-card .price small {
+  color: var(--dark-text-muted) !important;
+}
+
+[data-theme="dark"] .institutional-section {
+  background: var(--dark-bg-primary) !important;
+}
+
+[data-theme="dark"] .institutional-card {
+  background: var(--dark-bg-secondary) !important;
+  border-color: var(--dark-border) !important;
+}
+
+[data-theme="dark"] .institutional-card h5 {
+  color: var(--dark-text-primary) !important;
+}
+
+[data-theme="dark"] .institutional-price,
+[data-theme="dark"] .institutional-price small {
+  color: var(--dark-text-primary) !important;
+}
+
+[data-theme="dark"] .institutional-icon {
+  background: var(--dark-bg-tertiary) !important;
+  color: var(--dark-accent) !important;
+}
+
+[data-theme="dark"] .feature-list li {
+  color: var(--dark-text-secondary) !important;
+}
+
+[data-theme="dark"] .certification-section {
+  background: var(--dark-bg-primary) !important;
+}
+
+[data-theme="dark"] .cert-card {
+  background: var(--dark-bg-secondary) !important;
+  border-color: var(--dark-border) !important;
+}
+
+[data-theme="dark"] .cert-title,
+[data-theme="dark"] .cert-price {
+  color: var(--dark-text-primary) !important;
+}
+
+[data-theme="dark"] .cert-features li {
+  color: var(--dark-text-secondary) !important;
+}
+
+[data-theme="dark"] .professional-callout {
+  background: var(--dark-bg-secondary) !important;
+  border-color: var(--dark-border) !important;
+}
+
+[data-theme="dark"] .professional-callout h5,
+[data-theme="dark"] .professional-callout p {
+  color: var(--dark-text-secondary) !important;
+}
+
+[data-theme="dark"] .btn-primary-modern,
+[data-theme="dark"] .btn-modern {
+  color: white !important;
+}
+
+[data-theme="dark"] .btn-outline-primary {
+  border-color: var(--dark-border) !important;
+  color: var(--dark-text-primary) !important;
+}
+
+[data-theme="dark"] .btn-outline-primary:hover {
+  background: var(--dark-bg-tertiary) !important;
+  border-color: var(--dark-accent) !important;
+}
+
